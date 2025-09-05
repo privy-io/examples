@@ -1,0 +1,15 @@
+.navbar {
+  z-index: 1000;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  padding: 12px 24px;
+  gap: 10px;
+  min-height: 64px;
+  background-color: rgba(247, 247, 247, 0.024);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid rgba(229, 231, 235, 0.194);
+}
