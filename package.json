@@ -1,0 +1,42 @@
+{
+  "name": "@privy-io/examples",
+  "version": "1.0.0",
+  "description": "Comprehensive collection of Privy starter repos and integration examples",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/privy-io/examples.git"
+  },
+  "author": "Privy <support@privy.io>",
+  "license": "MIT",
+  "private": true,
+  "workspaces": [
+    "privy-*-starter",
+    "privy-*-*",
+    "shared/*"
+  ],
+  "scripts": {
+    "clean": "rm -rf node_modules && rm -rf */node_modules",
+    "install-all": "npm install && npm run bootstrap",
+    "bootstrap": "npm install --workspaces",
+    "build": "npm run build --workspaces",
+    "dev": "npm run dev --workspaces",
+    "test": "npm run test --workspaces",
+    "lint": "npm run lint --workspaces",
+    "typecheck": "npm run typecheck --workspaces"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0",
+    "prettier": "^3.0.0",
+    "eslint": "^8.0.0"
+  },
+  "keywords": [
+    "privy",
+    "web3",
+    "auth",
+    "wallet",
+    "starter",
+    "examples",
+    "monorepo"
+  ]
+}
