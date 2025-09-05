@@ -37,9 +37,12 @@ Perfect starting points for new projects. Each includes the "Hello World" sign m
 | [`privy-nextjs-starter`](./privy-nextjs-starter) | Full-featured Next.js application with Privy auth | Next.js + TypeScript | ✅ Ready |
 | [`privy-react-starter`](./privy-react-starter) | Complete React application starter | React + JavaScript | ✅ Ready |
 | [`privy-expo-starter`](./privy-expo-starter) | React Native mobile app with Expo | Expo + TypeScript | ✅ Ready |
+| [`privy-expo-bare-starter`](./privy-expo-bare-starter) | Bare minimum Expo React Native project | Expo Bare + TypeScript | ✅ Ready |
+| [`privy-flutter-starter`](./privy-flutter-starter) | Flutter mobile application starter | Flutter + Dart | ✅ Ready |
 | [`privy-whitelabel-nextjs`](./privy-whitelabel-nextjs) | Custom UI implementation without Privy components | Next.js + TypeScript | ✅ Ready |
 | [`privy-pwa-nextjs`](./privy-pwa-nextjs) | Progressive Web App with offline support | Next.js + PWA | ✅ Ready |
 | [`privy-solana-nextjs`](./privy-solana-nextjs) | Solana blockchain integration | Next.js + Solana | ✅ Ready |
+| [`privy-ecosystem-sdk-starter`](./privy-ecosystem-sdk-starter) | Get started building your own ecosystem SDK | TypeScript + SDK | ✅ Ready |
 
 ### 🔧 Platform Integrations
 
@@ -48,6 +51,7 @@ Examples for specific platforms and environments.
 | Example | Description | Technology | Status |
 |---------|-------------|------------|---------|
 | [`privy-chrome-extension`](./privy-chrome-extension) | Browser extension with Privy auth | TypeScript + Manifest V3 | ✅ Ready |
+| [`privy-telegram-bot-nodejs`](./privy-telegram-bot-nodejs) | Telegram trading bot integration | Node.js + JavaScript | ✅ Ready |
 | [`privy-auth0-ios-example`](./privy-auth0-ios-example) | iOS app with Auth0 + Privy integration | Swift + Auth0 | ✅ Ready |
 
 ### 🌟 Feature Demos
@@ -56,8 +60,28 @@ Focused examples showcasing specific Privy features and advanced use cases.
 
 | Example | Description | Technology | Status |
 |---------|-------------|------------|---------|
+| [`privy-smart-wallets-nextjs`](./privy-smart-wallets-nextjs) | Smart wallets integration and usage | Next.js + TypeScript | ✅ Ready |
+| [`privy-session-keys-nextjs`](./privy-session-keys-nextjs) | Account abstraction with session keys | Next.js + TypeScript | ✅ Ready |
 | [`privy-cross-app-connect`](./privy-cross-app-connect) | Cross-application connection demo | Next.js + TypeScript | ✅ Ready |
 | [`privy-cross-app-provider`](./privy-cross-app-provider) | Cross-application provider implementation | Next.js + TypeScript | ✅ Ready |
+| [`privy-farcaster-nextjs`](./privy-farcaster-nextjs) | Login and write to Farcaster using Privy | Next.js + TypeScript | ✅ Ready |
+| [`privy-frames-nextjs`](./privy-frames-nextjs) | Farcaster Frames integration | Next.js + TypeScript | ✅ Ready |
+| [`privy-frames-v2-nextjs`](./privy-frames-v2-nextjs) | Farcaster Frames v2 integration | Next.js + TypeScript | ✅ Ready |
+| [`privy-funding-nextjs`](./privy-funding-nextjs) | Privy funding hook showcase | Next.js + TypeScript | ✅ Ready |
+| [`privy-fiat-onramp-nextjs`](./privy-fiat-onramp-nextjs) | Fiat on-ramp integration demo | Next.js + TypeScript | ✅ Ready |
+
+### 🔗 Third-Party Integrations
+
+Examples showing Privy integration with popular Web3 libraries and services.
+
+| Example | Description | Technology | Status |
+|---------|-------------|------------|---------|
+| [`privy-wagmi-nextjs`](./privy-wagmi-nextjs) | Privy + Wagmi integration example | Next.js + Wagmi | ✅ Ready |
+| [`privy-permissionless-nextjs`](./privy-permissionless-nextjs) | Privy + permissionless.js integration | Next.js + Permissionless | ✅ Ready |
+| [`privy-zerodev-nextjs`](./privy-zerodev-nextjs) | Privy + ZeroDev account abstraction | Next.js + ZeroDev | ✅ Ready |
+| [`privy-biconomy-nextjs`](./privy-biconomy-nextjs) | Privy + Biconomy smart accounts | Next.js + Biconomy | ✅ Ready |
+| [`privy-base-paymaster-nextjs`](./privy-base-paymaster-nextjs) | Base network paymaster integration | Next.js + Base | ✅ Ready |
+| [`privy-decentxyz-minting-nextjs`](./privy-decentxyz-minting-nextjs) | Decent Editions NFT minting page | Next.js + Decent | ✅ Ready |
 
 ### 🚧 Coming Soon
 
