@@ -11,8 +11,7 @@
   "private": true,
   "workspaces": [
     "privy-*-starter",
-    "privy-*-*",
-    "shared/*"
+    "privy-*-*"
   ],
   "scripts": {
     "clean": "rm -rf node_modules && rm -rf */node_modules",
