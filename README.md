@@ -11,164 +11,91 @@
 
 Welcome to the official Privy examples monorepo! This is your one-stop destination for starter templates, integration demos, and best practices for building with [Privy](https://privy.io).
 
-## 🚀 Quick Start
+## 🚀 Core Starter Repositories
 
-Each example is self-contained and can be cloned independently:
+Perfect starting points for new projects. Each includes authentication, wallet connection, and the essential "sign message" experience.
 
-```bash
-# Clone the entire monorepo
-git clone https://github.com/privy-io/examples.git
-cd examples
+| Repository | Description |
+|------------|-------------|
+| [`privy-react-starter`](./privy-react-starter) | Complete React application with Privy auth |
+| [`privy-next-starter`](./privy-next-starter) | Full-featured Next.js application |
+| [`privy-expo-starter`](./privy-expo-starter) | React Native mobile app with Expo |
+| [`privy-expo-bare-starter`](./privy-expo-bare-starter) | Minimal Expo React Native project |
+| [`privy-flutter-starter`](./privy-flutter-starter) | Flutter mobile application |
+| [`privy-swift-auth0`](./privy-swift-auth0) | iOS app with Auth0 + Privy integration |
+| [`privy-node-telegram-trading-bot`](./privy-node-telegram-trading-bot) | Telegram trading bot with Solana |
 
-# Or work with a specific example
-cd privy-nextjs-starter
-npm install
-npm run dev
-```
+## 📚 Feature Example Repositories
 
-## 📋 Examples Overview
+Focused examples showcasing specific Privy features and integrations, organized by SDK.
 
-### 🎯 Starter Templates
+### React SDK (`@privy-io/react-auth`)
 
-Perfect starting points for new projects. Each includes the "Hello World" sign message moment and full Privy integration.
+#### Smart Wallets & Account Abstraction
+| Repository | Description |
+|------------|-------------|
+| [`privy-react-smart-wallets`](./privy-react-smart-wallets) | Smart wallets integration and usage |
+| [`privy-react-session-keys`](./privy-react-session-keys) | Account abstraction with session keys |
+| [`privy-react-base-paymaster`](./privy-react-base-paymaster) | Base network paymaster integration |
+| [`privy-react-biconomy`](./privy-react-biconomy) | Biconomy smart accounts |
+| [`privy-react-permissionless`](./privy-react-permissionless) | Permissionless.js integration |
+| [`privy-react-zerodev`](./privy-react-zerodev) | ZeroDev account abstraction |
 
-| Example | Description | Technology | Status |
-|---------|-------------|------------|---------|
-| [`privy-nextjs-starter`](./privy-nextjs-starter) | Full-featured Next.js application with Privy auth | Next.js + TypeScript | ✅ Ready |
-| [`privy-react-starter`](./privy-react-starter) | Complete React application starter | React + JavaScript | ✅ Ready |
-| [`privy-expo-starter`](./privy-expo-starter) | React Native mobile app with Expo | Expo + TypeScript | ✅ Ready |
-| [`privy-expo-bare-starter`](./privy-expo-bare-starter) | Bare minimum Expo React Native project | Expo Bare + TypeScript | ✅ Ready |
-| [`privy-flutter-starter`](./privy-flutter-starter) | Flutter mobile application starter | Flutter + Dart | ✅ Ready |
-| [`privy-whitelabel-nextjs`](./privy-whitelabel-nextjs) | Custom UI implementation without Privy components | Next.js + TypeScript | ✅ Ready |
-| [`privy-pwa-nextjs`](./privy-pwa-nextjs) | Progressive Web App with offline support | Next.js + PWA | ✅ Ready |
-| [`privy-solana-nextjs`](./privy-solana-nextjs) | Solana blockchain integration | Next.js + Solana | ✅ Ready |
-| [`privy-ecosystem-sdk-starter`](./privy-ecosystem-sdk-starter) | Get started building your own ecosystem SDK | TypeScript + SDK | ✅ Ready |
+#### Blockchain Integrations
+| Repository | Description |
+|------------|-------------|
+| [`privy-react-solana`](./privy-react-solana) | Solana blockchain integration |
+| [`privy-react-wagmi`](./privy-react-wagmi) | Wagmi integration for Ethereum |
 
-### 🔧 Platform Integrations
+#### Social & Communication
+| Repository | Description |
+|------------|-------------|
+| [`privy-react-farcaster`](./privy-react-farcaster) | Farcaster social integration |
+| [`privy-react-frames`](./privy-react-frames) | Farcaster Frames integration |
+| [`privy-react-frames-v2`](./privy-react-frames-v2) | Farcaster Frames v2 |
 
-Examples for specific platforms and environments.
+#### Platform & UI Examples
+| Repository | Description |
+|------------|-------------|
+| [`privy-react-whitelabel`](./privy-react-whitelabel) | Custom UI without Privy components |
+| [`privy-react-pwa`](./privy-react-pwa) | Progressive Web App |
+| [`privy-react-chrome-extension`](./privy-react-chrome-extension) | Browser extension with Privy |
 
-| Example | Description | Technology | Status |
-|---------|-------------|------------|---------|
-| [`privy-chrome-extension`](./privy-chrome-extension) | Browser extension with Privy auth | TypeScript + Manifest V3 | ✅ Ready |
-| [`privy-telegram-bot-nodejs`](./privy-telegram-bot-nodejs) | Telegram trading bot integration | Node.js + JavaScript | ✅ Ready |
-| [`privy-auth0-ios-example`](./privy-auth0-ios-example) | iOS app with Auth0 + Privy integration | Swift + Auth0 | ✅ Ready |
+#### Cross-App & Advanced Features
+| Repository | Description |
+|------------|-------------|
+| [`privy-react-cross-app-connect`](./privy-react-cross-app-connect) | Cross-application connection |
+| [`privy-react-cross-app-provider`](./privy-react-cross-app-provider) | Cross-application provider |
+| [`privy-react-ecosystem-sdk-starter`](./privy-react-ecosystem-sdk-starter) | Build your own ecosystem SDK |
 
-### 🌟 Feature Demos
+#### Financial & Commerce
+| Repository | Description |
+|------------|-------------|
+| [`privy-react-funding`](./privy-react-funding) | Privy funding hooks showcase |
+| [`privy-react-fiat-onramp`](./privy-react-fiat-onramp) | Fiat on-ramp integration |
+| [`privy-react-decentxyz-minting`](./privy-react-decentxyz-minting) | NFT minting with Decent |
 
-Focused examples showcasing specific Privy features and advanced use cases.
+### Expo SDK (`@privy-io/expo`)
 
-| Example | Description | Technology | Status |
-|---------|-------------|------------|---------|
-| [`privy-smart-wallets-nextjs`](./privy-smart-wallets-nextjs) | Smart wallets integration and usage | Next.js + TypeScript | ✅ Ready |
-| [`privy-session-keys-nextjs`](./privy-session-keys-nextjs) | Account abstraction with session keys | Next.js + TypeScript | ✅ Ready |
-| [`privy-cross-app-connect`](./privy-cross-app-connect) | Cross-application connection demo | Next.js + TypeScript | ✅ Ready |
-| [`privy-cross-app-provider`](./privy-cross-app-provider) | Cross-application provider implementation | Next.js + TypeScript | ✅ Ready |
-| [`privy-farcaster-nextjs`](./privy-farcaster-nextjs) | Login and write to Farcaster using Privy | Next.js + TypeScript | ✅ Ready |
-| [`privy-frames-nextjs`](./privy-frames-nextjs) | Farcaster Frames integration | Next.js + TypeScript | ✅ Ready |
-| [`privy-frames-v2-nextjs`](./privy-frames-v2-nextjs) | Farcaster Frames v2 integration | Next.js + TypeScript | ✅ Ready |
-| [`privy-funding-nextjs`](./privy-funding-nextjs) | Privy funding hook showcase | Next.js + TypeScript | ✅ Ready |
-| [`privy-fiat-onramp-nextjs`](./privy-fiat-onramp-nextjs) | Fiat on-ramp integration demo | Next.js + TypeScript | ✅ Ready |
+| Repository | Description |
+|------------|-------------|
+| [`privy-expo-starter`](./privy-expo-starter) | Complete Expo application |
+| [`privy-expo-bare-starter`](./privy-expo-bare-starter) | Minimal Expo setup |
 
-### 🔗 Third-Party Integrations
+### Flutter SDK (`privy_flutter`)
 
-Examples showing Privy integration with popular Web3 libraries and services.
+| Repository | Description |
+|------------|-------------|
+| [`privy-flutter-starter`](./privy-flutter-starter) | Cross-platform Flutter app |
 
-| Example | Description | Technology | Status |
-|---------|-------------|------------|---------|
-| [`privy-wagmi-nextjs`](./privy-wagmi-nextjs) | Privy + Wagmi integration example | Next.js + Wagmi | ✅ Ready |
-| [`privy-permissionless-nextjs`](./privy-permissionless-nextjs) | Privy + permissionless.js integration | Next.js + Permissionless | ✅ Ready |
-| [`privy-zerodev-nextjs`](./privy-zerodev-nextjs) | Privy + ZeroDev account abstraction | Next.js + ZeroDev | ✅ Ready |
-| [`privy-biconomy-nextjs`](./privy-biconomy-nextjs) | Privy + Biconomy smart accounts | Next.js + Biconomy | ✅ Ready |
-| [`privy-base-paymaster-nextjs`](./privy-base-paymaster-nextjs) | Base network paymaster integration | Next.js + Base | ✅ Ready |
-| [`privy-decentxyz-minting-nextjs`](./privy-decentxyz-minting-nextjs) | Decent Editions NFT minting page | Next.js + Decent | ✅ Ready |
+### Swift SDK (`PrivySDK`)
 
-### 🚧 Coming Soon
+| Repository | Description |
+|------------|-------------|
+| [`privy-swift-auth0`](./privy-swift-auth0) | iOS with Auth0 integration |
 
-Additional starters and examples we're actively building.
+### Node.js SDK (`@privy-io/server-auth`)
 
-| Example | Description | Technology | Status |
-|---------|-------------|------------|---------|
-| `privy-ios-starter` | Native iOS "Hello World" app | Swift + UIKit | 🚧 Coming Soon |
-| `privy-android-starter` | Native Android application | Kotlin | 🚧 Coming Soon |
-| `privy-unity-starter` | Unity game integration | C# + Unity | 🚧 Coming Soon |
-| `privy-node-starter` | Server-side authentication | Node.js + Express | 🚧 Coming Soon |
-| `privy-python-starter` | Python server implementation | Python + FastAPI | 🚧 Coming Soon |
-
-## 🎯 "Hello World" Moment
-
-Every starter template includes Privy's core "Hello World" experience: **signing your first message**. This demonstrates:
-
-- ✅ Wallet connection
-- ✅ User authentication  
-- ✅ Message signing
-- ✅ Signature verification
-
-## 🏗️ Architecture
-
-This monorepo follows a flat, discoverable structure inspired by successful open-source examples:
-
-```
-privy-examples/
-├── privy-{tech}-starter/      # Full-featured starters
-├── privy-{feature}-{tech}/    # Feature-specific demos
-└── privy-{platform}/          # Platform integrations
-```
-
-## 🚦 Getting Started
-
-### Prerequisites
-
-- Node.js 18+ (for web examples)
-- Xcode (for iOS examples)  
-- Android Studio (for Android examples)
-- A [Privy account](https://dashboard.privy.io)
-
-### Setup
-
-1. **Choose your example** from the table above
-2. **Navigate to the directory**: `cd privy-nextjs-starter`
-3. **Install dependencies**: `npm install`
-4. **Configure your Privy App ID** in the environment variables
-5. **Start developing**: `npm run dev`
-
-Each example includes detailed setup instructions in its individual README.
-
-## 🤝 Contributing
-
-We welcome contributions! Whether you're:
-
-- 🐛 Fixing bugs in existing examples
-- ✨ Adding new features or examples
-- 📚 Improving documentation
-- 🔧 Updating dependencies
-
-Please see our [Contributing Guidelines](./CONTRIBUTING.md) for details.
-
-### Adding New Examples
-
-Follow our naming convention: `privy-{technology}-{platform}` (e.g., `privy-vue-starter`, `privy-flutter-mobile`)
-
-## 📖 Documentation
-
-- [Privy Documentation](https://docs.privy.io)
-- [API Reference](https://docs.privy.io/reference)
-- [SDKs and Libraries](https://docs.privy.io/guide/react)
-
-## 🆘 Support
-
-- [Discord Community](https://discord.gg/privy)
-- [GitHub Issues](https://github.com/privy-io/examples/issues)
-- [Support Email](mailto:support@privy.io)
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](./LICENSE) file for details.
-
----
-
-<div align="center">
-
-**Built with ❤️ by the [Privy](https://privy.io) team**
-
-</div>
+| Repository | Description |
+|------------|-------------|
+| [`privy-node-telegram-trading-bot`](./privy-node-telegram-trading-bot) | Telegram bot with Solana trading |
