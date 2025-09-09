@@ -1,0 +1,58 @@
+{
+  "private": true,
+  "engines": {
+    "npm": ">=8.0.0 <10.0.0",
+    "node": ">=20.0.0 <21.0.0"
+  },
+  "scripts": {
+    "dev": "next dev -p 3200",
+    "build": "next build",
+    "start": "next start -p 3200",
+    "format": "npx prettier --write \"{__tests__,components,pages,styles}/**/*.{ts,tsx,js,jsx}\"",
+    "lint": "next lint && npx prettier --check \"{__tests__,components,pages,styles}/**/*.{ts,tsx,js,jsx}\" && npx tsc --noEmit"
+  },
+  "dependencies": {
+    "@datadog/browser-rum": "^4.32.1",
+    "@headlessui/react": "^1.7.3",
+    "@heroicons/react": "^2.1.1",
+    "@privy-io/react-auth": "^1.64.1-beta-20240509015041",
+    "@privy-io/server-auth": "1.7.4-beta.1",
+    "@standard-crypto/farcaster-js": "^7.4.0",
+    "@supabase/supabase-js": "^2.43.1",
+    "@tailwindcss/forms": "^0.5.3",
+    "@wagmi/chains": "^1.8.0",
+    "@zerodev/ecdsa-validator": "^5.2.3",
+    "@zerodev/permissions": "^5.2.6",
+    "@zerodev/remote-signer": "^5.2.1",
+    "@zerodev/sdk": "^5.2.11",
+    "axios": "^1.5.1",
+    "ethers": "^5.7.2",
+    "next": "^13",
+    "permissionless": "^0.1.26",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "react-qr-code": "^2.0.12",
+    "react-toastify": "^10.0.5",
+    "swr": "^2.1.5",
+    "viem": "^2.10.2"
+  },
+  "devDependencies": {
+    "@tsconfig/next": "^2.0.0",
+    "@tsconfig/node18": "^18.2.0",
+    "@tsconfig/strictest": "^2.0.1",
+    "@types/node": "^18",
+    "@types/react": "18.2.0",
+    "autoprefixer": "^10.4.7",
+    "dotenv-cli": "^6.0.0",
+    "eslint": "^8.23.0",
+    "eslint-config-next": "12.2.5",
+    "postcss": "^8.4.14",
+    "prettier-plugin-tailwindcss": "^0.2.3",
+    "tailwindcss": "^3.1.2",
+    "ts-node": "github:TypeStrong/ts-node#main",
+    "typescript": "^5.1.6"
+  },
+  "overrides": {
+    "react": "18.2.0"
+  }
+}
