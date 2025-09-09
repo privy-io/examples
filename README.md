@@ -13,7 +13,7 @@ Welcome to the official Privy examples monorepo! This is your one-stop destinati
 
 ## Repository Structure
 
-This monorepo is organized with **core starter templates** at the top level and **feature-specific examples** organized by functionality in the `features/` directory.
+This monorepo is organized with **core starter templates** at the top level and **use case examples** organized by SDK in the `use-case-examples/` directory.
 
 ## 🚀 Core Starter Repositories
 
@@ -26,76 +26,31 @@ Perfect starting points for new projects. Each includes authentication, wallet c
 | [`privy-flutter-starter`](./privy-flutter-starter) | Flutter mobile application |
 | [`privy-next-starter`](./privy-next-starter) | Next.js with App Router |
 | [`privy-react-starter`](./privy-react-starter) | Complete React application with Privy auth |
+| [`privy-react-whitelabel`](./privy-react-whitelabel) | Custom UI without Privy components |
 | [`privy-swift-auth0`](./privy-swift-auth0) | iOS app with Auth0 + Privy integration |
 
-## 📚 Feature Example Repositories
+## 📚 Use Case Examples
 
-Focused examples showcasing specific Privy features and integrations, organized by functionality in the `features/` directory.
-
-### Smart Wallets (`features/smart-wallets/`)
-Account abstraction and smart wallet implementations:
+Focused examples showcasing specific Privy features and integrations.
 
 | Repository | Description |
 |------------|-------------|
-| [`privy-react-permissionless`](./features/smart-wallets/privy-react-permissionless) | Permissionless.js integration |
-| [`privy-react-smart-wallets`](./features/smart-wallets/privy-react-smart-wallets) | Smart wallets starter template |
-
-### Web3 Integrations (`features/web3-integrations/`)
-Blockchain and Web3 library integrations:
-
-| Repository | Description |
-|------------|-------------|
-| [`privy-react-ecosystem-sdk-starter`](./features/web3-integrations/privy-react-ecosystem-sdk-starter) | Build your own ecosystem SDK |
-| [`privy-react-solana`](./features/web3-integrations/privy-react-solana) | Solana blockchain integration |
-| [`privy-react-wagmi`](./features/web3-integrations/privy-react-wagmi) | Wagmi integration for Ethereum |
-
-### Social Auth (`features/social-auth/`)
-Social authentication and cross-application examples:
-
-| Repository | Description |
-|------------|-------------|
-| [`privy-react-cross-app-connect`](./features/social-auth/privy-react-cross-app-connect) | Cross-application wallet connection |
-| [`privy-react-cross-app-provider`](./features/social-auth/privy-react-cross-app-provider) | Cross-application auth provider |
-| [`privy-react-farcaster`](./features/social-auth/privy-react-farcaster) | Farcaster social integration |
-
-### UI Frameworks (`features/ui-frameworks/`)
-Different UI frameworks and deployment targets:
-
-| Repository | Description |
-|------------|-------------|
-| [`privy-react-chrome-extension`](./features/ui-frameworks/privy-react-chrome-extension) | Browser extension implementation |
-| [`privy-react-pwa`](./features/ui-frameworks/privy-react-pwa) | Progressive Web App |
-| [`privy-react-whitelabel`](./features/ui-frameworks/privy-react-whitelabel) | Custom UI without Privy components |
-
-### Fintech (`features/fintech/`)
-Financial services and payment integrations:
-
-| Repository | Description |
-|------------|-------------|
-| [`privy-react-fiat-onramp`](./features/fintech/privy-react-fiat-onramp) | Fiat currency on-ramp |
-| [`privy-react-funding`](./features/fintech/privy-react-funding) | Privy funding hooks showcase |
-
-### Frames (`features/frames/`)
-Farcaster Frames implementations:
-
-| Repository | Description |
-|------------|-------------|
-| [`privy-react-frames`](./features/frames/privy-react-frames) | Farcaster Frames integration |
-| [`privy-react-frames-v2`](./features/frames/privy-react-frames-v2) | Farcaster Frames v2 |
-
-### Advanced Features (`features/advanced/`)
-Advanced Privy features and integrations:
-
-| Repository | Description |
-|------------|-------------|
-| [`privy-react-session-keys`](./features/advanced/privy-react-session-keys) | Account abstraction with session keys |
-
-### Trading Bots (`features/trading-bots/`)
-Automated trading and bot implementations:
-
-| Repository | Description |
-|------------|-------------|
-| [`privy-node-telegram-trading-bot`](./features/trading-bots/privy-node-telegram-trading-bot) | Telegram trading bot with Solana |
+| [`privy-react-chrome-extension`](./use-case-examples/react-sdk/privy-react-chrome-extension) | Browser extension implementation |
+| [`privy-react-cross-app-connect`](./use-case-examples/react-sdk/privy-react-cross-app-connect) | Cross-application wallet connection |
+| [`privy-react-cross-app-provider`](./use-case-examples/react-sdk/privy-react-cross-app-provider) | Cross-application auth provider |
+| [`privy-react-ecosystem-sdk-starter`](./use-case-examples/react-sdk/privy-react-ecosystem-sdk-starter) | Build your own ecosystem SDK |
+| [`privy-react-farcaster`](./use-case-examples/react-sdk/privy-react-farcaster) | Farcaster social integration |
+| [`privy-react-fiat-onramp`](./use-case-examples/react-sdk/privy-react-fiat-onramp) | Fiat currency on-ramp |
+| [`privy-react-frames`](./use-case-examples/react-sdk/privy-react-frames) | Farcaster Frames integration |
+| [`privy-react-frames-v2`](./use-case-examples/react-sdk/privy-react-frames-v2) | Farcaster Frames v2 |
+| [`privy-react-funding`](./use-case-examples/react-sdk/privy-react-funding) | Privy funding hooks showcase |
+| [`privy-react-permissionless`](./use-case-examples/react-sdk/privy-react-permissionless) | Permissionless.js integration |
+| [`privy-react-pwa`](./use-case-examples/react-sdk/privy-react-pwa) | Progressive Web App |
+| [`privy-react-session-keys`](./use-case-examples/react-sdk/privy-react-session-keys) | Account abstraction with session keys |
+| [`privy-react-smart-wallets`](./use-case-examples/react-sdk/privy-react-smart-wallets) | Smart wallets starter template |
+| [`privy-react-solana`](./use-case-examples/react-sdk/privy-react-solana) | Solana blockchain integration |
+| [`privy-react-wagmi`](./use-case-examples/react-sdk/privy-react-wagmi) | Wagmi integration for Ethereum |
+| [`privy-node-telegram-trading-bot`](./use-case-examples/server-sdk/privy-node-telegram-trading-bot) | Telegram trading bot with Solana |
 
 ## Getting Started
 
