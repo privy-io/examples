@@ -1,0 +1,31 @@
+{
+  "name": "telegram-trading-bot-starter",
+  "version": "1.0.0",
+  "description": "A Telegram trading bot with Privy authentication",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "telegram",
+    "bot",
+    "trading",
+    "privy",
+    "authentication"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@jup-ag/api": "^6.0.40",
+    "@privy-io/server-auth": "^1.20.2",
+    "@solana/web3.js": "^1.87.6",
+    "axios": "^1.8.4",
+    "dotenv": "^16.0.0",
+    "express": "^4.17.1",
+    "node-telegram-bot-api": "^0.61.0"
+  },
+  "devDependencies": {
+    "@types/node-telegram-bot-api": "^0.64.8"
+  }
+}
