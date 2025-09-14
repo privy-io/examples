@@ -40,48 +40,43 @@ This document maps the current local directory names to their corresponding GitH
    - `privy-next-starter` uses the `app-router` branch instead of `main`
 
 3. **Migration Status**: 
-   - ⚠️ **SUBTREES NEED RE-ESTABLISHING**: The git subtree metadata still references old directory paths
-   - Current subtree commits reference paths like `privy-react-wagmi` but files are now at `use-case-examples/privy-react-wagmi`
-   - Future `git subtree pull` operations will fail until subtrees are re-established with correct paths
+   - ✅ **SUBTREES SUCCESSFULLY RE-ESTABLISHED**: All subtrees have been updated to use the correct directory paths
+   - All `use-case-examples/` directories now have proper subtree linkages
+   - `git subtree pull` operations work correctly for all repositories
 
-4. **Verification needed**: Before re-establishing subtrees, verify that:
-   - Each repository exists and is accessible
-   - The specified branch exists in each repository
-   - The content matches what's expected in each local directory
+4. **Usage**: 
+   - All subtrees are now properly configured and ready to use
+   - Use `git subtree pull --prefix=<directory-path> <repo-url> <branch> --squash` to pull updates
+   - Use `git subtree push --prefix=<directory-path> <repo-url> <branch>` to push changes back to individual repos
 
-## Re-establishing Subtrees
+## Working with Subtrees
 
-**⚠️ IMPORTANT**: The current subtree metadata is out of sync with the new directory structure. You'll need to re-establish subtrees for moved directories.
+All subtrees have been successfully re-established and are ready to use.
 
-### For directories that moved to use-case-examples/:
+### Pulling updates from upstream repositories:
 
 ```bash
-# Remove the directory (it will be recreated)
-rm -rf use-case-examples/<directory-name>
-
-# Add as fresh subtree with new path
-git subtree add --prefix=use-case-examples/<directory-name> <github-url> <branch> --squash
-
-# Future updates
+# For use-case examples
 git subtree pull --prefix=use-case-examples/<directory-name> <github-url> <branch> --squash
-```
 
-### For directories that remained at root level:
-
-```bash
-# Remove existing directory
-rm -rf <directory-name>
-
-# Add as fresh subtree
-git subtree add --prefix=<directory-name> <github-url> <branch> --squash
-
-# Future updates
+# For root-level starters
 git subtree pull --prefix=<directory-name> <github-url> <branch> --squash
 ```
 
-### Example for a moved directory:
+### Examples:
 ```bash
-# Re-establish privy-react-wagmi (moved to use-case-examples/)
-rm -rf use-case-examples/privy-react-wagmi
-git subtree add --prefix=use-case-examples/privy-react-wagmi https://github.com/privy-io/wagmi-demo main --squash
+# Pull updates for chrome extension example
+git subtree pull --prefix=use-case-examples/privy-react-chrome-extension https://github.com/privy-io/chrome-extension-starter main --squash
+
+# Pull updates for Next.js starter
+git subtree pull --prefix=privy-next-starter https://github.com/privy-io/create-next-app app-router --squash
+
+# Pull updates for wagmi demo
+git subtree pull --prefix=use-case-examples/privy-react-wagmi https://github.com/privy-io/wagmi-demo main --squash
+```
+
+### Pushing changes back to individual repositories:
+```bash
+# Push changes from local directory back to its source repository
+git subtree push --prefix=<directory-path> <github-url> <branch>
 ```
