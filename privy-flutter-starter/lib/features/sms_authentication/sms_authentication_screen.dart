@@ -4,18 +4,17 @@ import 'package:flutter_starter/router/app_router.dart';
 import 'package:flutter_starter/models/auth_action.dart';
 import 'package:go_router/go_router.dart';
 
-class EmailAuthenticationScreen extends StatefulWidget {
+class SmsAuthenticationScreen extends StatefulWidget {
   final AuthAction authAction;
 
-  const EmailAuthenticationScreen({super.key, required this.authAction});
+  const SmsAuthenticationScreen({super.key, required this.authAction});
 
   @override
-  EmailAuthenticationScreenState createState() =>
-      EmailAuthenticationScreenState();
+  SmsAuthenticationScreenState createState() => SmsAuthenticationScreenState();
 }
 
-class EmailAuthenticationScreenState extends State<EmailAuthenticationScreen> {
-  final TextEditingController emailController = TextEditingController();
+class SmsAuthenticationScreenState extends State<SmsAuthenticationScreen> {
+  final TextEditingController phoneController = TextEditingController();
   final TextEditingController codeController = TextEditingController();
   bool codeSent = false;
   String? errorMessage;
@@ -24,20 +23,20 @@ class EmailAuthenticationScreenState extends State<EmailAuthenticationScreen> {
   @override
   void initState() {
     super.initState();
-    // Pre-fill email if updating
+    // Pre-fill phone number if updating
     if (widget.authAction is Update) {
-      emailController.text = (widget.authAction as Update).currentValue;
+      phoneController.text = (widget.authAction as Update).currentValue;
     }
   }
 
   String _getScreenTitle() {
     switch (widget.authAction) {
       case Login():
-        return 'Email Authentication';
+        return 'SMS Authentication';
       case Link():
-        return 'Link Email Account';
+        return 'Link Phone Number';
       case Update(currentValue: _):
-        return 'Update Email Address';
+        return 'Update Phone Number';
     }
   }
 
@@ -75,15 +74,15 @@ class EmailAuthenticationScreenState extends State<EmailAuthenticationScreen> {
     );
   }
 
-  /// Sends OTP to the provided email
+  /// Sends OTP to the provided phone number
   ///
-  /// NOTE: To use email authentication, you must enable it in the Privy Dashboard:
+  /// NOTE: To use SMS authentication, you must enable it in the Privy Dashboard:
   /// https://dashboard.privy.io/apps?page=login-methods
   Future<void> sendCode() async {
-    // Get and validate the email input
-    String email = emailController.text.trim();
-    if (email.isEmpty) {
-      showMessage("Please enter your email", isError: true);
+    // Get and validate the phone input
+    String phone = phoneController.text.trim();
+    if (phone.isEmpty) {
+      showMessage("Please enter your phone number", isError: true);
       return;
     }
 
@@ -96,7 +95,7 @@ class EmailAuthenticationScreenState extends State<EmailAuthenticationScreen> {
     try {
       // Call Privy SDK to send verification code
       // This makes an API request to Privy's authentication service
-      final result = await privyManager.privy.email.sendCode(email);
+      final result = await privyManager.privy.sms.sendCode(phone);
 
       // Handle the result using Privy's Result type which has onSuccess and onFailure handlers
       result.fold(
@@ -108,7 +107,7 @@ class EmailAuthenticationScreenState extends State<EmailAuthenticationScreen> {
             errorMessage = null;
             isLoading = false;
           });
-          showMessage("Code sent successfully to $email");
+          showMessage("Code sent successfully to $phone");
         },
         // Failure handler - something went wrong on Privy's end
         onFailure: (error) {
@@ -149,9 +148,9 @@ class EmailAuthenticationScreenState extends State<EmailAuthenticationScreen> {
       switch (widget.authAction) {
         case Login():
           // Handle login case
-          final result = await privyManager.privy.email.loginWithCode(
+          final result = await privyManager.privy.sms.loginWithCode(
             code: code,
-            email: emailController.text.trim(),
+            phoneNumber: phoneController.text.trim(),
           );
 
           result.fold(
@@ -175,9 +174,9 @@ class EmailAuthenticationScreenState extends State<EmailAuthenticationScreen> {
 
         case Link():
           // Handle linking case
-          final result = await privyManager.privy.email.linkWithCode(
+          final result = await privyManager.privy.sms.linkWithCode(
             code: code,
-            email: emailController.text.trim(),
+            phoneNumber: phoneController.text.trim(),
           );
 
           result.fold(
@@ -185,7 +184,7 @@ class EmailAuthenticationScreenState extends State<EmailAuthenticationScreen> {
               setState(() {
                 isLoading = false;
               });
-              showMessage("Email linked successfully!");
+              showMessage("Phone number linked successfully!");
               if (mounted) {
                 Navigator.of(context).pop(true);
               }
@@ -201,9 +200,9 @@ class EmailAuthenticationScreenState extends State<EmailAuthenticationScreen> {
 
         case Update(currentValue: _):
           // Handle update case
-          final result = await privyManager.privy.email.updateWithCode(
+          final result = await privyManager.privy.sms.updateWithCode(
             code: code,
-            email: emailController.text.trim(),
+            phoneNumber: phoneController.text.trim(),
           );
 
           result.fold(
@@ -211,7 +210,7 @@ class EmailAuthenticationScreenState extends State<EmailAuthenticationScreen> {
               setState(() {
                 isLoading = false;
               });
-              showMessage("Email updated successfully!");
+              showMessage("Phone number updated successfully!");
               if (mounted) {
                 Navigator.of(context).pop(true);
               }
@@ -270,15 +269,16 @@ class EmailAuthenticationScreenState extends State<EmailAuthenticationScreen> {
                   ),
                 ),
 
-                // Email input field
+                // Phone number input field
                 TextField(
-                  controller: emailController,
+                  controller: phoneController,
                   decoration: InputDecoration(
-                    labelText: "Email address",
+                    labelText: "Phone number",
+                    hintText: "+1 234 567 8900",
                     border: const OutlineInputBorder(),
                     labelStyle: Theme.of(context).textTheme.bodyLarge,
                   ),
-                  keyboardType: TextInputType.emailAddress,
+                  keyboardType: TextInputType.phone,
                   autocorrect: false,
                   enabled: !isLoading,
                 ),
@@ -347,7 +347,7 @@ class EmailAuthenticationScreenState extends State<EmailAuthenticationScreen> {
 
   @override
   void dispose() {
-    emailController.dispose();
+    phoneController.dispose();
     codeController.dispose();
     super.dispose();
   }
