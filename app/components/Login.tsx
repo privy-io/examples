@@ -2,6 +2,10 @@
 import {useEffect, useState} from 'react';
 import {useLoginWithEmail, useLoginWithSms, useGuestAccounts, usePrivy} from '@privy-io/react-auth';
 import OAuth from './OAuth';
+import Passkey from './Passkey';
+import SIWE from './SIWE';
+import TelegramLogin from './TelegramLogin';
+import SIWS from './SIWS';
 
 const Login = () => {
   const {createGuestAccount} = useGuestAccounts();
@@ -16,7 +20,7 @@ const Login = () => {
     loginWithCode: loginWithCodeEmail,
     state: stateEmail,
   } = useLoginWithEmail({
-    onComplete: ({ user, isNewUser, wasAlreadyAuthenticated, loginMethod }) => {
+    onComplete: ({user, isNewUser, wasAlreadyAuthenticated, loginMethod}) => {
       console.log('🔑 ✅ User successfully logged in with email', {
         user,
         isNewUser,
@@ -52,7 +56,7 @@ const Login = () => {
     loginWithCode: loginWithCodeSms,
     state: stateSms,
   } = useLoginWithSms({
-    onComplete: ({ user, isNewUser, wasAlreadyAuthenticated, loginMethod }) => {
+    onComplete: ({user, isNewUser, wasAlreadyAuthenticated, loginMethod}) => {
       console.log('🔑 ✅ User successfully logged in with Sms', {
         user,
         isNewUser,
@@ -173,6 +177,14 @@ const Login = () => {
         </div>
         <h2 className="text-xl font-bold mb-4 text-left mt-2">OAuth</h2>
         <OAuth />
+        <h2 className="text-xl font-bold mb-4 text-left mt-2">Passkey</h2>
+        <Passkey />
+        <h2 className="text-xl font-bold mb-4 text-left mt-2">SIWE</h2>
+        <SIWE />
+        <h2 className="text-xl font-bold mb-4 text-left mt-2">SIWS</h2>
+        <SIWS />
+        <h2 className="text-xl font-bold mb-4 text-left mt-2">Telegram</h2>
+        <TelegramLogin />
       </div>
     </div>
   );

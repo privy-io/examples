@@ -1,11 +1,12 @@
 'use client';
 import {usePrivy} from '@privy-io/react-auth';
-import {useRouter} from 'next/navigation';
+
 import Login from './components/Login';
 import Wallets from './components/Wallets';
+import UserManagement from './components/UserManagement';
 
 export default function Home() {
-  const {ready} = usePrivy();
+  const {ready, authenticated} = usePrivy();
   if (!ready) {
     return <div></div>;
   }
@@ -45,6 +46,11 @@ export default function Home() {
         <div className="w-full md:w-1/2">
           <Wallets />
         </div>
+        {authenticated && (
+          <div className="w-full md:w-1/2">
+            <UserManagement />
+          </div>
+        )}
       </div>
     </div>
   );

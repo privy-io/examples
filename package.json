@@ -10,8 +10,10 @@
     "format": "prettier --write ."
   },
   "dependencies": {
-    "@privy-io/react-auth": "^2.17.2",
+    "@privy-io/react-auth": "^2.24.0",
     "@solana/spl-token": "^0.4.13",
+    "@solana/web3.js": "^1.98.4",
+    "bs58": "^6.0.0",
     "next": "^14.0.1",
     "permissionless": "*",
     "react": "^18.2.0",
@@ -31,6 +33,5 @@
     "prettier": "^3.3.3",
     "tailwindcss": "^3.4.14",
     "typescript": "^5"
-  },
-  "packageManager": "yarn@4.9.2"
+  }
 }
