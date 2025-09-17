@@ -55,7 +55,7 @@ class HomeScreenState extends State<HomeScreen> {
       if (state is Authenticated && mounted) {
         debugPrint('User authenticated: ${state.user.id}');
         // Navigate to authenticated screen
-        navigationManager.navigateToAuthenticatedScreen(context);
+        navigationManager.navigateToAuthenticatedScreen(context, user: state.user);
       }
     });
   }
@@ -92,11 +92,34 @@ class HomeScreenState extends State<HomeScreen> {
                       style: Theme.of(context).textTheme.headlineLarge,
                     ),
                     const SizedBox(height: 30),
-                    ElevatedButton(
-                      onPressed: () {
-                        context.go(AppRouter.emailAuthPath);
-                      },
-                      child: const Text('Login With Email'),
+                    SizedBox(
+                      width: 200,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          context.go(AppRouter.emailAuthPath);
+                        },
+                        child: const Text('Login With Email'),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    SizedBox(
+                      width: 200,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          context.go(AppRouter.smsAuthPath);
+                        },
+                        child: const Text('Login With SMS'),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    SizedBox(
+                      width: 200,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          context.go(AppRouter.oauthAuthPath);
+                        },
+                        child: const Text('Login With OAuth'),
+                      ),
                     ),
                   ],
                 )

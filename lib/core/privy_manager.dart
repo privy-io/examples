@@ -1,7 +1,5 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_starter/config/env_config.dart';
-import 'package:flutter_starter/core/navigation_manager.dart';
 import 'package:privy_flutter/privy_flutter.dart';
 
 /// A singleton class to manage the Privy initialization and instance

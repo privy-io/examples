@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_starter/router/app_router.dart';
+import 'package:privy_flutter/privy_flutter.dart';
 
 /// NavigationManager handles all app navigation logic
 class NavigationManager {
@@ -10,7 +11,7 @@ class NavigationManager {
   NavigationManager._internal();
 
   /// Navigate to authenticated screen
-  void navigateToAuthenticatedScreen(BuildContext context) {
+  void navigateToAuthenticatedScreen(BuildContext context, {PrivyUser? user}) {
     if (!_isValidContext(context)) return;
     
     final router = GoRouter.of(context);
@@ -21,7 +22,7 @@ class NavigationManager {
       debugPrint('Navigating to authenticated screen');
 
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        router.go(AppRouter.authenticatedPath);
+        router.go(AppRouter.authenticatedPath, extra: user);
       });
     } else {
       debugPrint('Already on authenticated path, skipping navigation');
