@@ -9,7 +9,7 @@ This document maps the current local directory names to their corresponding GitH
 | privy-expo-bare-starter | https://github.com/privy-io/expo-bare-starter | main |
 | privy-expo-starter | https://github.com/privy-io/expo-starter | main |
 | privy-flutter-starter | https://github.com/privy-io/flutter-starter | main |
-| privy-next-starter | https://github.com/privy-io/create-next-app | app-router |
+| privy-next-starter | https://github.com/privy-io/create-next-app | main |
 | privy-react-starter | https://github.com/privy-io/create-react-app | main |
 | privy-react-whitelabel | https://github.com/privy-io/whitelabel-starter | main |
 | privy-swift-auth0 | https://github.com/privy-io/privy-auth0-ios-example | main |
@@ -37,7 +37,7 @@ This document maps the current local directory names to their corresponding GitH
    - **Use-case Examples**: All use-case specific examples are now under `use-case-examples/` directory
 
 2. **Special cases**:
-   - `privy-next-starter` uses the `app-router` branch instead of `main`
+   - All repositories now use the `main` branch
 
 3. **Migration Status**: 
    - ✅ **SUBTREES SUCCESSFULLY RE-ESTABLISHED**: All subtrees have been updated to use the correct directory paths
@@ -69,7 +69,7 @@ git subtree pull --prefix=<directory-name> <github-url> <branch> --squash
 git subtree pull --prefix=use-case-examples/privy-react-chrome-extension https://github.com/privy-io/chrome-extension-starter main --squash
 
 # Pull updates for Next.js starter
-git subtree pull --prefix=privy-next-starter https://github.com/privy-io/create-next-app app-router --squash
+git subtree pull --prefix=privy-next-starter https://github.com/privy-io/create-next-app main --squash
 
 # Pull updates for wagmi demo
 git subtree pull --prefix=use-case-examples/privy-react-wagmi https://github.com/privy-io/wagmi-demo main --squash
