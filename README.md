@@ -1,35 +1,69 @@
-# Privy Auth `create-react-app` Starter
+# React + TypeScript + Vite
 
-This is a minimal template for integrating [Privy Auth](https://www.privy.io/) into a new [`create-react-app`](https://create-react-app.dev/) project. Check out the deployed app [here](https://create-react-app.privy.io/)!
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-## Setup:
+Currently, two official plugins are available:
 
-1. Clone this repository and open it in your terminal.
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+
+## Expanding the ESLint configuration
+
+If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+
+```js
+export default tseslint.config([
+  globalIgnores(['dist']),
+  {
+    files: ['**/*.{ts,tsx}'],
+    extends: [
+      // Other configs...
+
+      // Remove tseslint.configs.recommended and replace with this
+      ...tseslint.configs.recommendedTypeChecked,
+      // Alternatively, use this for stricter rules
+      ...tseslint.configs.strictTypeChecked,
+      // Optionally, add this for stylistic rules
+      ...tseslint.configs.stylisticTypeChecked,
+
+      // Other configs...
+    ],
+    languageOptions: {
+      parserOptions: {
+        project: ['./tsconfig.node.json', './tsconfig.app.json'],
+        tsconfigRootDir: import.meta.dirname,
+      },
+      // other options...
+    },
+  },
+])
 ```
-git clone https://github.com/privy-io/create-react-app.git
+
+You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+
+```js
+// eslint.config.js
+import reactX from 'eslint-plugin-react-x'
+import reactDom from 'eslint-plugin-react-dom'
+
+export default tseslint.config([
+  globalIgnores(['dist']),
+  {
+    files: ['**/*.{ts,tsx}'],
+    extends: [
+      // Other configs...
+      // Enable lint rules for React
+      reactX.configs['recommended-typescript'],
+      // Enable lint rules for React DOM
+      reactDom.configs.recommended,
+    ],
+    languageOptions: {
+      parserOptions: {
+        project: ['./tsconfig.node.json', './tsconfig.app.json'],
+        tsconfigRootDir: import.meta.dirname,
+      },
+      // other options...
+    },
+  },
+])
 ```
-
-2. Install the necessary dependencies (including [Privy Auth](https://www.npmjs.com/package/@privy-io/react-auth)) with `npm`.
-```sh
-npm i 
-```
-
-3. Initialize your environment variables by copying the `.env.example` file to an `.env` file. Then, [paste your Privy App ID from the console](https://docs.privy.io/guide/console/api-keys) in `.env`.
-```sh
-# In your terminal, create .env from .env.example
-cp .env.example .env
-
-# Add your Privy App ID to .env
-VITE_PRIVY_APP_ID=<your-privy-app-id>
-```
-
-## Building locally:
-
-In your project directory, run `npm run dev`. You can now visit http://localhost:5173 (or the port Vite chooses if 5173 is busy) to see your app and login with Privy!
-
-## Check out:
-
-- `src/index.jsx` for how to use the `PrivyProvider` and initialize it with your Privy App ID
-- `src/App.jsx` for how to use the `usePrivy()` hook, fields like `authenticated` and `user`, and methods like `login` and `logout`
-
-**Check out [our docs](https://docs.privy.io/) for more guidance around using Privy in your app!**
