@@ -11,7 +11,7 @@ const OAuth = () => {
     // value can be used to show an intermediate state while login completes.
     initOAuth,
   } = useLoginWithOAuth({
-    onComplete: ({ user, isNewUser, wasAlreadyAuthenticated, loginMethod }) => {
+    onComplete: ({user, isNewUser, wasAlreadyAuthenticated, loginMethod}) => {
       console.log('🔑 ✅ User successfully logged in with OAuth', {
         user,
         isNewUser,
@@ -27,8 +27,9 @@ const OAuth = () => {
   useOAuthTokens({
     onOAuthTokenGrant: (args) => {
       console.log('OAuth tokens granted', args);
-    }
-  })
+    },
+  });
+
   return (
     <div className="grid grid-cols-2 gap-3">
       <button onClick={() => initOAuth({provider: 'google'})} className="btn">
@@ -43,8 +44,17 @@ const OAuth = () => {
       <button onClick={() => initOAuth({provider: 'github'})} className="btn">
         <div className="btn-text">GitHub</div>
       </button>
+      <button onClick={() => initOAuth({provider: 'spotify'})} className="btn">
+        <div className="btn-text">Spotify</div>
+      </button>
+      <button onClick={() => initOAuth({provider: 'instagram'})} className="btn">
+        <div className="btn-text">Instagram</div>
+      </button>
       <button onClick={() => initOAuth({provider: 'tiktok'})} className="btn">
         <div className="btn-text">TikTok</div>
+      </button>
+      <button onClick={() => initOAuth({provider: 'line'})} className="btn">
+        <div className="btn-text">Line</div>
       </button>
       <button onClick={() => initOAuth({provider: 'linkedin'})} className="btn">
         <div className="btn-text">LinkedIn</div>

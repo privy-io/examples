@@ -7,6 +7,7 @@ import {
   WalletWithMetadata,
   useGuestAccounts,
 } from '@privy-io/react-auth';
+import {useCreateWallet as useCreateExtendedWallet} from '@privy-io/react-auth/extended-chains';
 import {useRouter} from 'next/navigation';
 import {ToastContainer, toast} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -20,10 +21,11 @@ export default function Wallets() {
   const {ready, authenticated, createWallet: createEthereumWallet, user} = usePrivy();
   const {wallets: ethereumWallets} = useWallets();
   const {createWallet: createSolanaWallet, wallets: solanaWallets} = useSolanaWallets();
+  const {createWallet: createExtendedWallet} = useCreateExtendedWallet();
   const {createGuestAccount} = useGuestAccounts();
   const [showSmartWallet, setShowSmartWallet] = useState(false);
   const [pendingAction, setPendingAction] = useState('');
-
+  console.log(user);
   const smartWallet = user?.linkedAccounts.find((account) => account.type === 'smart_wallet');
 
   const embeddedEthereumWallets = ethereumWallets.filter(
@@ -52,11 +54,36 @@ export default function Wallets() {
       createEthereumWallet({createAdditional: true});
     } else if (pendingAction === 'Solana') {
       createSolanaWallet();
+    } else if (pendingAction === 'Cosmos') {
+      createExtendedWallet({chainType: 'cosmos'});
+    } else if (pendingAction === 'Bitcoin') {
+      createExtendedWallet({chainType: 'bitcoin-segwit'});
+    } else if (pendingAction === 'Stellar') {
+      createExtendedWallet({chainType: 'stellar'});
+    } else if (pendingAction === 'Sui') {
+      createExtendedWallet({chainType: 'sui'});
+    } else if (pendingAction === 'Tron') {
+      createExtendedWallet({chainType: 'tron'});
+    } else if (pendingAction === 'Near') {
+      createExtendedWallet({chainType: 'near'});
+    } else if (pendingAction === 'Ton') {
+      createExtendedWallet({chainType: 'ton'});
+    } else if (pendingAction === 'Starknet') {
+      createExtendedWallet({chainType: 'starknet'});
+    } else if (pendingAction === 'Spark') {
+      createExtendedWallet({chainType: 'spark'});
     } else if (pendingAction === 'EthereumSmartWallet') {
       setShowSmartWallet(true);
     }
     setPendingAction('');
-  }, [user, createEthereumWallet, createSolanaWallet, pendingAction, setPendingAction]);
+  }, [
+    user,
+    createEthereumWallet,
+    createSolanaWallet,
+    createExtendedWallet,
+    pendingAction,
+    setPendingAction,
+  ]);
 
   const createWallet = async (walletType: string) => {
     if (ready && !authenticated && !user?.isGuest) {
@@ -124,6 +151,33 @@ export default function Wallets() {
             Create Solana wallet
           </div>
         </button>
+        <button onClick={() => createWallet('Cosmos')} className="btn">
+          <div className="btn-text text-black">Create Cosmos wallet</div>
+        </button>
+        <button onClick={() => createWallet('Bitcoin')} className="btn">
+          <div className="btn-text text-black">Create Bitcoin wallet</div>
+        </button>
+        <button onClick={() => createWallet('Stellar')} className="btn">
+          <div className="btn-text text-black">Create Stellar wallet</div>
+        </button>
+        <button onClick={() => createWallet('Sui')} className="btn">
+          <div className="btn-text text-black">Create Sui wallet</div>
+        </button>
+        <button onClick={() => createWallet('Tron')} className="btn">
+          <div className="btn-text text-black">Create Tron wallet</div>
+        </button>
+        <button onClick={() => createWallet('Near')} className="btn">
+          <div className="btn-text text-black">Create Near wallet</div>
+        </button>
+        <button onClick={() => createWallet('Ton')} className="btn">
+          <div className="btn-text text-black">Create Ton wallet</div>
+        </button>
+        <button onClick={() => createWallet('Starknet')} className="btn">
+          <div className="btn-text text-black">Create Starknet wallet</div>
+        </button>
+        <button onClick={() => createWallet('Spark')} className="btn">
+          <div className="btn-text text-black">Create Spark wallet</div>
+        </button>
       </div>
       <div className="mt-4">
         <div className="mb-4">
@@ -160,6 +214,34 @@ export default function Wallets() {
             </div>
           </div>
         )}
+        {/* Extended chains (non-Ethereum/Solana) */}
+        {user &&
+          (() => {
+            const extendedWallets = user.linkedAccounts.filter(
+              (account): account is WalletWithMetadata =>
+                account.type === 'wallet' &&
+                account.chainType !== 'ethereum' &&
+                account.chainType !== 'solana',
+            );
+            if (extendedWallets.length === 0) return null;
+            return (
+              <div className="mb-4">
+                <h2 className="text-xl font-semibold mb-2">Other chains</h2>
+                <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2">
+                  {extendedWallets.map((wallet, index) => (
+                    <div key={`${wallet.chainType}-${wallet.address}`} className="wallet-container">
+                      <h3 className="wallet-header capitalize">
+                        {wallet.chainType} wallet {index + 1}
+                      </h3>
+                      <p className="wallet-address">
+                        <span className="break-all">{wallet.address}</span>
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            );
+          })()}
       </div>
     </div>
   );
