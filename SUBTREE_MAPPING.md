@@ -11,24 +11,24 @@ This document maps the current local directory names to their corresponding GitH
 | privy-flutter-starter | https://github.com/privy-io/flutter-starter | main |
 | privy-next-starter | https://github.com/privy-io/create-next-app | main |
 | privy-react-starter | https://github.com/privy-io/create-react-app | main |
-| privy-react-whitelabel | https://github.com/privy-io/whitelabel-starter | main |
+| privy-react-whitelabel-starter | https://github.com/privy-io/whitelabel-starter | main |
 | privy-swift-auth0 | https://github.com/privy-io/privy-auth0-ios-example | main |
-| use-case-examples/privy-node-telegram-trading-bot | https://github.com/privy-io/telegram-trading-bot-starter | main |
-| use-case-examples/privy-react-chrome-extension | https://github.com/privy-io/chrome-extension-starter | main |
-| use-case-examples/privy-react-cross-app-connect | https://github.com/privy-io/cross-app-connect-demo | main |
-| use-case-examples/privy-react-cross-app-provider | https://github.com/privy-io/cross-app-provider-demo | main |
-| use-case-examples/privy-react-ecosystem-sdk-starter | https://github.com/privy-io/ecosystem-sdk-starter | main |
-| use-case-examples/privy-react-farcaster | https://github.com/privy-io/farcaster-demo | main |
-| use-case-examples/privy-react-fiat-onramp | https://github.com/privy-io/fiat-onramp-demo | main |
-| use-case-examples/privy-react-frames | https://github.com/privy-io/privy-frames-demo | main |
-| use-case-examples/privy-react-frames-v2 | https://github.com/privy-io/privy-frames-v2-demo | main |
-| use-case-examples/privy-react-funding | https://github.com/privy-io/funding-demo | main |
-| use-case-examples/privy-react-permissionless | https://github.com/privy-io/permissionless-example | main |
-| use-case-examples/privy-react-pwa | https://github.com/privy-io/create-privy-pwa | main |
-| use-case-examples/privy-react-session-keys | https://github.com/privy-io/session-keys-example | main |
-| use-case-examples/privy-react-smart-wallets | https://github.com/privy-io/smart-wallets-starter | main |
-| use-case-examples/privy-react-solana | https://github.com/privy-io/create-solana-next-app | main |
-| use-case-examples/privy-react-wagmi | https://github.com/privy-io/wagmi-demo | main |
+| examples/privy-node-telegram-trading-bot | https://github.com/privy-io/telegram-trading-bot-starter | main |
+| examples/privy-react-chrome-extension | https://github.com/privy-io/chrome-extension-starter | main |
+| examples/privy-react-cross-app-connect | https://github.com/privy-io/cross-app-connect-demo | main |
+| examples/privy-react-cross-app-provider | https://github.com/privy-io/cross-app-provider-demo | main |
+| examples/privy-react-ecosystem-sdk-starter | https://github.com/privy-io/ecosystem-sdk-starter | main |
+| examples/privy-react-farcaster | https://github.com/privy-io/farcaster-demo | main |
+| examples/privy-react-fiat-onramp | https://github.com/privy-io/fiat-onramp-demo | main |
+| examples/privy-react-frames | https://github.com/privy-io/privy-frames-demo | main |
+| examples/privy-react-frames-v2 | https://github.com/privy-io/privy-frames-v2-demo | main |
+| examples/privy-react-funding | https://github.com/privy-io/funding-demo | main |
+| examples/privy-react-permissionless | https://github.com/privy-io/permissionless-example | main |
+| examples/privy-react-pwa | https://github.com/privy-io/create-privy-pwa | main |
+| examples/privy-react-session-keys | https://github.com/privy-io/session-keys-example | main |
+| examples/privy-react-smart-wallets | https://github.com/privy-io/smart-wallets-starter | main |
+| examples/privy-react-solana | https://github.com/privy-io/create-solana-next-app | main |
+| examples/privy-react-wagmi | https://github.com/privy-io/wagmi-demo | main |
 
 ## Notes
 

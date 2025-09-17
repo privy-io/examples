@@ -4,18 +4,15 @@
 
 **Comprehensive collection of Privy starter repos and integration examples**
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![npm](https://img.shields.io/npm/v/@privy-io/react-auth.svg)](https://www.npmjs.com/package/@privy-io/react-auth)
-
 </div>
 
-Welcome to the official Privy examples monorepo! This is your one-stop destination for starter templates, integration demos, and best practices for building with [Privy](https://privy.io).
+Welcome to the official Privy examples monorepo! This is your one-stop destination for starter templates, integration demos.
 
 ## Repository Structure
 
-This monorepo is organized with **core starter templates** at the top level and **use case examples** organized by SDK in the `use-case-examples/` directory.
+This monorepo is organized with **core starter templates** at the top level and **examples** showcasing specific features or third party integrations.
 
-## 🚀 Core Starter Repositories
+## Core Starter Repositories
 
 Perfect starting points for new projects. Each includes authentication, wallet connection, and the essential "sign message" experience.
 
@@ -29,7 +26,7 @@ Perfect starting points for new projects. Each includes authentication, wallet c
 | [`privy-react-whitelabel`](./privy-react-whitelabel) | Custom UI without Privy components |
 | [`privy-swift-auth0`](./privy-swift-auth0) | iOS app with Auth0 + Privy integration |
 
-## 📚 Use Case Examples
+## Examples
 
 Focused examples showcasing specific Privy features and integrations.
 
@@ -51,30 +48,3 @@ Focused examples showcasing specific Privy features and integrations.
 | [`privy-react-solana`](./use-case-examples/privy-react-solana) | Solana blockchain integration |
 | [`privy-react-wagmi`](./use-case-examples/privy-react-wagmi) | Wagmi integration for Ethereum |
 | [`privy-node-telegram-trading-bot`](./use-case-examples/privy-node-telegram-trading-bot) | Telegram trading bot with Solana |
-
-## Getting Started
-
-1. **Choose a starter template** from the top-level directories based on your platform
-2. **Explore use-case examples** in the `use-case-examples/` directory for specific functionality
-3. **Follow the README** in each individual project for setup instructions
-
-## Updating from Upstream
-
-This repository uses git subtrees to track the original Privy repositories. To pull updates from upstream:
-
-```bash
-# For core starters
-git subtree pull --prefix=privy-next-starter https://github.com/privy-io/create-next-app app-router --squash
-
-# For use-case examples  
-git subtree pull --prefix=use-case-examples/privy-react-smart-wallets https://github.com/privy-io/smart-wallets-starter main --squash
-```
-
-See `SUBTREE_MAPPING.md` for the complete list of repository mappings.
-
-## Repository Structure Benefits
-
-- **Clear separation**: Core starters vs feature-specific examples
-- **Easy discovery**: Related functionality grouped together
-- **Scalable**: New features can be added to appropriate categories
-- **Maintainable**: Each category has focused, related examples
