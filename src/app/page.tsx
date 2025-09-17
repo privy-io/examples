@@ -23,16 +23,16 @@ function Home() {
   }
 
   return (
-    <div className="bg-[#E0E7FF66] max-h-[100vh] overflow-hidden">
+    <div className="bg-[#E0E7FF66] md:max-h-[100vh] md:overflow-hidden">
       <Header />
       {authenticated ? (
-        <section className="w-full flex flex-row h-[calc(100vh-60px)]">
+        <section className="w-full flex flex-col md:flex-row md:h-[calc(100vh-60px)]">
           <div className="flex-grow overflow-y-auto h-full p-4 pl-8">
             <button className="button" onClick={logout}>
               <ArrowLeftIcon className="h-4 w-4" strokeWidth={2} /> Logout
             </button>
 
-            <div className="">
+            <div>
               <CreateAWallet />
               <FundWallet />
               <LinkAccounts />
@@ -46,7 +46,7 @@ function Home() {
           <UserObject />
         </section>
       ) : (
-        <section className="w-full flex flex-reow justify-center items-center h-[calc(100vh-60px)]">
+        <section className="w-full flex flex-row justify-center items-center h-[calc(100vh-60px)]">
           <button className="button " onClick={login}>
             Login
           </button>
@@ -65,6 +65,7 @@ function Home() {
         pauseOnHover
         limit={1}
         aria-label="Toast notifications"
+        style={{ top: 58 }}
       />
     </div>
   );
