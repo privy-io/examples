@@ -6,12 +6,6 @@ This example showcases how to get started using Solana with Privy's React SDK in
 
 [View Demo]({{DEPLOY_URL}})
 
-## Prerequisites
-
-- Node.js 18+
-- pnpm 9+
-- A Privy account and app created in the [Privy Dashboard](https://dashboard.privy.io)
-
 ## Quick Start
 
 ### 1. Clone the Project
