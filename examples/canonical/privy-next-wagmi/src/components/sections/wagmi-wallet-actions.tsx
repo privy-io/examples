@@ -151,11 +151,11 @@ const WalletActions = () => {
 
   return (
     <Section
-      name="Wallet actions"
+      name="Wagmi wallet actions"
       description={
-        "Sign messages, typed data, raw hashes, and transactions, send transactions for both EVM and Solana wallets. Seamless experience with Privy embedded wallets."
+        "Using Wagmi, we can sign messages, typed data, and send transactions creating a seamless experience across Privy embedded wallets and externally connected wallets."
       }
-      filepath="src/components/sections/wallet-actions"
+      filepath="src/components/sections/wagmi-wallet-actions"
       actions={availableActions}
     >
       <div className="mb-4">

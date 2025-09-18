@@ -35,15 +35,14 @@ function Home() {
 
             <div>
               <CreateAWallet />
-              <FundWallet />
-              <LinkAccounts />
-              <UnlinkAccounts />
-              {/* <WalletActions /> */}
               <WagmiWalletActions />
+              {/* <FundWallet />
+              <LinkAccounts />
+              <UnlinkAccounts /> 
+              <WalletActions />
               <SessionSigners />
               <WalletManagement />
-
-              <MFA />
+              <MFA />  */}
             </div>
           </div>
           <UserObject />
