@@ -10,6 +10,7 @@ This document maps the current local directory names to their corresponding GitH
 | privy-expo-starter | https://github.com/privy-io/expo-starter | main |
 | privy-flutter-starter | https://github.com/privy-io/flutter-starter | main |
 | privy-next-starter | https://github.com/privy-io/create-next-app | main |
+| privy-node-starter | https://github.com/privy-io/node-starter | main |
 | privy-react-starter | https://github.com/privy-io/create-react-app | main |
 | privy-react-whitelabel-starter | https://github.com/privy-io/whitelabel-starter | main |
 | privy-swift-auth0 | https://github.com/privy-io/privy-auth0-ios-example | main |
