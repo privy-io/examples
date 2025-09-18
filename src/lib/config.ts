@@ -1,0 +1,16 @@
+export const PRIVY_APP_ID = process.env.PRIVY_APP_ID!;
+export const PRIVY_APP_SECRET = process.env.PRIVY_APP_SECRET!;
+
+export const TREASURY_WALLET_ID = process.env.TREASURY_WALLET_ID!;
+export const TREASURY_WALLET_ADDRESS = process.env.TREASURY_WALLET_ADDRESS!;
+export const TREASURY_AUTHORIZATION_KEY =
+  process.env.TREASURY_AUTHORIZATION_KEY!;
+
+export const TREASURY_OWNER_ID = process.env.TREASURY_OWNER_ID!;
+
+export const TREASURY_QUORUM_PRIVATE_KEY =
+  process.env.TREASURY_QUORUM_PRIVATE_KEY!;
+export const TREASURY_QUORUM_PUBLIC_KEY =
+  process.env.TREASURY_QUORUM_PUBLIC_KEY!;
+
+export const ALLOWLIST_USDC_POLICY_ID = process.env.ALLOWLIST_USDC_POLICY_ID!;
