@@ -5,7 +5,12 @@
 
 version: 2
 updates:
-  - package-ecosystem: "" # See documentation for possible values
-    directory: "/" # Location of package manifests
+  - package-ecosystem: "npm" # See documentation for possible values
+    directories: # Location of package manifests
+      - "**/*" # Location of package manifests
+    allow:
+      - dependency-name: "@privy-io/react-auth"
+      - dependency-name: "@privy-io/server-auth"
+      - dependency-name: "@privy-io/js-sdk-core"
     schedule:
       interval: "weekly"
