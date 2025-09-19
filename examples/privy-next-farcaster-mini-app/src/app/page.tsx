@@ -60,10 +60,10 @@ function Home() {
   }
 
   return (
-    <div className="bg-[#E0E7FF66] md:max-h-[100vh] md:overflow-hidden">
-      <Header />
+    <div className={`${authenticated ? 'bg-[#E0E7FF66] md:max-h-[100vh] md:overflow-hidden' : 'bg-transparent h-screen overflow-hidden'}`}>
+      <Header authenticated={authenticated} />
       {authenticated ? (
-        <section className="w-full flex flex-col md:flex-row md:h-[calc(100vh-60px)]">
+        <section className="w-full flex flex-col md:flex-row h-screen pt-[60px]">
           <div className="flex-grow overflow-y-auto h-full p-4 pl-8">
             <button className="button" onClick={logout}>
               <ArrowLeftIcon className="h-4 w-4" strokeWidth={2} /> Logout
@@ -83,7 +83,7 @@ function Home() {
           <UserObject />
         </section>
       ) : (
-        <section className="w-full flex flex-row justify-center items-center h-[calc(100vh-60px)] relative">
+        <section className="w-full flex flex-row justify-center items-center h-screen relative">
           <Image
             src="./BG.svg"
             alt="Background"
