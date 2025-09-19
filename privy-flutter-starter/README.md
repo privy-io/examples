@@ -1,36 +1,97 @@
-# 🧪 PrivySDK Flutter Starter App
+# Privy + Flutter Starter
 
-This is a minimal Flutter starter app demonstrating the base functionality of the [PrivySDK](https://docs.privy.io/basics/flutter/quickstart) for authentication and user management.
+This example showcases how to get started using Privy's Flutter SDK inside a Flutter application.
 
-## 🚀 Features
+## Getting Started
 
-- PrivySDK setup and initialization
-- Basic email authentication flow
-- Cross-platform support (iOS & Android)
-- Wallet creation (Solana and Ethereum)
-- Signing messages with the wallets
+### 1. Clone the Project
 
+```bash
+mkdir -p privy-flutter-starter && curl -L https://github.com/privy-io/privy-examples/archive/main.tar.gz | tar -xz --strip=2 -C privy-flutter-starter privy-examples-main/privy-flutter-starter && cd privy-flutter-starter
+```
 
-## 🛠 Getting Started
+### 2. Install Dependencies
 
-1.  **Clone the repo:**
-    ```bash
-    git clone https://github.com/privy-io/flutter-starter.git
-    cd privy_flutter_starter
-    ```
+```bash
+flutter pub get
+```
 
-2.  **Set up your environment variables:**
-    This project uses a `.env` file to manage your Privy App ID and Client ID.
-    Create a file named `.env` in the root of the `privy_flutter_starter` directory and add your Privy credentials like this:
-    ```env
-    PRIVY_APP_ID=YOUR_PRIVY_APP_ID
-    PRIVY_CLIENT_ID=YOUR_PRIVY_CLIENT_ID
-    ```
-    Replace `YOUR_PRIVY_APP_ID` and `YOUR_PRIVY_CLIENT_ID` with your actual credentials from the [Privy Dashboard](https://dashboard.privy.io).
+### 3. Configure Environment
 
-3.  **Run the app:**
-    ```bash
-    flutter run
-    ```
+Create a `.env` file in the root directory and configure your Privy app credentials:
 
-4.  **Have fun building with Privy!** 🎉
+```bash
+touch .env
+```
+
+Update `.env` with your Privy app credentials:
+
+```env
+PRIVY_APP_ID=your_app_id_here
+PRIVY_CLIENT_ID=your_client_id_here
+```
+
+**Important:** Get your credentials from the [Privy Dashboard](https://dashboard.privy.io).
+
+### 4. Start Development Server
+
+```bash
+flutter run
+```
+
+This will launch the app on your connected device or emulator.
+
+## Core Functionality
+
+### 1. Login with Privy
+
+Login or sign up using Privy's authentication flow for Flutter.
+
+[`lib/main.dart`](./lib/main.dart)
+```dart
+import 'package:privy_flutter/privy_flutter.dart';
+
+final privy = PrivyManager().privy;
+// Authentication handled through Privy's Flutter screens
+```
+
+### 2. Create Multi-Chain Wallets
+
+Programmatically create embedded wallets for Ethereum and Solana.
+
+[`lib/features/authenticated/widgets/ethereum_wallets_widget.dart`](./lib/features/authenticated/widgets/ethereum_wallets_widget.dart)
+```dart
+import 'package:privy_flutter/privy_flutter.dart';
+
+// Create Ethereum wallet
+await privy.createEthereumWallet();
+
+// Create Solana wallet  
+await privy.createSolanaWallet();
+```
+
+### 3. Send Transactions
+
+Send transactions on Ethereum using Flutter SDK's RPC methods.
+
+[`lib/features/wallet/eth_wallet_screen.dart`](./lib/features/wallet/eth_wallet_screen.dart)
+```dart
+import 'package:privy_flutter/privy_flutter.dart';
+
+final request = EthereumRpcRequest.ethSendTransaction(
+  jsonEncode({
+    "from": wallet.address,
+    "to": toAddress,
+    "value": weiHex,
+    "chainId": "0xAA36A7",
+  }),
+);
+final result = await wallet.provider.request(request);
+```
+
+## Relevant Links
+
+- [Privy Dashboard](https://dashboard.privy.io)
+- [Privy Documentation](https://docs.privy.io)
+- [Flutter SDK](https://www.npmjs.com/package/privy_flutter)
+- [Flutter Documentation](https://flutter.dev/docs)

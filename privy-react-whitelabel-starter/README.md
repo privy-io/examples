@@ -1,53 +1,114 @@
-# Privy Whitelabel Starter
+# Privy + Whitelabel Next.js Starter
 
-This is a template for integrating whitelabel [**Privy**](https://www.privy.io/) into a [NextJS](https://nextjs.org/) project. Check out the deployed app [here](https://whitelabel.privy.io/)!
+This example showcases how to get started using Privy's React SDK inside a React + Vite application.Privy’s frontend SDKs let you fully customize embedded wallet experiences allowing you to match wallet flows to your app’s look and feel.
 
-This demo uses NextJS's [App Router](https://nextjs.org/docs/app).
+## Live Demo
 
-## Setup Privy App
+[View Demo](https://whitelabel.privy.io/)
 
-1. Enable all the login methods you want to use in the [dashboard](https://dashboard.privy.io/apps?page=login-methods).
+## Getting Started
 
-2. [optional] Enable guest accounts in the [dashboard](https://dashboard.privy.io/apps?page=settings) under Settings > Advanced settings > Guest accounts.
+### 1. Clone the Project
 
-3. Enable smart wallets in the [dashboard](https://dashboard.privy.io/apps?page=embedded&tab=smart-wallets) or remove <SmartWalletProvider/> in app/providers if you do not wish to use them.
-
-## Setup Repository
-
-1. Clone this repository and open it in your terminal.
-
-```sh
-git clone https://github.com/privy-io/whitelabel-starter.git
+```bash
+mkdir -p privy-react-whitelabel-starter && curl -L https://github.com/privy-io/privy-examples/archive/main.tar.gz | tar -xz --strip=2 -C privy-react-whitelabel-starter privy-examples-main/privy-react-whitelabel-starter && cd privy-react-whitelabel-starter
 ```
 
-2. Install the necessary dependencies (including [Privy Auth](https://www.npmjs.com/package/@privy-io/react-auth)) with `yarn`.
+### 2. Install Dependencies
 
-```sh
-yarn install
+```bash
+npm install
 ```
 
-3. Initialize your environment variables by copying the `.env.example` file to an `.env.local` file. Then, in `.env.local`, [paste your Privy App ID from the dashboard](https://docs.privy.io/guide/dashboard/api-keys).
+### 3. Configure Environment
 
-```sh
-# In your terminal, create .env.local from .env.example
+Copy the example environment file and configure your Privy app credentials:
+
+```bash
 cp .env.example .env.local
-
-# Add your Privy App ID to .env.local
-NEXT_PUBLIC_PRIVY_APP_ID=<your-privy-app-id>
 ```
 
-## Building locally
+Update `.env.local` with your Privy app credentials:
 
-In your project directory, run `yarn dev`. You can now visit http://localhost:3000 to see your app and login with Privy!
+```env
+# Public - Safe to expose in the browser
+NEXT_PUBLIC_PRIVY_APP_ID=your_app_id_here
+```
 
-## Check out:
+**Important:** Get your credentials from the [Privy Dashboard](https://dashboard.privy.io).
 
-- `app/providers.tsx` for how to use the `PrivyProvider` and initialize it with your Privy App ID
-- `app/components/Login.tsx` for whitelabel login methods
-- `app/components/Wallets.tsx` for how to create wallets, send transactions and sign messages in a whitelabeled experience
+### 4. Configure Dashboard Settings
 
-## Optional features:
+1. Enable desired login methods in the [Privy Dashboard](https://dashboard.privy.io/apps?page=login-methods)
+2. [Optional] Enable guest accounts under Settings > Advanced settings > Guest accounts
+3. [Optional] Enable smart wallets or remove SmartWalletProvider in `app/providers.tsx`
 
-- OAuth methods can be enabled on the dashboard [here](https://dashboard.privy.io/apps?page=login-methods&logins=socials)
+### 5. Start Development Server
 
-**Check out [our docs](https://docs.privy.io/) for more guidance around using Privy in your app!**
+```bash
+npm run dev
+```
+
+Open [http://localhost:3000](http://localhost:3000) in your browser to see the application.
+
+## Core Functionality
+
+### 1. Custom Authentication UI
+
+Build custom login interfaces with multiple authentication methods.
+
+[`app/components/Login.tsx`](./app/components/Login.tsx)
+```tsx
+import { useLoginWithEmail, useLoginWithSms, useGuestAccounts } from "@privy-io/react-auth";
+
+const { sendCode: sendCodeEmail, loginWithCode: loginWithCodeEmail } = useLoginWithEmail();
+const { sendCode: sendCodeSms, loginWithCode: loginWithCodeSms } = useLoginWithSms();
+const { createGuestAccount } = useGuestAccounts();
+
+// Custom email login
+sendCodeEmail({ email });
+loginWithCodeEmail({ code: codeEmail });
+```
+
+### 2. Create Multi-Chain Wallets
+
+Custom wallet creation interfaces for multiple blockchains.
+
+[`app/components/Wallets.tsx`](./app/components/Wallets.tsx)
+```tsx
+import { usePrivy, useSolanaWallets } from "@privy-io/react-auth";
+import { useCreateWallet as useCreateExtendedWallet } from "@privy-io/react-auth/extended-chains";
+
+const { createWallet: createEthereumWallet } = usePrivy();
+const { createWallet: createSolanaWallet } = useSolanaWallets();
+const { createWallet: createExtendedWallet } = useCreateExtendedWallet();
+
+// Create wallets with custom UI
+createEthereumWallet({ createAdditional: true });
+createSolanaWallet();
+createExtendedWallet({ chainType: "cosmos" });
+```
+
+### 3. Custom Wallet Actions
+
+Custom transaction interfaces with whitelabel design.
+
+[`app/components/EthereumWallet.tsx`](./app/components/EthereumWallet.tsx)
+```tsx
+import { useSendTransaction, useSignMessage } from "@privy-io/react-auth";
+
+const { sendTransaction } = useSendTransaction();
+const { signMessage } = useSignMessage();
+
+// Custom transaction UI
+const txHash = await sendTransaction(
+  { to: recipientAddress, value: amount },
+  { address: wallet.address }
+);
+```
+## Relevant Links
+
+- [Privy Dashboard](https://dashboard.privy.io)
+- [Privy Documentation](https://docs.privy.io)
+- [React SDK](https://www.npmjs.com/package/@privy-io/react-auth)
+- [Next.js Documentation](https://nextjs.org/docs)

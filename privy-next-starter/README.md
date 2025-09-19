@@ -1,36 +1,117 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Privy + Next.js Starter
+
+This example showcases how to get started using Privy's React SDK inside a Next.js application.
+
+## Live Demo
+
+[View Demo]({{DEPLOY_URL}})
 
 ## Getting Started
 
-First, run the development server:
+### 1. Clone the Project
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+mkdir -p privy-next-starter && curl -L https://github.com/privy-io/privy-examples/archive/main.tar.gz | tar -xz --strip=2 -C privy-next-starter privy-examples-main/privy-next-starter && cd privy-next-starter
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2. Install Dependencies
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+pnpm install
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 3. Configure Environment
 
-## Learn More
+Copy the example environment file and configure your Privy app credentials:
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+cp .env .env.local
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Update `.env.local` with your Privy app credentials:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```env
+# Public - Safe to expose in the browser
+NEXT_PUBLIC_PRIVY_APP_ID=your_app_id_here
+NEXT_PUBLIC_PRIVY_CLIENT_ID=your_client_id_here
+NEXT_PUBLIC_PRIVY_SIGNER_ID=your_signer_id_here
+```
 
-## Deploy on Vercel
+**Important:** Variables prefixed with `NEXT_PUBLIC_` are exposed to the browser. Get your credentials from the [Privy Dashboard](https://dashboard.privy.io).
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### 4. Start Development Server
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+pnpm dev
+```
+
+Open [http://localhost:3000](http://localhost:3000) in your browser to see the application.
+
+## Core Functionality
+
+### 1. Login with Privy
+
+Login or sign up using Privy's pre-built modals.
+
+[`src/app/page.tsx`](./src/app/page.tsx)
+```tsx
+import { usePrivy } from "@privy-io/react-auth";
+const { login } = usePrivy();
+login();
+```
+
+### 2. Create Multi-Chain Wallets
+
+Programmatically create embedded wallets for multiple blockchains. Supports Ethereum, Solana, Bitcoin, and more.
+
+[`src/components/sections/create-a-wallet.tsx`](./src/components/sections/create-a-wallet.tsx)
+```tsx
+import { useCreateWallet, useSolanaWallets } from "@privy-io/react-auth";
+import { useCreateWallet as useCreateWalletExtendedChains } from "@privy-io/react-auth/extended-chains";
+
+const { createWallet: createWalletEvm } = useCreateWallet();
+const { createWallet: createWalletSolana } = useSolanaWallets();
+const { createWallet: createWalletExtendedChains } = useCreateWalletExtendedChains();
+
+// Create Ethereum wallet
+createWalletEvm({ createAdditional: true });
+
+// Create Solana wallet
+createWalletSolana({ createAdditional: true });
+
+// Create Bitcoin/other chain wallets
+createWalletExtendedChains({ chainType: "bitcoin-segwit" });
+```
+
+### 3. Send Transactions
+
+Send transactions on both Ethereum and Solana with comprehensive wallet action support.
+
+[`src/components/sections/wallet-actions.tsx`](./src/components/sections/wallet-actions.tsx)
+```tsx
+import { useSendTransaction } from "@privy-io/react-auth";
+import { useSendTransaction as useSendTransactionSolana } from "@privy-io/react-auth/solana";
+
+const { sendTransaction: sendTransactionEvm } = useSendTransaction();
+const { sendTransaction: sendTransactionSolana } = useSendTransactionSolana();
+
+// Send Ethereum transaction
+const txHash = await sendTransactionEvm(
+  { to: "0xE3070d3e4309afA3bC9a6b057685743CF42da77C", value: 10000 },
+  { address: selectedWallet.address }
+);
+
+// Send Solana transaction
+const receipt = await sendTransactionSolana({
+  transaction: transaction,
+  connection: connection,
+  address: selectedWallet.address,
+});
+```
+
+## Relevant Links
+
+- [Privy Dashboard](https://dashboard.privy.io)
+- [Privy Documentation](https://docs.privy.io)
+- [React SDK](https://www.npmjs.com/package/@privy-io/react-auth)
+- [Next.js Documentation](https://nextjs.org/docs)
