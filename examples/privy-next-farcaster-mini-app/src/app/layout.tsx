@@ -17,7 +17,7 @@ const abcFavorit = localFont({
   display: "swap",
 });
 
-export const appUrl = process.env.NEXT_PUBLIC_URL || "http://localhost:3000";
+const appUrl = process.env.NEXT_PUBLIC_URL || "http://localhost:3000";
 
 const frame = {
   version: "next",

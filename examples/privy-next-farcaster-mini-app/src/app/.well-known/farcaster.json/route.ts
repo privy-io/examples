@@ -1,6 +1,6 @@
-import { appUrl } from "@/app/layout";
 import { NextResponse } from "next/server";
 
+const appUrl = process.env.NEXT_PUBLIC_URL || "http://localhost:3000";
 export async function GET() {
   const manifest = {
     accountAssociation: {
@@ -21,7 +21,6 @@ export async function GET() {
   return NextResponse.json(manifest, {
     headers: {
       "Content-Type": "application/json",
-      "Cache-Control": "public, max-age=3600",
     },
   });
 }
