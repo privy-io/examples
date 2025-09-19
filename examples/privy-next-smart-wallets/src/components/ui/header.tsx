@@ -1,21 +1,32 @@
 // FILE ALTERED FROM CANONICAL STARTER
 import { ArrowRightIcon, ArrowUpRightIcon } from "@heroicons/react/16/solid";
-import { PrivyLogo } from "./privy-logo";
+import Image from "next/image";
 
-export function Header() {
+interface HeaderProps {
+  authenticated: boolean;
+}
+
+export function Header({ authenticated }: HeaderProps) {
   return (
-    <header className="h-[60px] flex flex-row justify-between items-center px-6 border-b bg-white border-[#E2E3F0]">
+    <header className={`fixed top-0 left-0 w-full h-[60px] flex flex-row justify-between items-center px-6 z-50 ${authenticated ? 'bg-white border-b border-[#E2E3F0]' : 'bg-transparent border-none backdrop-blur-none'}`}>
       <div className="flex flex-row items-center gap-2 h-[26px]">
-        <PrivyLogo className="w-[103.48px] h-[23.24px]" />
+        <Image
+          src={authenticated ? "/privy-logo-black.png" : "/privy-logo-white.png"}
+          alt="Privy Logo"
+          width={104}
+          height={23}
+          className="w-[103.48px] h-[23.24px]"
+          priority
+        />
 
-        <div className="text-medium flex h-[22px] items-center justify-center rounded-[11px] border border-primary px-[0.375rem] text-[0.75rem] text-primary">
+        {authenticated && <div className={`text-medium flex h-[22px] items-center justify-center rounded-[11px] border px-[0.375rem] text-[0.75rem] ${authenticated ? 'border-primary text-primary' : 'border-white text-white'}`}>
           Smart Wallets Demo
-        </div>
+        </div>}
       </div>
 
       <div className="flex flex-row justify-end items-center gap-4 h-9">
         <a
-          className="text-primary flex flex-row items-center gap-1 cursor-pointer"
+          className={`flex flex-row items-center gap-1 cursor-pointer ${authenticated ? 'text-primary' : 'text-white'}`}
           href="https://docs.privy.io/basics/react/installation"
           target="_blank"
           rel="noreferrer"
