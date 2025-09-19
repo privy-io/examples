@@ -1,16 +1,6 @@
 # Privy Examples
 
-<div align="center">
-
-**Comprehensive collection of Privy starter repos and integration examples**
-
-</div>
-
-Welcome to the official Privy examples monorepo! This is your one-stop destination for starter templates, integration demos.
-
-## Repository Structure
-
-This monorepo is organized with **core starter templates** at the top level and **examples** showcasing specific features or third party integrations.
+Comprehensive collection of Privy starter repos and integration examples
 
 ## Core Starter Repositories
 
