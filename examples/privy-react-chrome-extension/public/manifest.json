@@ -1,0 +1,22 @@
+{
+  "manifest_version": 3,
+  "name": "Privy React Chrome Extension",
+  "version": "1.0",
+  "description": "Chrome extension with Privy authentication",
+  "permissions": ["identity"],
+  "host_permissions": ["https://auth.privy.io/*"],
+  "action": {
+    "default_popup": "index.html",
+    "default_title": "Privy Extension",
+    "default_icon": "favicon.ico"
+  },
+  "icons": {
+    "16": "favicon.ico",
+    "48": "favicon.ico",
+    "128": "favicon.ico"
+  },
+  "options_page": "options.html",
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'; frame-ancestors 'none';"
+  }
+}
