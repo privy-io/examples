@@ -16,7 +16,7 @@ export function Header({ authenticated }: HeaderProps) {
     >
       <div className="flex flex-row items-center gap-2 h-[26px]">
         <Image
-          src="./privy-logo-black.svg"
+          src={authenticated ? "./privy-logo-black.svg" : "./privy-logo-white.svg"}
           alt="Privy Logo"
           width={104}
           height={23}
