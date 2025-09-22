@@ -4,7 +4,7 @@ Comprehensive collection of Privy starter repos and integration examples
 
 ## Core Starter Repositories
 
-Perfect starting points for new projects. Each includes authentication, wallet connection, and the essential "sign message" experience.
+Perfect starting points for new projects. Each includes authentication, wallet connection, and the essential "sign message" experience. HI
 
 | Repository | Description |
 |------------|-------------|
