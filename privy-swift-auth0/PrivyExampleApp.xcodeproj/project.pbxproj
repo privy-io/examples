@@ -1,0 +1,478 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		11878BA72B579C3E0082464D /* BigInt in Frameworks */ = {isa = PBXBuildFile; productRef = 11878BA62B579C3E0082464D /* BigInt */; };
+		11878BAA2B579C450082464D /* AlertToast in Frameworks */ = {isa = PBXBuildFile; productRef = 11878BA92B579C450082464D /* AlertToast */; };
+		11878BAD2B579D0C0082464D /* WalletView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11878BAC2B579D0C0082464D /* WalletView.swift */; };
+		11878BB02B579D3A0082464D /* PrimaryButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11878BAF2B579D3A0082464D /* PrimaryButtonStyle.swift */; };
+		11878BB22B579D5E0082464D /* RadioButtonItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11878BB12B579D5E0082464D /* RadioButtonItem.swift */; };
+		11878BB42B579D740082464D /* PrimaryTextFieldStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11878BB32B579D740082464D /* PrimaryTextFieldStyle.swift */; };
+		11878BB62B579D860082464D /* HiddenModifer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11878BB52B579D860082464D /* HiddenModifer.swift */; };
+		11878BB82B579DA70082464D /* ConditionalModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11878BB72B579DA70082464D /* ConditionalModifier.swift */; };
+		11878BBA2B579DC80082464D /* SpinnerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11878BB92B579DC80082464D /* SpinnerView.swift */; };
+		252D30052B15648C005AFB7E /* Auth0 in Frameworks */ = {isa = PBXBuildFile; productRef = 252D30042B15648C005AFB7E /* Auth0 */; };
+		252D30072B15650D005AFB7E /* Auth0.plist in Resources */ = {isa = PBXBuildFile; fileRef = 252D30062B15650D005AFB7E /* Auth0.plist */; };
+		252D300C2B1675F1005AFB7E /* Auth0Manager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 252D300B2B1675F1005AFB7E /* Auth0Manager.swift */; };
+		252D300E2B167885005AFB7E /* PrivyManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 252D300D2B167885005AFB7E /* PrivyManager.swift */; };
+		25C091622B1009BC00E97DF2 /* PrivyExampleApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25C091612B1009BC00E97DF2 /* PrivyExampleApp.swift */; };
+		25C091662B1009BC00E97DF2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 25C091652B1009BC00E97DF2 /* Assets.xcassets */; };
+		25C091692B1009BC00E97DF2 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 25C091682B1009BC00E97DF2 /* Preview Assets.xcassets */; };
+		436971C42B16410F0054C210 /* Privy in Frameworks */ = {isa = PBXBuildFile; productRef = 436971C32B16410F0054C210 /* Privy */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		11878BAC2B579D0C0082464D /* WalletView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletView.swift; sourceTree = "<group>"; };
+		11878BAF2B579D3A0082464D /* PrimaryButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrimaryButtonStyle.swift; sourceTree = "<group>"; };
+		11878BB12B579D5E0082464D /* RadioButtonItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioButtonItem.swift; sourceTree = "<group>"; };
+		11878BB32B579D740082464D /* PrimaryTextFieldStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrimaryTextFieldStyle.swift; sourceTree = "<group>"; };
+		11878BB52B579D860082464D /* HiddenModifer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HiddenModifer.swift; sourceTree = "<group>"; };
+		11878BB72B579DA70082464D /* ConditionalModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConditionalModifier.swift; sourceTree = "<group>"; };
+		11878BB92B579DC80082464D /* SpinnerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpinnerView.swift; sourceTree = "<group>"; };
+		252D30062B15650D005AFB7E /* Auth0.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Auth0.plist; sourceTree = "<group>"; };
+		252D300B2B1675F1005AFB7E /* Auth0Manager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Auth0Manager.swift; sourceTree = "<group>"; };
+		252D300D2B167885005AFB7E /* PrivyManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivyManager.swift; sourceTree = "<group>"; };
+		25C0915E2B1009BC00E97DF2 /* PrivyExampleApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PrivyExampleApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		25C091612B1009BC00E97DF2 /* PrivyExampleApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivyExampleApp.swift; sourceTree = "<group>"; };
+		25C091652B1009BC00E97DF2 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		25C091682B1009BC00E97DF2 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		436971C52B1646600054C210 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		25C0915B2B1009BC00E97DF2 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				11878BA72B579C3E0082464D /* BigInt in Frameworks */,
+				11878BAA2B579C450082464D /* AlertToast in Frameworks */,
+				252D30052B15648C005AFB7E /* Auth0 in Frameworks */,
+				436971C42B16410F0054C210 /* Privy in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		11878BAB2B579CF40082464D /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				11878BAC2B579D0C0082464D /* WalletView.swift */,
+				11878BAE2B579D1F0082464D /* Helper */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		11878BAE2B579D1F0082464D /* Helper */ = {
+			isa = PBXGroup;
+			children = (
+				11878BAF2B579D3A0082464D /* PrimaryButtonStyle.swift */,
+				11878BB12B579D5E0082464D /* RadioButtonItem.swift */,
+				11878BB92B579DC80082464D /* SpinnerView.swift */,
+				11878BB32B579D740082464D /* PrimaryTextFieldStyle.swift */,
+				11878BB52B579D860082464D /* HiddenModifer.swift */,
+				11878BB72B579DA70082464D /* ConditionalModifier.swift */,
+			);
+			path = Helper;
+			sourceTree = "<group>";
+		};
+		25C091552B1009BC00E97DF2 = {
+			isa = PBXGroup;
+			children = (
+				25C091602B1009BC00E97DF2 /* PrivyExampleApp */,
+				25C0915F2B1009BC00E97DF2 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		25C0915F2B1009BC00E97DF2 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				25C0915E2B1009BC00E97DF2 /* PrivyExampleApp.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		25C091602B1009BC00E97DF2 /* PrivyExampleApp */ = {
+			isa = PBXGroup;
+			children = (
+				436971C52B1646600054C210 /* Info.plist */,
+				252D30062B15650D005AFB7E /* Auth0.plist */,
+				11878BAB2B579CF40082464D /* Views */,
+				25C091612B1009BC00E97DF2 /* PrivyExampleApp.swift */,
+				252D300B2B1675F1005AFB7E /* Auth0Manager.swift */,
+				252D300D2B167885005AFB7E /* PrivyManager.swift */,
+				25C091652B1009BC00E97DF2 /* Assets.xcassets */,
+				25C091672B1009BC00E97DF2 /* Preview Content */,
+			);
+			path = PrivyExampleApp;
+			sourceTree = "<group>";
+		};
+		25C091672B1009BC00E97DF2 /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				25C091682B1009BC00E97DF2 /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		25C0915D2B1009BC00E97DF2 /* PrivyExampleApp */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 25C0916C2B1009BC00E97DF2 /* Build configuration list for PBXNativeTarget "PrivyExampleApp" */;
+			buildPhases = (
+				25C0915A2B1009BC00E97DF2 /* Sources */,
+				25C0915B2B1009BC00E97DF2 /* Frameworks */,
+				25C0915C2B1009BC00E97DF2 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = PrivyExampleApp;
+			packageProductDependencies = (
+				252D30042B15648C005AFB7E /* Auth0 */,
+				436971C32B16410F0054C210 /* Privy */,
+				11878BA62B579C3E0082464D /* BigInt */,
+				11878BA92B579C450082464D /* AlertToast */,
+			);
+			productName = PrivyExampleApp;
+			productReference = 25C0915E2B1009BC00E97DF2 /* PrivyExampleApp.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		25C091562B1009BC00E97DF2 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1430;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					25C0915D2B1009BC00E97DF2 = {
+						CreatedOnToolsVersion = 14.3.1;
+					};
+				};
+			};
+			buildConfigurationList = 25C091592B1009BC00E97DF2 /* Build configuration list for PBXProject "PrivyExampleApp" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 25C091552B1009BC00E97DF2;
+			packageReferences = (
+				252D30032B15648C005AFB7E /* XCRemoteSwiftPackageReference "Auth0" */,
+				436971C22B16410F0054C210 /* XCRemoteSwiftPackageReference "privy-ios" */,
+				11878BA52B579C3E0082464D /* XCRemoteSwiftPackageReference "BigInt" */,
+				11878BA82B579C450082464D /* XCRemoteSwiftPackageReference "AlertToast" */,
+			);
+			productRefGroup = 25C0915F2B1009BC00E97DF2 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				25C0915D2B1009BC00E97DF2 /* PrivyExampleApp */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		25C0915C2B1009BC00E97DF2 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				25C091692B1009BC00E97DF2 /* Preview Assets.xcassets in Resources */,
+				252D30072B15650D005AFB7E /* Auth0.plist in Resources */,
+				25C091662B1009BC00E97DF2 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		25C0915A2B1009BC00E97DF2 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				11878BB62B579D860082464D /* HiddenModifer.swift in Sources */,
+				252D300C2B1675F1005AFB7E /* Auth0Manager.swift in Sources */,
+				11878BB42B579D740082464D /* PrimaryTextFieldStyle.swift in Sources */,
+				11878BB02B579D3A0082464D /* PrimaryButtonStyle.swift in Sources */,
+				11878BB82B579DA70082464D /* ConditionalModifier.swift in Sources */,
+				11878BB22B579D5E0082464D /* RadioButtonItem.swift in Sources */,
+				11878BBA2B579DC80082464D /* SpinnerView.swift in Sources */,
+				252D300E2B167885005AFB7E /* PrivyManager.swift in Sources */,
+				25C091622B1009BC00E97DF2 /* PrivyExampleApp.swift in Sources */,
+				11878BAD2B579D0C0082464D /* WalletView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		25C0916A2B1009BC00E97DF2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		25C0916B2B1009BC00E97DF2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		25C0916D2B1009BC00E97DF2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"PrivyExampleApp/Preview Content\"";
+				DEVELOPMENT_TEAM = "";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = PrivyExampleApp/Info.plist;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = privy.io.PrivyExampleApp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		25C0916E2B1009BC00E97DF2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"PrivyExampleApp/Preview Content\"";
+				DEVELOPMENT_TEAM = "";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = PrivyExampleApp/Info.plist;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = privy.io.PrivyExampleApp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		25C091592B1009BC00E97DF2 /* Build configuration list for PBXProject "PrivyExampleApp" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				25C0916A2B1009BC00E97DF2 /* Debug */,
+				25C0916B2B1009BC00E97DF2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		25C0916C2B1009BC00E97DF2 /* Build configuration list for PBXNativeTarget "PrivyExampleApp" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				25C0916D2B1009BC00E97DF2 /* Debug */,
+				25C0916E2B1009BC00E97DF2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		11878BA52B579C3E0082464D /* XCRemoteSwiftPackageReference "BigInt" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/attaswift/BigInt";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.1.0;
+			};
+		};
+		11878BA82B579C450082464D /* XCRemoteSwiftPackageReference "AlertToast" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/elai950/AlertToast";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.3.9;
+			};
+		};
+		252D30032B15648C005AFB7E /* XCRemoteSwiftPackageReference "Auth0" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/auth0/Auth0.swift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.0.0;
+			};
+		};
+		436971C22B16410F0054C210 /* XCRemoteSwiftPackageReference "privy-ios" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/privy-io/privy-ios";
+			requirement = {
+				kind = upToNextMinorVersion;
+				minimumVersion = 0.4.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		11878BA62B579C3E0082464D /* BigInt */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 11878BA52B579C3E0082464D /* XCRemoteSwiftPackageReference "BigInt" */;
+			productName = BigInt;
+		};
+		11878BA92B579C450082464D /* AlertToast */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 11878BA82B579C450082464D /* XCRemoteSwiftPackageReference "AlertToast" */;
+			productName = AlertToast;
+		};
+		252D30042B15648C005AFB7E /* Auth0 */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 252D30032B15648C005AFB7E /* XCRemoteSwiftPackageReference "Auth0" */;
+			productName = Auth0;
+		};
+		436971C32B16410F0054C210 /* Privy */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 436971C22B16410F0054C210 /* XCRemoteSwiftPackageReference "privy-ios" */;
+			productName = Privy;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = 25C091562B1009BC00E97DF2 /* Project object */;
+}
