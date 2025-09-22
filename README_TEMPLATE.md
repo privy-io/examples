@@ -1,12 +1,16 @@
-# Privy + {{BLOCKCHAIN_NAME}} {{FRAMEWORK_NAME}} Starter
+# {{CORE_FEATURE_NAME}} + Privy
 
-This example showcases how to get started using {{BLOCKCHAIN_NAME}} with Privy's React SDK inside a {{FRAMEWORK_NAME}} application.
+This example showcases how to get started using {{CORE_FEATURE_DESCRIPTION}} with Privy's React SDK inside a {{FRAMEWORK_NAME}} application.
 
 ## Live Demo
 
 [View Demo]({{DEPLOY_URL}})
 
 ## Quick Start
+
+### 0. Dashboard setup
+- Create an app in the Privy dashboard [here](https://dashboard.privy.io/)
+{{DASHBOARD_SETUP_INSTRUCTIONS}}
 
 ### 1. Clone the Project
 
@@ -55,20 +59,18 @@ Open [http://localhost:3000](http://localhost:3000) in your browser to see the a
 
 ## Core Functionality
 
-### 1. Login with Privy
+### 1. {{SETUP_SECTION_TITLE}}
 
-Login or sign up using Privy's pre-built modals.
+{{SETUP_SECTION_DESCRIPTION}}
 
-[`{{LOGIN_FILE_PATH}}`]({{LOGIN_FILE_PATH}})
+[`{{SETUP_FILE_PATH}}`]({{SETUP_FILE_PATH}})
 ```tsx
-import { usePrivy } from "@privy-io/react-auth"; 
-const { login } = usePrivy();
-login();
+{{SETUP_CODE}}
 ```
 
-### 2. Create a {{BLOCKCHAIN_NAME}} wallet
+### 2. {{WALLET_CREATION_TITLE}}
 
-Programmatically create a {{BLOCKCHAIN_NAME}} embedded wallet for your user. Wallets can also be automatically created on login by configuring your PrivyProvider, learn more [here](https://docs.privy.io/basics/react/advanced/automatic-wallet-creation).
+{{WALLET_CREATION_DESCRIPTION}}
 
 [`{{CREATE_WALLET_FILE_PATH}}`]({{CREATE_WALLET_FILE_PATH}})
 ```tsx

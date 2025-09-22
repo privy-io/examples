@@ -1,36 +1,100 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Funding onramps + Privy
 
-## Getting Started
+This example showcases how to get started using Privy's native wallet funding flows inside a Next.js application.
 
-First, run the development server:
+## Live Demo
+
+[View Demo]({{DEPLOY_URL}})
+
+## Quick Start
+
+### 0. Dashboard setup
+- Create an app in the Privy dashboard [here](https://dashboard.privy.io/)
+- Configure funding settings if needed [here](https://docs.privy.io/recipes/card-based-funding#funding-wallets-with-apple-pay-and-google-pay)
+
+### 1. Clone the Project
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+mkdir -p privy-react-funding && curl -L https://github.com/privy-io/privy-examples/archive/main.tar.gz | tar -xz --strip=3 -C privy-react-funding privy-examples-main/examples/privy-react-funding && cd privy-react-funding
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2. Install Dependencies
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+pnpm install
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 3. Configure Environment
 
-## Learn More
+Copy the example environment file and configure your Privy app credentials:
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+cp .env.example .env.local
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Update `.env.local` with your Privy app credentials:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```env
+# Public - Safe to expose in the browser
+NEXT_PUBLIC_PRIVY_APP_ID=your_app_id_here
 
-## Deploy on Vercel
+# Private - Keep server-side only
+PRIVY_APP_SECRET=your_app_secret_here
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+# Optional: Uncomment if using custom auth URLs or client IDs
+# NEXT_PUBLIC_PRIVY_CLIENT_ID=your_client_id_here
+# NEXT_PUBLIC_PRIVY_AUTH_URL=https://auth.privy.io
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+**Important:** Variables prefixed with `NEXT_PUBLIC_` are exposed to the browser. Keep `PRIVY_APP_SECRET` private and server-side only.
+
+### 4. Start Development Server
+
+```bash
+pnpm dev
+```
+
+Open [http://localhost:3000](http://localhost:3000) in your browser to see the application.
+
+## Core Functionality
+
+### 1. Login with Privy
+
+Login or sign up using Privy's pre-built modals.
+
+[`app/page.tsx`](./app/page.tsx)
+```tsx
+import { usePrivy } from "@privy-io/react-auth"; 
+const { login } = usePrivy();
+login();
+```
+
+### 2. Create Embedded Wallets
+
+Create embedded wallets for your users. Wallets can also be automatically created on login by configuring your PrivyProvider.
+
+[`lib/privy/LoginButton.tsx`](./lib/privy/LoginButton.tsx)
+```tsx
+import { useCreateWallet } from "@privy-io/react-auth";
+const { createWallet } = useCreateWallet();
+createWallet({ createAdditional: true });
+```
+
+### 3. Fund Your Wallet
+
+Fund your wallet using a card, exchange, or external wallet. Privy has bridging integration out of the box powered by Relay.
+
+[`lib/privy/FundingButton.tsx`](./lib/privy/FundingButton.tsx)
+```tsx
+import { useFundWallet, useWallets } from "@privy-io/react-auth";
+const { wallets } = useWallets();
+const { fundWallet } = useFundWallet();
+fundWallet(wallets[0].address, { asset: "USDC", amount: "15" });
+```
+
+## Relevant Links
+
+- [Privy Dashboard](https://dashboard.privy.io)
+- [Privy Documentation](https://docs.privy.io)
+- [React SDK](https://www.npmjs.com/package/@privy-io/react-auth)
+- [Funding Guide](https://docs.privy.io/guide/react/recipes/misc/funding)

@@ -1,51 +1,125 @@
-# Privy x `permissionless` Starter
+# Account Abstraction + Privy
+
+This example showcases how to get started using account abstraction with Privy's React SDK and Permissionless.js inside a Next.js application.
 
 ## Live Demo
 
-[https://permissionless-example.privy.io/](https://permissionless-example.privy.io/)
+[View Demo](https://permissionless-example.privy.io/)
 
-## Intro
+## Quick Start
 
-This is a template for integrating [**Privy**](https://www.privy.io/) and [**`permissionless.js` (Pimlico)**](https://docs.pimlico.io/permissionless) into a [NextJS](https://nextjs.org/) project. Check out the deployed app [here](https://permissionless-example.privy.io/)!
+### 0. Dashboard setup
+- Create an app in the Privy dashboard [here](https://dashboard.privy.io/)
+- Set up a Pimlico project for Base Sepolia [here](https://dashboard.pimlico.io/)
 
-In this demo app, a user can login with their email or Google account, and get a Privy embedded wallet. Once the user has logged in and created an embedded wallet, `permissionless.js` will create a **smart wallet** for the user behind the scenes, which can then be used to incorporate gas sponsorship, batched transactions, and more into your app. 
+### 1. Clone the Project
 
-You can test this by logging into the app and attempting to mint an NFT with your smart wallet; it should cost you no gas!
-
-## Setup
-
-1. Fork this repository, clone it, and open it in your terminal.
-```sh
-git clone https://github.com/<your-github-handle>/permissionless-example
+```bash
+mkdir -p privy-react-permissionless && curl -L https://github.com/privy-io/privy-examples/archive/main.tar.gz | tar -xz --strip=3 -C privy-react-permissionless privy-examples-main/examples/privy-react-permissionless && cd privy-react-permissionless
 ```
 
-2. Install the necessary dependencies (including [Privy](https://www.npmjs.com/package/@privy-io/react-auth) and [Permissionless](https://www.npmjs.com/package/permissionless)) with `npm`.
-```sh
-npm i 
+### 2. Install Dependencies
+
+```bash
+pnpm install
 ```
 
-3. Initialize your environment variables by copying the `.env.example` file to an `.env.local` file. Then, in `.env.local`, paste your **Privy App ID** from the [Privy console](https://console.privy.io) and your **Pimlico Bundler and Paymaster URLs** from the [Pimlico dashboard](https://dashboard.pimlico.io/). This app uses the **Base Sepolia** testnet; you should make sure to apply the same settings to your Pimlico configuration in the dashboard. 
+### 3. Configure Environment
 
-```sh
-# In your terminal, create .env.local from .env.example
+Copy the example environment file and configure your Privy app credentials:
+
+```bash
 cp .env.example .env.local
-
-# Add your Privy App ID to .env.local
-NEXT_PUBLIC_PRIVY_APP_ID=<your-privy-app-id>
-NEXT_PUBLIC_PIMLICO_PAYMASTER_URL=<your-pimlico-paymaster-url>
-NEXT_PUBLIC_PIMLICO_BUNDLER_URL=<your-pimlico-bundler-url>
 ```
 
-## Building locally
+Update `.env.local` with your Privy app credentials and Pimlico configuration:
 
-In your project directory, run `npm run dev`. You can now visit http://localhost:3000 to see your app and login with Privy!
+```env
+# Public - Safe to expose in the browser
+NEXT_PUBLIC_PRIVY_APP_ID=your_app_id_here
 
+# Pimlico Configuration (Base Sepolia)
+# Get these from https://dashboard.pimlico.io/apikeys
+NEXT_PUBLIC_PIMLICO_PAYMASTER_URL=your_pimlico_paymaster_url_here
+NEXT_PUBLIC_PIMLICO_BUNDLER_URL=your_pimlico_bundler_url_here
 
-## Check out:
-- `pages/_app.tsx` for how to set your app up with the `PrivyProvider`
-- `hooks/SmartAccountContext.tsx` for how to deploy a smart account for users, using their Privy embedded wallet as a signer, and how to store it in a React context
-- `pages/dashboard.tsx` for how to use the custom `useSmartAccount` hook to send an NFT minting transaction
+# Private - Keep server-side only
+PRIVY_APP_SECRET=your_app_secret_here
 
-**Check out our [Pimlico integration guide](https://docs.privy.io/guide/frontend/account-abstraction/pimlico) for more guidance!**
+# Optional: Uncomment if using custom auth URLs or client IDs
+# NEXT_PUBLIC_PRIVY_CLIENT_ID=your_client_id_here
+# NEXT_PUBLIC_PRIVY_AUTH_URL=https://auth.privy.io
+```
 
+**Important:** 
+- Variables prefixed with `NEXT_PUBLIC_` are exposed to the browser. Keep `PRIVY_APP_SECRET` private and server-side only.
+- This app uses **Base Sepolia** testnet. Make sure to configure your Pimlico project for Base Sepolia in the [Pimlico dashboard](https://dashboard.pimlico.io/).
 
+### 4. Start Development Server
+
+```bash
+pnpm dev
+```
+
+Open [http://localhost:3000](http://localhost:3000) in your browser to see the application.
+
+## Core Functionality
+
+### 1. Login with Privy
+
+Login or sign up using Privy's pre-built modals.
+
+[`pages/index.tsx`](./pages/index.tsx)
+```tsx
+import { usePrivy } from "@privy-io/react-auth"; 
+const { login } = usePrivy();
+login();
+```
+
+### 2. Create Smart Accounts
+
+Create embedded wallets
+
+[`hooks/SmartAccountContext.tsx`](./hooks/SmartAccountContext.tsx)
+```tsx
+import { useCreateWallet } from "@privy-io/react-auth";
+const { createWallet } = useCreateWallet();
+createWallet({ createAdditional: true });
+```
+
+### 3. Mint NFT with Gas Sponsorship
+
+Create smart accounts with gas sponsorship using Permissionless.js and Pimlico. Users can mint NFTs without paying gas fees.
+
+[`hooks/SmartAccountContext.tsx`](./hooks/SmartAccountContext.tsx)
+```tsx
+import { signerToSafeSmartAccount } from "permissionless/accounts";
+import { createSmartAccountClient } from "permissionless";
+import { createPimlicoBundlerClient, createPimlicoPaymasterClient } from "permissionless/clients/pimlico";
+
+const safeAccount = await signerToSafeSmartAccount(publicClient, {
+  signer: customSigner,
+  safeVersion: '1.4.1',
+  entryPoint: ENTRYPOINT_ADDRESS_V07
+});
+
+const smartAccountClient = createSmartAccountClient({
+  account: safeAccount,
+  entryPoint: ENTRYPOINT_ADDRESS_V07,
+  chain: baseSepolia,
+  bundlerTransport: http(process.env.NEXT_PUBLIC_PIMLICO_BUNDLER_URL),
+  middleware: {
+    sponsorUserOperation: pimlicoPaymaster.sponsorUserOperation,
+    gasPrice: async () => (await pimlicoBundler.getUserOperationGasPrice()).fast,
+  },
+});
+```
+
+## Relevant Links
+
+- [Privy + Account Abstraction integration guide](https://docs.privy.io/recipes/account-abstraction/custom-implementation#safe)
+- [Privy Dashboard](https://dashboard.privy.io)
+- [Privy Documentation](https://docs.privy.io)
+- [React SDK](https://www.npmjs.com/package/@privy-io/react-auth)
+- [Permissionless.js Documentation](https://docs.pimlico.io/permissionless)
+- [Safe Smart Accounts](https://docs.safe.global/)
