@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@heroicons/react": "^2.2.0",
-    "@privy-io/react-auth": "^2.25.0",
+    "@privy-io/react-auth": "^3.0.1",
     "@solana-program/system": "0.7.0",
     "@solana-program/token": "0.5.1",
     "@solana/kit": "2.3.0",
