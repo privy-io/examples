@@ -1,7 +1,5 @@
 # Privy Examples
 
-test
-
 Comprehensive collection of Privy starter repos and integration examples
 
 ## Core Starter Repositories
