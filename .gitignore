@@ -81,6 +81,15 @@ dist
 .cache/
 public
 
+# Allow static assets in starter projects
+!*/public/
+!public/
+# But exclude any build artifacts that might end up in public dirs
+public/**/*.js
+public/**/*.js.map
+public/**/*.d.ts
+public/**/*.d.ts.map
+
 # Vuepress build output
 .vuepress/dist
 
