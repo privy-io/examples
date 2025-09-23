@@ -70,7 +70,7 @@ export default function HomePage() {
 
     if (wallet?.address) {
       setOnrampUrl(
-        `https://buy-sandbox.moonpay.com/?walletAddress=${wallet.address}&currencyCode=${fundingConfig.asset.toLowerCase()}&networkCode=${fundingConfig.chain.name.toLowerCase()}&quoteCurrencyAmount=${fundingConfig.amount}&defaultPaymentMethod=card&apiKey=${process.env.MOONPAY_SECRET_KEY}`,
+        `https://buy-sandbox.moonpay.com/?walletAddress=${wallet.address}&currencyCode=${fundingConfig.asset.toLowerCase()}&networkCode=${fundingConfig.chain.name.toLowerCase()}&quoteCurrencyAmount=${fundingConfig.amount}&defaultPaymentMethod=card&apiKey=${process.env.NEXT_PUBLIC_MOONPAY_API_KEY}`,
       );
     }
   };
@@ -88,7 +88,7 @@ export default function HomePage() {
 
     if (wallet?.address) {
       setOnrampUrl(
-        `https://buy-sandbox.moonpay.com/?walletAddress=${wallet.address}&currencyCode=sol&networkCode=solana&quoteCurrencyAmount=${fundingConfig.amount}&defaultPaymentMethod=card`,
+        `https://buy-sandbox.moonpay.com/?walletAddress=${wallet.address}&currencyCode=sol&networkCode=solana&quoteCurrencyAmount=${fundingConfig.amount}&defaultPaymentMethod=card&apiKey=${process.env.NEXT_PUBLIC_MOONPAY_API_KEY}`,
       );
     }
   };
