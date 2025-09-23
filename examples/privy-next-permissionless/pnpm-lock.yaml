@@ -16,7 +16,7 @@ importers:
         version: 2.2.0(react@18.2.0)
       '@privy-io/react-auth':
         specifier: 2.25.0
-        version: 2.25.0(@solana/web3.js@1.98.4(bufferutil@4.0.9)(encoding@0.1.13)(typescript@5.9.2)(utf-8-validate@5.0.10))(@types/react@18.0.9)(bs58@6.0.0)(bufferutil@4.0.9)(permissionless@0.1.49(viem@2.37.7(bufferutil@4.0.9)(typescript@5.9.2)(utf-8-validate@5.0.10)(zod@3.25.76)))(react-dom@18.3.1(react@18.2.0))(react@18.2.0)(typescript@5.9.2)(use-sync-external-store@1.5.0(react@18.2.0))(utf-8-validate@5.0.10)(zod@3.25.76)
+        version: 2.25.0(@solana/web3.js@1.98.4(bufferutil@4.0.9)(encoding@0.1.13)(typescript@5.9.2)(utf-8-validate@5.0.10))(@types/react@18.0.9)(bs58@6.0.0)(bufferutil@4.0.9)(permissionless@0.1.45(viem@2.37.7(bufferutil@4.0.9)(typescript@5.9.2)(utf-8-validate@5.0.10)(zod@3.25.76)))(react-dom@18.3.1(react@18.2.0))(react@18.2.0)(typescript@5.9.2)(use-sync-external-store@1.5.0(react@18.2.0))(utf-8-validate@5.0.10)(zod@3.25.76)
       '@tailwindcss/forms':
         specifier: ^0.5.7
         version: 0.5.10(tailwindcss@4.1.13)
@@ -30,8 +30,8 @@ importers:
         specifier: latest
         version: 15.5.3(react-dom@18.3.1(react@18.2.0))(react@18.2.0)
       permissionless:
-        specifier: ^0.1.45
-        version: 0.1.49(viem@2.37.7(bufferutil@4.0.9)(typescript@5.9.2)(utf-8-validate@5.0.10)(zod@3.25.76))
+        specifier: 0.1.45
+        version: 0.1.45(viem@2.37.7(bufferutil@4.0.9)(typescript@5.9.2)(utf-8-validate@5.0.10)(zod@3.25.76))
       react:
         specifier: 18.2.0
         version: 18.2.0
@@ -2549,8 +2549,8 @@ packages:
     resolution: {integrity: sha512-gDKb8aZMDeD/tZWs9P6+q0J9Mwkdl6xMV8TjnGP3qJVJ06bdMgkbBlLU8IdfOsIsFz2BW1rNVT3XuNEl8zPAvw==}
     engines: {node: '>=8'}
 
-  permissionless@0.1.49:
-    resolution: {integrity: sha512-blA6Uaj4+FpX4MKSNEqvydguFgHX+t9/EUSilN9QC0ngLCjWNbTE8OX1nPSOp2PvH5H29bVqPOBxGL8cngxBHA==}
+  permissionless@0.1.45:
+    resolution: {integrity: sha512-YJJrNFeP3T7mmfXExZsGz0J8SfOPgYzT3fyRIJtImFcUI2UmnyBQLrFt+BaiIXNogzAQuBvOSi6KKtyBePJ2/Q==}
     peerDependencies:
       viem: '>=2.14.1 <2.18.0'
 
@@ -3979,7 +3979,7 @@ snapshots:
     dependencies:
       viem: 2.37.7(bufferutil@4.0.9)(typescript@5.9.2)(utf-8-validate@5.0.10)(zod@3.25.76)
 
-  '@privy-io/js-sdk-core@0.55.0(bufferutil@4.0.9)(permissionless@0.1.49(viem@2.37.7(bufferutil@4.0.9)(typescript@5.9.2)(utf-8-validate@5.0.10)(zod@3.25.76)))(typescript@5.9.2)(utf-8-validate@5.0.10)(viem@2.37.7(bufferutil@4.0.9)(typescript@5.9.2)(utf-8-validate@5.0.10)(zod@3.25.76))':
+  '@privy-io/js-sdk-core@0.55.0(bufferutil@4.0.9)(permissionless@0.1.45(viem@2.37.7(bufferutil@4.0.9)(typescript@5.9.2)(utf-8-validate@5.0.10)(zod@3.25.76)))(typescript@5.9.2)(utf-8-validate@5.0.10)(viem@2.37.7(bufferutil@4.0.9)(typescript@5.9.2)(utf-8-validate@5.0.10)(zod@3.25.76))':
     dependencies:
       '@ethersproject/abstract-signer': 5.8.0
       '@ethersproject/bignumber': 5.8.0
@@ -3999,7 +3999,7 @@ snapshots:
       set-cookie-parser: 2.7.1
       uuid: 9.0.1
     optionalDependencies:
-      permissionless: 0.1.49(viem@2.37.7(bufferutil@4.0.9)(typescript@5.9.2)(utf-8-validate@5.0.10)(zod@3.25.76))
+      permissionless: 0.1.45(viem@2.37.7(bufferutil@4.0.9)(typescript@5.9.2)(utf-8-validate@5.0.10)(zod@3.25.76))
       viem: 2.37.7(bufferutil@4.0.9)(typescript@5.9.2)(utf-8-validate@5.0.10)(zod@3.25.76)
     transitivePeerDependencies:
       - bufferutil
@@ -4018,7 +4018,7 @@ snapshots:
       - typescript
       - utf-8-validate
 
-  '@privy-io/react-auth@2.25.0(@solana/web3.js@1.98.4(bufferutil@4.0.9)(encoding@0.1.13)(typescript@5.9.2)(utf-8-validate@5.0.10))(@types/react@18.0.9)(bs58@6.0.0)(bufferutil@4.0.9)(permissionless@0.1.49(viem@2.37.7(bufferutil@4.0.9)(typescript@5.9.2)(utf-8-validate@5.0.10)(zod@3.25.76)))(react-dom@18.3.1(react@18.2.0))(react@18.2.0)(typescript@5.9.2)(use-sync-external-store@1.5.0(react@18.2.0))(utf-8-validate@5.0.10)(zod@3.25.76)':
+  '@privy-io/react-auth@2.25.0(@solana/web3.js@1.98.4(bufferutil@4.0.9)(encoding@0.1.13)(typescript@5.9.2)(utf-8-validate@5.0.10))(@types/react@18.0.9)(bs58@6.0.0)(bufferutil@4.0.9)(permissionless@0.1.45(viem@2.37.7(bufferutil@4.0.9)(typescript@5.9.2)(utf-8-validate@5.0.10)(zod@3.25.76)))(react-dom@18.3.1(react@18.2.0))(react@18.2.0)(typescript@5.9.2)(use-sync-external-store@1.5.0(react@18.2.0))(utf-8-validate@5.0.10)(zod@3.25.76)':
     dependencies:
       '@base-org/account': 1.1.1(@types/react@18.0.9)(bufferutil@4.0.9)(react@18.2.0)(typescript@5.9.2)(use-sync-external-store@1.5.0(react@18.2.0))(utf-8-validate@5.0.10)(zod@3.25.76)
       '@coinbase/wallet-sdk': 4.3.2
@@ -4030,7 +4030,7 @@ snapshots:
       '@privy-io/api-base': 1.7.0
       '@privy-io/chains': 0.0.2
       '@privy-io/ethereum': 0.0.2(viem@2.37.7(bufferutil@4.0.9)(typescript@5.9.2)(utf-8-validate@5.0.10)(zod@3.25.76))
-      '@privy-io/js-sdk-core': 0.55.0(bufferutil@4.0.9)(permissionless@0.1.49(viem@2.37.7(bufferutil@4.0.9)(typescript@5.9.2)(utf-8-validate@5.0.10)(zod@3.25.76)))(typescript@5.9.2)(utf-8-validate@5.0.10)(viem@2.37.7(bufferutil@4.0.9)(typescript@5.9.2)(utf-8-validate@5.0.10)(zod@3.25.76))
+      '@privy-io/js-sdk-core': 0.55.0(bufferutil@4.0.9)(permissionless@0.1.45(viem@2.37.7(bufferutil@4.0.9)(typescript@5.9.2)(utf-8-validate@5.0.10)(zod@3.25.76)))(typescript@5.9.2)(utf-8-validate@5.0.10)(viem@2.37.7(bufferutil@4.0.9)(typescript@5.9.2)(utf-8-validate@5.0.10)(zod@3.25.76))
       '@privy-io/public-api': 2.45.0(bufferutil@4.0.9)(typescript@5.9.2)(utf-8-validate@5.0.10)
       '@reown/appkit': 1.8.6(@types/react@18.0.9)(bufferutil@4.0.9)(encoding@0.1.13)(react@18.2.0)(typescript@5.9.2)(utf-8-validate@5.0.10)(zod@3.25.76)
       '@scure/base': 1.2.6
@@ -4067,7 +4067,7 @@ snapshots:
       zustand: 5.0.8(@types/react@18.0.9)(react@18.2.0)(use-sync-external-store@1.5.0(react@18.2.0))
     optionalDependencies:
       '@solana/web3.js': 1.98.4(bufferutil@4.0.9)(encoding@0.1.13)(typescript@5.9.2)(utf-8-validate@5.0.10)
-      permissionless: 0.1.49(viem@2.37.7(bufferutil@4.0.9)(typescript@5.9.2)(utf-8-validate@5.0.10)(zod@3.25.76))
+      permissionless: 0.1.45(viem@2.37.7(bufferutil@4.0.9)(typescript@5.9.2)(utf-8-validate@5.0.10)(zod@3.25.76))
     transitivePeerDependencies:
       - '@azure/app-configuration'
       - '@azure/cosmos'
@@ -7154,7 +7154,7 @@ snapshots:
 
   path-type@4.0.0: {}
 
-  permissionless@0.1.49(viem@2.37.7(bufferutil@4.0.9)(typescript@5.9.2)(utf-8-validate@5.0.10)(zod@3.25.76)):
+  permissionless@0.1.45(viem@2.37.7(bufferutil@4.0.9)(typescript@5.9.2)(utf-8-validate@5.0.10)(zod@3.25.76)):
     dependencies:
       viem: 2.37.7(bufferutil@4.0.9)(typescript@5.9.2)(utf-8-validate@5.0.10)(zod@3.25.76)
 
