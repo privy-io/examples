@@ -4,6 +4,19 @@ import Head from "next/head";
 import { PrivyProvider } from "@privy-io/react-auth";
 import React from "react";
 import { mainnet } from "viem/chains";
+import localFont from "next/font/local";
+
+const inter = localFont({
+  src: "../public/fonts/InterVariable.ttf",
+  variable: "--font-inter",
+  display: "swap",
+});
+
+const abcFavorit = localFont({
+  src: "../public/fonts/ABCFavorit-Medium.woff2",
+  variable: "--font-abc-favorit",
+  display: "swap",
+});
 
 const privyLogo =
   "https://pub-dc971f65d0aa41d18c1839f8ab426dcb.r2.dev/privy.png";
@@ -12,30 +25,6 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <>
       <Head>
-        <link
-          rel="preload"
-          href="/fonts/AdelleSans-Regular.woff"
-          as="font"
-          crossOrigin=""
-        />
-        <link
-          rel="preload"
-          href="/fonts/AdelleSans-Regular.woff2"
-          as="font"
-          crossOrigin=""
-        />
-        <link
-          rel="preload"
-          href="/fonts/AdelleSans-Semibold.woff"
-          as="font"
-          crossOrigin=""
-        />
-        <link
-          rel="preload"
-          href="/fonts/AdelleSans-Semibold.woff2"
-          as="font"
-          crossOrigin=""
-        />
 
         <link rel="icon" href="/favicon.ico" sizes="any" />
 
@@ -45,6 +34,7 @@ function MyApp({ Component, pageProps }: AppProps) {
           content="Demo implementation of Privy with a fiat on-ramp"
         />
       </Head>
+      <div className={`${inter.variable} ${abcFavorit.variable} antialiased`}>
       <PrivyProvider
         appId={process.env.NEXT_PUBLIC_PRIVY_APP_ID || ""}
         config={{
@@ -64,6 +54,7 @@ function MyApp({ Component, pageProps }: AppProps) {
       >
         <Component {...pageProps} />
       </PrivyProvider>
+      </div>
     </>
   );
 }

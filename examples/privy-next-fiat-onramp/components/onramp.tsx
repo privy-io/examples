@@ -68,7 +68,7 @@ export default function OnrampModal({ onrampUrl, onClose }: OnRampModalProps) {
                     <p className="mb-3">
                       This app partners with{" "}
                       <a
-                        className="font-semibold text-indigo-600"
+                        className="font-semibold text-primary"
                         href="https://www.moonpay.com/"
                         target="_blank"
                         rel="noopener noreferrer"
@@ -84,7 +84,7 @@ export default function OnrampModal({ onrampUrl, onClose }: OnRampModalProps) {
                     </p>
                     <p className="mb-3">
                       Click{" "}
-                      <span className="font-semibold text-indigo-600">
+                      <span className="font-semibold text-primary">
                         Continue
                       </span>{" "}
                       to open Moonpay in a new tab.
@@ -93,14 +93,14 @@ export default function OnrampModal({ onrampUrl, onClose }: OnRampModalProps) {
                   <div className="flex w-full gap-x-2 px-4 pb-2">
                     <button
                       type="button"
-                      className="inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-indigo-500 shadow-sm outline outline-1 outline-indigo-500 hover:bg-indigo-50 hover:text-indigo-700"
+                      className="button w-full justify-center"
                       onClick={onClose}
                     >
                       Cancel
                     </button>
                     <button
                       type="button"
-                      className="inline-flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                      className="button-primary w-full justify-center"
                       onClick={onContinue}
                     >
                       Continue

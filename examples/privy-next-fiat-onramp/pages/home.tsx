@@ -4,8 +4,6 @@ import { usePrivy } from "@privy-io/react-auth";
 import Head from "next/head";
 import OnrampModal from "../components/onramp";
 import { ethers } from "ethers";
-import { useFundWallet as useFundEvmWallet } from "@privy-io/react-auth";
-import { useFundWallet as useFundSolanaWallet } from "@privy-io/react-auth/solana";
 import { useWallets } from "@privy-io/react-auth";
 import { useSolanaWallets } from "@privy-io/react-auth/solana";
 import { mainnet } from "viem/chains";
@@ -32,9 +30,6 @@ export default function HomePage() {
   const { wallets: solanaWallets, exportWallet: exportSolanaWallet } =
     useSolanaWallets();
 
-  const { fundWallet: fundEvmWallet } = useFundEvmWallet();
-  const { fundWallet: fundSolanaWallet } = useFundSolanaWallet();
-
   const router = useRouter();
   // Signature produced using `signMessage`
   const [signature, setSignature] = useState<string | null>(null);
@@ -49,7 +44,7 @@ export default function HomePage() {
     try {
       const ethersProvider = new ethers.InfuraProvider(
         "mainnet",
-        process.env.NEXT_PUBLIC_INFURA_API_KEY
+        process.env.NEXT_PUBLIC_INFURA_API_KEY,
       );
       const balanceInWei = await ethersProvider.getBalance(user.wallet.address);
       setEvmBalance(ethers.formatEther(balanceInWei));
@@ -74,7 +69,9 @@ export default function HomePage() {
     };
 
     if (wallet?.address) {
-      await fundEvmWallet(wallet.address, fundingConfig);
+      setOnrampUrl(
+        `https://buy-sandbox.moonpay.com/?walletAddress=${wallet.address}&currencyCode=${fundingConfig.asset.toLowerCase()}&networkCode=${fundingConfig.chain.name.toLowerCase()}&quoteCurrencyAmount=${fundingConfig.amount}&defaultPaymentMethod=card&apiKey=${process.env.MOONPAY_SECRET_KEY}`,
+      );
     }
   };
 
@@ -86,11 +83,13 @@ export default function HomePage() {
     const wallet = solanaWallets[0];
 
     const fundingConfig = {
-      amount: "0.01",
+      amount: "0.1",
     };
 
     if (wallet?.address) {
-      await fundSolanaWallet(wallet.address, fundingConfig);
+      setOnrampUrl(
+        `https://buy-sandbox.moonpay.com/?walletAddress=${wallet.address}&currencyCode=sol&networkCode=solana&quoteCurrencyAmount=${fundingConfig.amount}&defaultPaymentMethod=card`,
+      );
     }
   };
 
@@ -131,38 +130,34 @@ export default function HomePage() {
         <title>Fiat Onramp Demo</title>
       </Head>
 
-      <main className="flex min-h-screen flex-col bg-privy-light-blue px-4 py-6 sm:px-20 sm:py-10">
+      <main className="flex min-h-screen flex-col bg-[#E0E7FF66] px-4 py-6 sm:px-20 sm:py-10">
         <OnrampModal onrampUrl={onrampUrl} onClose={() => setOnrampUrl(null)} />
         {ready && authenticated ? (
           <>
-            <div className="flex flex-row justify-between">
-              <h1 className="text-2xl font-semibold">Fiat Onramp Demo</h1>
+            <div className="flex flex-row justify-between items-center mb-8">
+              <h1 className="text-2xl font-semibold font-abc-favorit">
+                Fiat Onramp Demo
+              </h1>
               <div className="flex flex-row gap-4">
-                <button
-                  onClick={logout}
-                  className="rounded-md bg-violet-200 px-4 py-2 text-sm text-violet-700 hover:text-violet-900"
-                >
+                <button onClick={logout} className="button-outline">
                   Logout
                 </button>
               </div>
             </div>
-            <p className="mt-6 mb-2 text-sm font-bold uppercase text-gray-600">
+            <p className="mb-4 text-sm font-bold uppercase text-gray-600">
               My Embedded Wallet
             </p>
             <div className="flex flex-row flex-wrap gap-4">
               <div>
                 <div className="flex w-[180px] flex-col items-center gap-2 rounded-xl bg-white p-2">
                   <button
-                    className="w-full rounded-md border border-violet-600 px-4 py-2 text-sm text-violet-600 transition-all hover:border-violet-700 hover:text-violet-700 disabled:border-gray-500 disabled:text-gray-500 hover:disabled:text-gray-500"
+                    className="button-outline w-full disabled:opacity-50 disabled:cursor-not-allowed"
                     disabled
                   >
                     {formatAddress(user?.wallet?.address)}
                   </button>
                   <p className="text-sm">Privy wallet</p>
-                  <button
-                    className="w-full rounded-md border-none bg-violet-600 px-4 py-2 text-sm text-white hover:bg-violet-700"
-                    onClick={onSign}
-                  >
+                  <button className="button w-full" onClick={onSign}>
                     Sign message
                   </button>
                 </div>
@@ -182,43 +177,31 @@ export default function HomePage() {
               </div>
               <div className="flex flex-col items-start gap-2 py-2">
                 {evmWallets.length > 0 && (
-                  <button
-                    onClick={onFundEVMWallet}
-                    className="rounded-md border-none bg-violet-600 px-4 py-2 text-sm text-white transition-all hover:bg-violet-700"
-                  >
+                  <button onClick={onFundEVMWallet} className="button">
                     Fund EVM embedded wallet
                   </button>
                 )}
                 {solanaWallets.length > 0 && (
-                  <button
-                    onClick={onFundSolanaWallet}
-                    className="rounded-md border-none bg-violet-600 px-4 py-2 text-sm text-white transition-all hover:bg-violet-700"
-                  >
+                  <button onClick={onFundSolanaWallet} className="button">
                     Fund Solana embedded wallet
                   </button>
                 )}
               </div>
               <div className="flex flex-col items-start gap-2 py-2">
-                <button
-                  onClick={onSend}
-                  className="rounded-md border-none bg-violet-600 px-4 py-2 text-sm text-white transition-all hover:bg-violet-700"
-                >
+                <button onClick={onSend} className="button">
                   Send an EVM transaction
                 </button>
               </div>
               <div className="flex flex-col items-start gap-2 py-2">
                 {evmWallets.length > 0 && (
-                  <button
-                    onClick={() => exportEvmWallet()}
-                    className="rounded-md border-none bg-violet-600 px-4 py-2 text-sm text-white transition-all hover:bg-violet-700"
-                  >
+                  <button onClick={() => exportEvmWallet()} className="button">
                     Export embedded wallet
                   </button>
                 )}
                 {solanaWallets.length > 0 && (
                   <button
                     onClick={() => exportSolanaWallet()}
-                    className="rounded-md border-none bg-violet-600 px-4 py-2 text-sm text-white transition-all hover:bg-violet-700"
+                    className="button"
                   >
                     Export solana wallet
                   </button>
