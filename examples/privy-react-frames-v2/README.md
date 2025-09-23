@@ -27,7 +27,7 @@ git clone https://github.com/<your-github-handle>/privy-frames-v2-demo
 npm i
 ```
 
-4. Initialize your environment variables by copying the contents of `.env.example.local` to a new `.env.local` file, and fill in the required values. You'll need to set a base URL, and your Privy app ID.
+4. Initialize your environment variables by copying the contents of `.env.example` to a new `.env.local` file, and fill in the required values. You'll need to set a base URL, and your Privy app ID.
 
 ```sh
 NEXT_PUBLIC_URL=<insert-the-url-for-your-frame>

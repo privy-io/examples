@@ -13,7 +13,7 @@ git clone git@github.com:privy-io/session-keys-example.git
 cd session-keys-example
 
 # Create .env.local file from example, filling in your Privy App ID and other environment variables.
-cp .env.example.local .env.local
+cp .env.example .env.local
 
 # Install dependencies
 npm i

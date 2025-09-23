@@ -42,14 +42,14 @@ git clone git@github.com:privy-io/fiat-onramp-demo.git
 cd fiat-onramp-demo
 ```
 
-2. Create your `.env.local` file from `.env.local.example`. Fill in your:
+2. Create your `.env.local` file from `.env.example`. Fill in your:
 
 - Privy App ID and App Secret
 - Infura API Key
 - Moonpay Base URL and Moonpay Secret Key
 
 ```
-cp .env.local.example .env.local
+cp .env.example .env.local
 ```
 
 3. Install your dependencies
