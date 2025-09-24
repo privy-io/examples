@@ -18,7 +18,7 @@
   "license": "ISC",
   "dependencies": {
     "@jup-ag/api": "^6.0.40",
-    "@privy-io/server-auth": "^1.20.2",
+    "@privy-io/server-auth": "^1.32.5",
     "@solana/web3.js": "^1.87.6",
     "axios": "^1.8.4",
     "dotenv": "^16.0.0",
