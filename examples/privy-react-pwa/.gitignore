@@ -9,7 +9,8 @@ node_modules
 **/public/sw**
 
 # local env files
-.env.local
+.env*
+!.env.example
 
 # Other
 **.DS_Store**

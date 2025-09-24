@@ -22,7 +22,7 @@ npm i
 Next, create your own env file by running
 
 ```
-cp .env.example.local .env.local
+cp .env.example .env.local
 ```
 
 and add your Privy App ID:
