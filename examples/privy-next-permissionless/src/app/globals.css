@@ -80,3 +80,19 @@ body {
     opacity: 1;
   }
 }
+
+@keyframes blobby-pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.animate-blobby-pulse {
+  animation: blobby-pulse 2s infinite;
+}

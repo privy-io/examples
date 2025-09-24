@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { useWallets } from "@privy-io/react-auth";
+import { useWallets, useConnectWallet } from "@privy-io/react-auth";
 import {
   Config,
   useSendTransaction,
@@ -37,6 +37,17 @@ const WalletActions = () => {
       },
     },
   });
+  const { connectWallet } = useConnectWallet({
+    onSuccess: ({ wallet }) => {
+      showSuccessToast(
+        "Successfully connected wallet: " + wallet.walletClientType,
+      );
+    },
+    onError: (error) => {
+      console.log(error);
+      showErrorToast("Failed to connect wallet");
+    },
+  });
   const { wallets } = useWallets();
   const { setActiveWallet } = useSetActiveWallet();
 
@@ -48,14 +59,14 @@ const WalletActions = () => {
     }
   }, [selectedWallet, setActiveWallet, wallets]);
 
-  const handleSignMessageEvm = async () => {
+  const handleSignMessageEvm = () => {
     if (!selectedWallet.address) {
       showErrorToast("Please select an Ethereum wallet");
       return;
     }
     try {
       const message = "Hello, world!";
-      await signMessage({
+      signMessage({
         message,
         account: selectedWallet.address,
       });
@@ -65,7 +76,7 @@ const WalletActions = () => {
     }
   };
 
-  const handleSendTransactionEvm = async () => {
+  const handleSendTransactionEvm = () => {
     if (!selectedWallet.address) {
       showErrorToast("Please select an Ethereum wallet");
       return;
@@ -76,14 +87,14 @@ const WalletActions = () => {
         value: parseEther("0.001"),
         type: "eip1559",
       };
-      await sendTransaction(transactionRequest);
+      sendTransaction(transactionRequest);
     } catch (error) {
       console.log(error);
       showErrorToast("Failed to send EVM transaction");
     }
   };
 
-  const handleSignTypedData = async () => {
+  const handleSignTypedData = () => {
     if (!selectedWallet.address) {
       showErrorToast("Please select an Ethereum wallet");
       return;
@@ -122,7 +133,7 @@ const WalletActions = () => {
         contents: "Hello, Bob!",
       } as const;
 
-      await signTypedData({
+      signTypedData({
         primaryType: "Mail",
         domain,
         types,
@@ -134,7 +145,20 @@ const WalletActions = () => {
     }
   };
 
+  const handleConnectWallet = () => {
+    try {
+      connectWallet();
+    } catch (error) {
+      console.log(error);
+      showErrorToast("Failed to connect wallet");
+    }
+  };
+
   const availableActions = [
+    {
+      name: "Connect Wallet",
+      function: handleConnectWallet,
+    },
     {
       name: "Sign message (EVM)",
       function: handleSignMessageEvm,

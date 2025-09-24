@@ -5,7 +5,7 @@ type Props = {
 
 export const Alert = ({ href, children }: Props) => {
   return (
-    <a href={href} target="_blank" color="#FF8271">
+    <a href={href} target="_blank" rel="noreferrer" color="#FF8271">
       {children}
     </a>
   );

@@ -1,0 +1,21 @@
+{
+  "name": "Privy x Permissionless Demo",
+  "short_name": "Privy Permissionless",
+  "description": "A demo showcasing Privy authentication with Permissionless smart accounts",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#5B4FFF",
+  "icons": [
+    {
+      "src": "/favicons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "/favicons/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    }
+  ]
+}

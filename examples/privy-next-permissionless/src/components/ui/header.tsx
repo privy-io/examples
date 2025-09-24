@@ -34,7 +34,7 @@ export function Header({ authenticated }: HeaderProps) {
                 : "border-white text-white"
             }`}
           >
-            Next.js Demo
+            Permissionless Demo
           </div>
         )}
       </div>
