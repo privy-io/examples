@@ -25,7 +25,7 @@ pnpm install
 Copy the example environment file and configure your Privy app credentials:
 
 ```bash
-cp .env .env.local
+cp .env.example .env.local
 ```
 
 Update `.env.local` with your Privy app credentials:
@@ -33,7 +33,6 @@ Update `.env.local` with your Privy app credentials:
 ```env
 # Public - Safe to expose in the browser
 NEXT_PUBLIC_PRIVY_APP_ID=your_app_id_here
-NEXT_PUBLIC_PRIVY_CLIENT_ID=your_client_id_here
 NEXT_PUBLIC_PRIVY_SIGNER_ID=your_signer_id_here
 ```
 
