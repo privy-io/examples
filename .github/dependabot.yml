@@ -12,5 +12,9 @@ updates:
       - dependency-name: "@privy-io/react-auth"
       - dependency-name: "@privy-io/server-auth"
       - dependency-name: "@privy-io/js-sdk-core"
+      - dependency-name: "@privy-io/node"
+    ignore:
+      - update-types:
+          - "version-update:semver-major"
     schedule:
       interval: "weekly"
