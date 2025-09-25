@@ -24,7 +24,7 @@ Focused examples showcasing specific Privy features and integrations.
 | ----------------------------------------------------------------------------------- | ------------------------------------- |
 | [`privy-react-chrome-extension`](./examples/privy-react-chrome-extension)           | Browser extension implementation      |
 | [`privy-react-ecosystem-sdk-starter`](./examples/privy-react-ecosystem-sdk-starter) | Build your own ecosystem SDK          |
-| [`privy-react-farcaster`](./examples/privy-react-farcaster)                         | Farcaster social integration          |
+| [`privy-next-farcaster`](./examples/privy-next-farcaster)                           | Farcaster social integration          |
 | [`privy-next-fiat-onramp`](./examples/privy-next-fiat-onramp)                       | Fiat currency on-ramp                 |
 | [`privy-react-frames`](./examples/privy-react-frames)                               | Farcaster Frames integration          |
 | [`privy-react-frames-v2`](./examples/privy-react-frames-v2)                         | Farcaster Frames v2                   |
