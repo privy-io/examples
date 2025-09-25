@@ -45,7 +45,11 @@ const SolanaWallet: React.FC<SolanaWalletProps> = ({wallet, index}) => {
 
   const customSignMessage = async () => {
     try {
-      const signature = await signMessage({message: Buffer.from('Your message here')});
+      const signature = await signMessage({
+        message: Buffer.from('Your message here'),
+        options: {address: wallet.address},
+      });
+
       toast.success(`Message signed successfully! ${signature}`);
     } catch (error: any) {
       toast.error(`Failed to sign message: ${error?.message}`);

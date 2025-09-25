@@ -39,8 +39,10 @@ Update the `app.json` file with your Privy app credentials:
 }
 ```
 
-**Important:** 
+**Important:**
+
 - Configure an app client in your [Privy Dashboard](https://dashboard.privy.io/apps?page=settings&setting=clients)
+- Add 'exp' to Allowed app URL schemas in the mobile client in your [Privy Dashboard](https://dashboard.privy.io/apps?page=settings&setting=clients)
 - For Expo Go development, add `host.exp.Exponent` to Allowed app identifiers in your Dashboard
 - For iOS passkey support, configure the `associatedDomains` and `passkeyAssociatedDomain`
 
@@ -51,8 +53,9 @@ npm start
 ```
 
 This will start the Expo development server. You can then:
+
 - Press `i` for iOS simulator
-- Press `a` for Android emulator  
+- Press `a` for Android emulator
 - Scan QR code with Expo Go app on your device
 
 ## Core Functionality
@@ -62,6 +65,7 @@ This will start the Expo development server. You can then:
 Login or sign up using Privy's pre-built modals optimized for mobile.
 
 [`app/index.tsx`](./app/index.tsx)
+
 ```tsx
 import { usePrivy } from "@privy-io/expo";
 const { user } = usePrivy();
@@ -73,8 +77,12 @@ const { user } = usePrivy();
 Programmatically create embedded wallets for multiple blockchains. Supports Ethereum, Solana, Bitcoin, and more.
 
 [`components/userManagement/Wallets.tsx`](./components/userManagement/Wallets.tsx)
+
 ```tsx
-import { useEmbeddedEthereumWallet, useEmbeddedSolanaWallet } from "@privy-io/expo";
+import {
+  useEmbeddedEthereumWallet,
+  useEmbeddedSolanaWallet,
+} from "@privy-io/expo";
 import { useCreateWallet } from "@privy-io/expo/extended-chains";
 
 const { create: createEthereumWallet } = useEmbeddedEthereumWallet();
@@ -84,7 +92,7 @@ const { createWallet } = useCreateWallet();
 // Create Ethereum wallet
 createEthereumWallet({ createAdditional: true });
 
-// Create Solana wallet  
+// Create Solana wallet
 createSolanaWallet({ createAdditional: true, recoveryMethod: "privy" });
 
 // Create Bitcoin/other chain wallets
@@ -96,6 +104,7 @@ createWallet({ chainType: "bitcoin-segwit" });
 Send transactions on EVM-compatible chains with native mobile UX.
 
 [`components/walletActions/EVMWalletActions.tsx`](./components/walletActions/EVMWalletActions.tsx)
+
 ```tsx
 import { useEmbeddedEthereumWallet } from "@privy-io/expo";
 
@@ -106,11 +115,13 @@ const provider = await wallet?.getProvider?.();
 // Sign and send transaction
 const response = await provider.request({
   method: "eth_sendTransaction",
-  params: [{
-    from: wallet.address,
-    to: "0x0000000000000000000000000000000000000000",
-    value: "1",
-  }],
+  params: [
+    {
+      from: wallet.address,
+      to: "0x0000000000000000000000000000000000000000",
+      value: "1",
+    },
+  ],
 });
 ```
 

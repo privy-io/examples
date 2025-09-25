@@ -118,7 +118,6 @@ export default function LinkAccounts() {
       >
         <Text>Link Email</Text>
         <View style={{ display: "flex", flexDirection: "row", gap: 10 }}>
-          {" "}
           <TextInput
             value={email}
             onChangeText={setEmail}
@@ -197,7 +196,7 @@ export default function LinkAccounts() {
             title="Link Code"
             onPress={() => linkWithCodeSMS({ code: smsCode, phone })}
           />
-        </View>{" "}
+        </View>
       </View>
       <Button title="Link Farcaster" onPress={() => linkWithFarcaster({})} />
       {error && <Text style={{ color: "red" }}>Error: {error}</Text>}
