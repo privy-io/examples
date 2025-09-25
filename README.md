@@ -29,7 +29,7 @@ Focused examples showcasing specific Privy features and integrations.
 | [`privy-react-frames`](./examples/privy-react-frames)                               | Farcaster Frames integration          |
 | [`privy-react-frames-v2`](./examples/privy-react-frames-v2)                         | Farcaster Frames v2                   |
 | [`privy-next-funding`](./examples/privy-next-funding)                               | Privy funding hooks showcase          |
-| [`privy-react-permissionless`](./examples/privy-react-permissionless)               | Permissionless.js integration         |
+| [`privy-next-permissionless`](./examples/privy-next-permissionless)                 | Permissionless.js integration         |
 | [`privy-react-pwa`](./examples/privy-react-pwa)                                     | Progressive Web App                   |
 | [`privy-react-session-keys`](./examples/privy-react-session-keys)                   | Account abstraction with session keys |
 | [`privy-next-smart-wallets`](./examples/privy-next-smart-wallets)                   | Smart wallets starter template        |
