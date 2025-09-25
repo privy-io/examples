@@ -7,7 +7,7 @@ This example showcases how to get started using Privy's Flutter SDK inside a Flu
 ### 1. Clone the Project
 
 ```bash
-mkdir -p privy-flutter-starter && curl -L https://github.com/privy-io/privy-examples/archive/main.tar.gz | tar -xz --strip=2 -C privy-flutter-starter privy-examples-main/privy-flutter-starter && cd privy-flutter-starter
+npx gitpick privy-io/examples/tree/main/privy-flutter-starter && cd privy-flutter-starter
 ```
 
 ### 2. Install Dependencies
@@ -66,7 +66,7 @@ import 'package:privy_flutter/privy_flutter.dart';
 // Create Ethereum wallet
 await privy.createEthereumWallet();
 
-// Create Solana wallet  
+// Create Solana wallet
 await privy.createSolanaWallet();
 ```
 

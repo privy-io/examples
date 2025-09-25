@@ -11,7 +11,7 @@ This example showcases how to get started using Wagmi with Privy's React SDK ins
 ### 1. Clone the Project
 
 ```bash
-mkdir -p privy-next-wagmi && curl -L https://github.com/privy-io/privy-examples/archive/main.tar.gz | tar -xz --strip=3 -C privy-next-wagmi privy-examples-main/examples/privy-next-wagmi && cd privy-next-wagmi
+npx gitpick privy-io/examples/tree/main/examples/privy-next-wagmi && cd privy-next-wagmi
 ```
 
 ### 2. Install Dependencies
@@ -60,7 +60,7 @@ Login or sign up using Privy's pre-built modals.
 
 [`src/app/page.tsx`](./src/app/page.tsx)
 ```tsx
-import { usePrivy } from "@privy-io/react-auth"; 
+import { usePrivy } from "@privy-io/react-auth";
 const { login } = usePrivy();
 login();
 ```

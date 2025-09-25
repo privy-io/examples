@@ -7,7 +7,7 @@ This example showcases how to get started using Privy's Node.js SDK in a server-
 ### 1. Clone the Project
 
 ```bash
-mkdir -p privy-node-starter && curl -L https://github.com/privy-io/privy-examples/archive/main.tar.gz | tar -xz --strip=2 -C privy-node-starter privy-examples-main/privy-node-starter && cd privy-node-starter
+npx gitpick privy-io/examples/tree/main/privy-node-starter && cd privy-node-starter
 ```
 
 ### 2. Install Dependencies

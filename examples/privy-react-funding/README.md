@@ -15,7 +15,7 @@ This example showcases how to get started using Privy's native wallet funding fl
 ### 1. Clone the Project
 
 ```bash
-mkdir -p privy-react-funding && curl -L https://github.com/privy-io/privy-examples/archive/main.tar.gz | tar -xz --strip=3 -C privy-react-funding privy-examples-main/examples/privy-react-funding && cd privy-react-funding
+npx gitpick privy-io/examples/tree/main/examples/privy-react-funding && cd privy-react-funding
 ```
 
 ### 2. Install Dependencies
@@ -64,7 +64,7 @@ Login or sign up using Privy's pre-built modals.
 
 [`app/page.tsx`](./app/page.tsx)
 ```tsx
-import { usePrivy } from "@privy-io/react-auth"; 
+import { usePrivy } from "@privy-io/react-auth";
 const { login } = usePrivy();
 login();
 ```

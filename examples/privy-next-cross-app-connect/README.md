@@ -11,7 +11,7 @@ This example showcases how to get started using Privy's React SDK inside a Next.
 ### 1. Clone the Project
 
 ```bash
-mkdir -p privy-next-starter && curl -L https://github.com/privy-io/privy-examples/archive/main.tar.gz | tar -xz --strip=2 -C privy-next-starter privy-examples-main/privy-next-starter && cd privy-next-starter
+npx gitpick privy-io/examples/tree/main/examples/privy-next-cross-app-connect && cd privy-next-cross-app-connect
 ```
 
 ### 2. Install Dependencies

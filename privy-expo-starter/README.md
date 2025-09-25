@@ -7,7 +7,7 @@ This example showcases how to get started using Privy's Expo SDK inside an Expo 
 ### 1. Clone the Project
 
 ```bash
-mkdir -p privy-expo-starter && curl -L https://github.com/privy-io/privy-examples/archive/main.tar.gz | tar -xz --strip=2 -C privy-expo-starter privy-examples-main/privy-expo-starter && cd privy-expo-starter
+npx gitpick privy-io/examples/tree/main/privy-expo-starter && cd privy-expo-starter
 ```
 
 ### 2. Install Dependencies
@@ -39,7 +39,7 @@ Update the `app.json` file with your Privy app credentials:
 }
 ```
 
-**Important:** 
+**Important:**
 - Configure an app client in your [Privy Dashboard](https://dashboard.privy.io/apps?page=settings&setting=clients)
 - For Expo Go development, add `host.exp.Exponent` to Allowed app identifiers in your Dashboard
 - For iOS passkey support, configure the `associatedDomains` and `passkeyAssociatedDomain`
@@ -52,7 +52,7 @@ npm start
 
 This will start the Expo development server. You can then:
 - Press `i` for iOS simulator
-- Press `a` for Android emulator  
+- Press `a` for Android emulator
 - Scan QR code with Expo Go app on your device
 
 ## Core Functionality
@@ -84,7 +84,7 @@ const { createWallet } = useCreateWallet();
 // Create Ethereum wallet
 createEthereumWallet({ createAdditional: true });
 
-// Create Solana wallet  
+// Create Solana wallet
 createSolanaWallet({ createAdditional: true, recoveryMethod: "privy" });
 
 // Create Bitcoin/other chain wallets

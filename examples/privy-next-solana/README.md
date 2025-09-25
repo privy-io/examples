@@ -11,7 +11,7 @@ This example showcases how to get started using Solana with Privy's React SDK in
 ### 1. Clone the Project
 
 ```bash
-mkdir -p privy-next-solana && curl -L https://github.com/privy-io/privy-examples/archive/main.tar.gz | tar -xz --strip=3 -C privy-next-solana privy-examples-main/examples/privy-next-solana && cd privy-next-solana
+npx gitpick privy-io/examples/tree/main/examples/privy-next-solana && cd privy-next-solana
 ```
 
 ### 2. Install Dependencies
@@ -60,7 +60,7 @@ Login or sign up using Privy's pre-built modals.
 
 [`src/app/page.tsx`](./src/app/page.tsx)
 ```tsx
-import { usePrivy } from "@privy-io/react-auth"; 
+import { usePrivy } from "@privy-io/react-auth";
 const { login } = usePrivy();
 login();
 ```
