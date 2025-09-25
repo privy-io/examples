@@ -7,7 +7,7 @@ This example showcases how to integrate Privy's iOS SDK with Auth0 as a custom a
 ### 1. Clone the Project
 
 ```bash
-mkdir -p privy-swift-auth0 && curl -L https://github.com/privy-io/privy-examples/archive/main.tar.gz | tar -xz --strip=2 -C privy-swift-auth0 privy-examples-main/privy-swift-auth0 && cd privy-swift-auth0
+npx gitpick privy-io/examples/tree/main/privy-swift-auth0 && cd privy-swift-auth0
 ```
 
 ### 2. Open in Xcode

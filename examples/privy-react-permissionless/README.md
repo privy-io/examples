@@ -15,7 +15,7 @@ This example showcases how to get started using account abstraction with Privy's
 ### 1. Clone the Project
 
 ```bash
-mkdir -p privy-react-permissionless && curl -L https://github.com/privy-io/privy-examples/archive/main.tar.gz | tar -xz --strip=3 -C privy-react-permissionless privy-examples-main/examples/privy-react-permissionless && cd privy-react-permissionless
+npx gitpick privy-io/examples/tree/main/examples/privy-react-permissionless && cd privy-react-permissionless
 ```
 
 ### 2. Install Dependencies
@@ -51,7 +51,7 @@ PRIVY_APP_SECRET=your_app_secret_here
 # NEXT_PUBLIC_PRIVY_AUTH_URL=https://auth.privy.io
 ```
 
-**Important:** 
+**Important:**
 - Variables prefixed with `NEXT_PUBLIC_` are exposed to the browser. Keep `PRIVY_APP_SECRET` private and server-side only.
 - This app uses **Base Sepolia** testnet. Make sure to configure your Pimlico project for Base Sepolia in the [Pimlico dashboard](https://dashboard.pimlico.io/).
 
@@ -71,7 +71,7 @@ Login or sign up using Privy's pre-built modals.
 
 [`pages/index.tsx`](./pages/index.tsx)
 ```tsx
-import { usePrivy } from "@privy-io/react-auth"; 
+import { usePrivy } from "@privy-io/react-auth";
 const { login } = usePrivy();
 login();
 ```

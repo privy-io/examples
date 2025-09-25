@@ -15,7 +15,7 @@ This example showcases how to get started using Farcaster social login and casti
 ### 1. Clone the Project
 
 ```bash
-mkdir -p privy-react-farcaster && curl -L https://github.com/privy-io/privy-examples/archive/main.tar.gz | tar -xz --strip=3 -C privy-react-farcaster privy-examples-main/examples/privy-react-farcaster && cd privy-react-farcaster
+npx gitpick privy-io/examples/tree/main/examples/privy-react-farcaster && cd privy-react-farcaster
 ```
 
 ### 2. Install Dependencies
@@ -64,7 +64,7 @@ Login or sign up using Privy's pre-built Farcaster authentication.
 
 [`pages/index.tsx`](./pages/index.tsx)
 ```tsx
-import { usePrivy } from "@privy-io/react-auth"; 
+import { usePrivy } from "@privy-io/react-auth";
 const { login } = usePrivy();
 // Login using Privy's prebuilt modal
 login()

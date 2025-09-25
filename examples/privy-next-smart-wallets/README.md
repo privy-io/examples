@@ -15,7 +15,7 @@ This example showcases how to get started using Multi-Chain EVM smart wallets wi
 ### 1. Clone the Project
 
 ```bash
-mkdir -p privy-next-smart-wallets && curl -L https://github.com/privy-io/privy-examples/archive/main.tar.gz | tar -xz --strip=3 -C privy-next-smart-wallets privy-examples-main/examples/privy-next-smart-wallets && cd privy-next-smart-wallets
+npx gitpick privy-io/examples/tree/main/examples/privy-next-smart-wallets && cd privy-next-smart-wallets
 ```
 
 ### 2. Install Dependencies
@@ -81,7 +81,7 @@ export default function Providers({ children }: { children: React.ReactNode }) {
 
 ### 2. Create Smart Wallets
 
-Create embedded wallets, smart wallets are automatically provisioned when the SmartWalletsProvider is configured. 
+Create embedded wallets, smart wallets are automatically provisioned when the SmartWalletsProvider is configured.
 
 [`src/components/sections/create-a-wallet.tsx`](./src/components/sections/create-a-wallet.tsx)
 ```tsx
@@ -119,7 +119,7 @@ client.sendTransaction({
       to: USDC_ADDRESS,
       data: encodeFunctionData({
         abi: erc20Abi,
-        functionName: "transfer", 
+        functionName: "transfer",
         args: [recipientAddress, amount],
       }),
     },
