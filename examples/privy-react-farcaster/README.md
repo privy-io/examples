@@ -4,7 +4,7 @@ This example showcases how to get started using Farcaster social login and casti
 
 ## Live Demo
 
-[View Demo]({{DEPLOY_URL}})
+[View Demo](farcaster-demo.vercel.app)
 
 ## Quick Start
 

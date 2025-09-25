@@ -2,6 +2,10 @@
 
 This example showcases how to get started using Privy's React SDK inside a React + Vite application.
 
+## Live Demo
+
+[View Demo](https://create-react-app.privy.io/)
+
 ## Getting Started
 
 ### 1. Clone the Project
@@ -50,6 +54,7 @@ Open [http://localhost:5173](http://localhost:5173) in your browser to see the a
 Login or sign up using Privy's pre-built modals.
 
 [`src/App.tsx`](./src/App.tsx)
+
 ```tsx
 import { usePrivy } from "@privy-io/react-auth";
 const { login } = usePrivy();
@@ -61,13 +66,15 @@ login();
 Programmatically create embedded wallets for multiple blockchains.
 
 [`src/components/create-wallet-card.tsx`](./src/components/create-wallet-card.tsx)
+
 ```tsx
 import { useCreateWallet, useSolanaWallets } from "@privy-io/react-auth";
 import { useCreateWallet as useCreateWalletExtendedChains } from "@privy-io/react-auth/extended-chains";
 
 const { createWallet: createWalletEvm } = useCreateWallet();
 const { createWallet: createWalletSolana } = useSolanaWallets();
-const { createWallet: createWalletExtendedChains } = useCreateWalletExtendedChains();
+const { createWallet: createWalletExtendedChains } =
+  useCreateWalletExtendedChains();
 
 // Create Ethereum wallet
 createWalletEvm({ createAdditional: true });
@@ -84,6 +91,7 @@ createWalletExtendedChains({ chainType: "bitcoin-segwit" });
 Send transactions on both Ethereum and Solana.
 
 [`src/components/wallet-actions-card.tsx`](./src/components/wallet-actions-card.tsx)
+
 ```tsx
 import { useSendTransaction } from "@privy-io/react-auth";
 import { useSendTransaction as useSendTransactionSolana } from "@privy-io/react-auth/solana";

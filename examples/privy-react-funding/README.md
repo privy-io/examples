@@ -2,13 +2,10 @@
 
 This example showcases how to get started using Privy's native wallet funding flows inside a Next.js application.
 
-## Live Demo
-
-[View Demo]({{DEPLOY_URL}})
-
 ## Quick Start
 
 ### 0. Dashboard setup
+
 - Create an app in the Privy dashboard [here](https://dashboard.privy.io/)
 - Configure funding settings if needed [here](https://docs.privy.io/recipes/card-based-funding#funding-wallets-with-apple-pay-and-google-pay)
 
@@ -63,8 +60,9 @@ Open [http://localhost:3000](http://localhost:3000) in your browser to see the a
 Login or sign up using Privy's pre-built modals.
 
 [`app/page.tsx`](./app/page.tsx)
+
 ```tsx
-import { usePrivy } from "@privy-io/react-auth"; 
+import { usePrivy } from "@privy-io/react-auth";
 const { login } = usePrivy();
 login();
 ```
@@ -74,6 +72,7 @@ login();
 Create embedded wallets for your users. Wallets can also be automatically created on login by configuring your PrivyProvider.
 
 [`lib/privy/LoginButton.tsx`](./lib/privy/LoginButton.tsx)
+
 ```tsx
 import { useCreateWallet } from "@privy-io/react-auth";
 const { createWallet } = useCreateWallet();
@@ -85,6 +84,7 @@ createWallet({ createAdditional: true });
 Fund your wallet using a card, exchange, or external wallet. Privy has bridging integration out of the box powered by Relay.
 
 [`lib/privy/FundingButton.tsx`](./lib/privy/FundingButton.tsx)
+
 ```tsx
 import { useFundWallet, useWallets } from "@privy-io/react-auth";
 const { wallets } = useWallets();

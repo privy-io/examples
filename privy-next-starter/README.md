@@ -4,7 +4,7 @@ This example showcases how to get started using Privy's React SDK inside a Next.
 
 ## Live Demo
 
-[View Demo]({{DEPLOY_URL}})
+[View Demo](https://create-next-app.privy.io/)
 
 ## Getting Started
 
@@ -53,6 +53,7 @@ Open [http://localhost:3000](http://localhost:3000) in your browser to see the a
 Login or sign up using Privy's pre-built modals.
 
 [`src/app/page.tsx`](./src/app/page.tsx)
+
 ```tsx
 import { usePrivy } from "@privy-io/react-auth";
 const { login } = usePrivy();
@@ -64,13 +65,15 @@ login();
 Programmatically create embedded wallets for multiple blockchains. Supports Ethereum, Solana, Bitcoin, and more.
 
 [`src/components/sections/create-a-wallet.tsx`](./src/components/sections/create-a-wallet.tsx)
+
 ```tsx
 import { useCreateWallet, useSolanaWallets } from "@privy-io/react-auth";
 import { useCreateWallet as useCreateWalletExtendedChains } from "@privy-io/react-auth/extended-chains";
 
 const { createWallet: createWalletEvm } = useCreateWallet();
 const { createWallet: createWalletSolana } = useSolanaWallets();
-const { createWallet: createWalletExtendedChains } = useCreateWalletExtendedChains();
+const { createWallet: createWalletExtendedChains } =
+  useCreateWalletExtendedChains();
 
 // Create Ethereum wallet
 createWalletEvm({ createAdditional: true });
@@ -87,6 +90,7 @@ createWalletExtendedChains({ chainType: "bitcoin-segwit" });
 Send transactions on both Ethereum and Solana with comprehensive wallet action support.
 
 [`src/components/sections/wallet-actions.tsx`](./src/components/sections/wallet-actions.tsx)
+
 ```tsx
 import { useSendTransaction } from "@privy-io/react-auth";
 import { useSendTransaction as useSendTransactionSolana } from "@privy-io/react-auth/solana";
