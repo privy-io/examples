@@ -34,7 +34,7 @@ Focused examples showcasing specific Privy features and integrations.
 | [`privy-react-session-keys`](./examples/privy-react-session-keys)                   | Account abstraction with session keys |
 | [`privy-next-smart-wallets`](./examples/privy-next-smart-wallets)                   | Smart wallets starter template        |
 | [`privy-react-solana`](./examples/privy-react-solana)                               | Solana blockchain integration         |
-| [`privy-react-wagmi`](./examples/privy-react-wagmi)                                 | Wagmi integration for Ethereum        |
+| [`privy-next-wagmi`](./examples/privy-next-wagmi)                                   | Wagmi integration for Ethereum        |
 | [`privy-next-cross-app-connect`](./examples/privy-next-cross-app-connect)           | Cross-application wallet connection   |
 | [`privy-next-cross-app-provider`](./examples/privy-next-cross-app-provider)         | Cross-application auth provider       |
 | [`privy-node-telegram-trading-bot`](./examples/privy-node-telegram-trading-bot)     | Telegram trading bot with Solana      |
