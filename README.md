@@ -31,9 +31,9 @@ Focused examples showcasing specific Privy features and integrations.
 | [`privy-next-funding`](./examples/privy-next-funding)                               | Privy funding hooks showcase          |
 | [`privy-next-permissionless`](./examples/privy-next-permissionless)                 | Permissionless.js integration         |
 | [`privy-react-pwa`](./examples/privy-react-pwa)                                     | Progressive Web App                   |
-| [`privy-react-session-keys`](./examples/privy-react-session-keys)                   | Account abstraction with session keys |
+| [`privy-next-session-keys`](./examples/privy-next-session-keys)                     | Account abstraction with session keys |
 | [`privy-next-smart-wallets`](./examples/privy-next-smart-wallets)                   | Smart wallets starter template        |
-| [`privy-react-solana`](./examples/privy-react-solana)                               | Solana blockchain integration         |
+| [`privy-next-solana`](./examples/privy-next-solana)                                 | Solana blockchain integration         |
 | [`privy-next-wagmi`](./examples/privy-next-wagmi)                                   | Wagmi integration for Ethereum        |
 | [`privy-next-cross-app-connect`](./examples/privy-next-cross-app-connect)           | Cross-application wallet connection   |
 | [`privy-next-cross-app-provider`](./examples/privy-next-cross-app-provider)         | Cross-application auth provider       |
