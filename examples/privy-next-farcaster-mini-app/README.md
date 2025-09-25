@@ -1,36 +1,130 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Privy + Next.js Farcaster Mini App
+
+This example showcases how to build a Farcaster mini app using Privy's React SDK inside a Next.js application with automatic Farcaster authentication.
 
 ## Getting Started
 
-First, run the development server:
+### 1. Clone the Project
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+mkdir -p privy-next-farcaster-mini-app && curl -L https://github.com/privy-io/privy-examples/archive/main.tar.gz | tar -xz --strip=2 -C privy-next-farcaster-mini-app privy-examples-main/privy-next-farcaster-mini-app && cd privy-next-farcaster-mini-app
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2. Install Dependencies
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+pnpm install
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 3. Configure Environment
 
-## Learn More
+Copy the example environment file and configure your Privy app credentials:
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+cp .env.example .env.local
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Update `.env.local` with your Privy app credentials:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```env
+# Public - Safe to expose in the browser
+NEXT_PUBLIC_PRIVY_APP_ID=your_app_id_here
+NEXT_PUBLIC_PRIVY_SIGNER_ID=your_signer_id_here # optional
+```
 
-## Deploy on Vercel
+**Important:** Variables prefixed with `NEXT_PUBLIC_` are exposed to the browser. Get your credentials from the [Privy Dashboard](https://dashboard.privy.io).
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### 4. Start Development Server
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+pnpm dev
+```
+
+Open [http://localhost:3000](http://localhost:3000) in your browser to see the application.
+
+## Core Functionality
+
+### 1. Farcaster Mini App Integration
+
+Automatic login using Farcaster's miniapp SDK with signature-based authentication.
+
+[`src/app/page.tsx`](./src/app/page.tsx)
+
+```tsx
+import { useLoginToMiniApp } from "@privy-io/react-auth/farcaster";
+import miniappSdk from "@farcaster/miniapp-sdk";
+
+const { initLoginToMiniApp, loginToMiniApp } = useLoginToMiniApp();
+
+// Initialize a new login attempt to get a nonce for the Farcaster wallet to sign
+const { nonce } = await initLoginToMiniApp();
+
+// Request a signature from Farcaster
+const result = await miniappSdk.actions.signIn({ nonce: nonce });
+
+// Send the received signature from Farcaster to Privy for authentication
+await loginToMiniApp({
+  message: result.message,
+  signature: result.signature,
+});
+```
+
+### 2. Create Multi-Chain Wallets
+
+Programmatically create embedded wallets for multiple blockchains. Supports Ethereum, Solana, Bitcoin, and more.
+
+[`src/components/sections/create-a-wallet.tsx`](./src/components/sections/create-a-wallet.tsx)
+
+```tsx
+import { useCreateWallet, useSolanaWallets } from "@privy-io/react-auth";
+import { useCreateWallet as useCreateWalletExtendedChains } from "@privy-io/react-auth/extended-chains";
+
+const { createWallet: createWalletEvm } = useCreateWallet();
+const { createWallet: createWalletSolana } = useSolanaWallets();
+const { createWallet: createWalletExtendedChains } =
+  useCreateWalletExtendedChains();
+
+// Create Ethereum wallet
+createWalletEvm({ createAdditional: true });
+
+// Create Solana wallet
+createWalletSolana({ createAdditional: true });
+
+// Create Bitcoin/other chain wallets
+createWalletExtendedChains({ chainType: "bitcoin-segwit" });
+```
+
+### 3. Send Transactions
+
+Send transactions on both Ethereum and Solana with comprehensive wallet action support.
+
+[`src/components/sections/wallet-actions.tsx`](./src/components/sections/wallet-actions.tsx)
+
+```tsx
+import { useSendTransaction } from "@privy-io/react-auth";
+import { useSendTransaction as useSendTransactionSolana } from "@privy-io/react-auth/solana";
+
+const { sendTransaction: sendTransactionEvm } = useSendTransaction();
+const { sendTransaction: sendTransactionSolana } = useSendTransactionSolana();
+
+// Send Ethereum transaction
+const txHash = await sendTransactionEvm(
+  { to: "0xE3070d3e4309afA3bC9a6b057685743CF42da77C", value: 10000 },
+  { address: selectedWallet.address }
+);
+
+// Send Solana transaction
+const receipt = await sendTransactionSolana({
+  transaction: transaction,
+  connection: connection,
+  address: selectedWallet.address,
+});
+```
+
+## Relevant Links
+
+- [Privy Dashboard](https://dashboard.privy.io)
+- [Privy Documentation](https://docs.privy.io)
+- [React SDK](https://www.npmjs.com/package/@privy-io/react-auth)
+- [Farcaster Mini App SDK](https://www.npmjs.com/package/@farcaster/miniapp-sdk)
+- [Next.js Documentation](https://nextjs.org/docs)
