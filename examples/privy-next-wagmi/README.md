@@ -4,7 +4,7 @@ This example showcases how to get started using Wagmi with Privy's React SDK ins
 
 ## Live Demo
 
-[View Demo]({{DEPLOY_URL}})
+[View Demo](wagmi-app.vercel.app)
 
 ## Quick Start
 
@@ -59,8 +59,9 @@ Open [http://localhost:3000](http://localhost:3000) in your browser to see the a
 Login or sign up using Privy's pre-built modals.
 
 [`src/app/page.tsx`](./src/app/page.tsx)
+
 ```tsx
-import { usePrivy } from "@privy-io/react-auth"; 
+import { usePrivy } from "@privy-io/react-auth";
 const { login } = usePrivy();
 login();
 ```
@@ -70,6 +71,7 @@ login();
 Programmatically create an Ethereum embedded wallet for your user. Wallets can also be automatically created on login by configuring your PrivyProvider, learn more [here](https://docs.privy.io/basics/react/advanced/automatic-wallet-creation).
 
 [`src/components/sections/create-a-wallet.tsx`](./src/components/sections/create-a-wallet.tsx)
+
 ```tsx
 import { useCreateWallet } from "@privy-io/react-auth";
 const { createWallet } = useCreateWallet();
@@ -81,6 +83,7 @@ createWallet({ createAdditional: true });
 Use Wagmi hooks to interact with Ethereum wallets seamlessly. Wagmi provides type-safe hooks that work with both Privy embedded wallets and externally connected wallets.
 
 [`src/components/sections/wagmi-wallet-actions.tsx`](./src/components/sections/wagmi-wallet-actions.tsx)
+
 ```tsx
 import { useSendTransaction } from "wagmi";
 import { useSetActiveWallet } from "@privy-io/wagmi";

@@ -2,10 +2,6 @@
 
 This example showcases how to integrate Privy's embedded wallets with ZeroDev session keys for automated transaction execution.
 
-## Live Demo
-
-[View Demo]({{DEPLOY_URL}})
-
 ## Getting Started
 
 ### 1. Clone the Project
