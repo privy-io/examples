@@ -1,0 +1,63 @@
+name: Example Request
+description: Request a new Privy integration example
+title: "[REQUEST] "
+labels: ["example-request"]
+body:
+  - type: input
+    id: framework
+    attributes:
+      label: Framework
+      description: What framework would you like to see integrated?
+      placeholder: e.g., Vue, Svelte, Flutter, Python
+    validations:
+      required: true
+  - type: input
+    id: integration
+    attributes:
+      label: Integration/Use Case
+      description: What specific integration or use case?
+      placeholder: e.g., Tron integration, Account Abstraction, DeFi protocol
+    validations:
+      required: true
+  - type: input
+    id: blockchain
+    attributes:
+      label: Blockchain/Chain
+      description: Which blockchain or chain (if applicable)?
+      placeholder: e.g., Tron, Bitcoin, Base, Arbitrum
+    validations:
+      required: false
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: Brief description of the example you'd like to see
+    validations:
+      required: true
+  - type: checkboxes
+    id: features
+    attributes:
+      label: Key Privy Features
+      description: What specific Privy features should this example demonstrate?
+      options:
+        - label: Authentication
+        - label: Wallet connection
+        - label: Smart wallets
+        - label: Cross-chain operations
+        - label: Gasless transactions
+        - label: Session keys
+        - label: Account abstraction
+  - type: textarea
+    id: use-case
+    attributes:
+      label: Use Case & Value
+      description: Why would this example be valuable to the community?
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional Context
+      description: Any additional information, links, or references that would help build this example
+    validations:
+      required: false
