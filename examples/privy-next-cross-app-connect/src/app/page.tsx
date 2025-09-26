@@ -1,10 +1,8 @@
 "use client";
 
-import { usePrivy } from "@privy-io/react-auth";
 import Image from "next/image";
 import { ToastContainer } from "react-toastify";
 
-import { FullScreenLoader } from "@/components/ui/fullscreen-loader";
 import { Header } from "@/components/ui/header";
 import { ArrowLeftIcon } from "@heroicons/react/16/solid";
 import WagmiActions from "@/components/sections/wagmi-actions";
@@ -22,7 +20,7 @@ function Home() {
       {!!address ? (
         <section className="w-full flex flex-col md:flex-row h-screen pt-[60px]">
           <div className="flex-grow overflow-y-auto h-full p-4 pl-8">
-            <button className="button" onClick={disconnect}>
+            <button className="button" onClick={() => disconnect()}>
               <ArrowLeftIcon className="h-4 w-4" strokeWidth={2} /> Disconnect
             </button>
 
