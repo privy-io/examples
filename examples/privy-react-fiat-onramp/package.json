@@ -15,7 +15,7 @@
     "@headlessui/react": "^2.2.0",
     "@heroicons/react": "^2.0.12",
     "@privy-io/react-auth": "^2.4.5",
-    "@privy-io/server-auth": "1.7.0",
+    "@privy-io/server-auth": "1.32.5",
     "@tailwindcss/forms": "^0.5.3",
     "axios": "^1.6.7",
     "crypto": "^1.0.1",
