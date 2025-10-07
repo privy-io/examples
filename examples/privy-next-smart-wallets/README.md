@@ -2,10 +2,6 @@
 
 This example showcases how to get started using Multi-Chain EVM smart wallets with Privy's React SDK inside a Next.js application.
 
-## Live Demo
-
-[View Demo]({{DEPLOY_URL}})
-
 ## Quick Start
 
 ### 0. Dashboard set up

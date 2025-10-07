@@ -2,10 +2,6 @@
 
 This example showcases how to get started using Wagmi with Privy's React SDK inside a Next.js application. Wagmi provides type-safe React hooks for Ethereum, making it seamless to work with both Privy embedded wallets and external wallets.
 
-## Live Demo
-
-[View Demo]({{DEPLOY_URL}})
-
 ## Quick Start
 
 ### 1. Clone the Project

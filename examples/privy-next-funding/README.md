@@ -2,10 +2,6 @@
 
 This example showcases how to get started using Privy's native wallet funding flows inside a Next.js application.
 
-## Live Demo
-
-[View Demo]({{DEPLOY_URL}})
-
 ## Quick Start
 
 ### 0. Dashboard setup

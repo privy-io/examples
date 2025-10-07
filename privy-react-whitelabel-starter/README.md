@@ -1,10 +1,6 @@
 # Privy + Whitelabel Next.js Starter
 
-This example showcases how to get started using Privy's React SDK inside a React + Vite application.Privy’s frontend SDKs let you fully customize embedded wallet experiences allowing you to match wallet flows to your app’s look and feel.
-
-## Live Demo
-
-[View Demo](https://whitelabel.privy.io/)
+This example showcases how to get started using Privy's React SDK inside a React + Vite application.Privy's frontend SDKs let you fully customize embedded wallet experiences allowing you to match wallet flows to your app's look and feel.
 
 ## Getting Started
 

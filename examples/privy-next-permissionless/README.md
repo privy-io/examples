@@ -1,12 +1,8 @@
 # Privy x `permissionless` Starter
 
-## Live Demo
-
-[https://permissionless-example.privy.io/](https://permissionless-example.privy.io/)
-
 ## Intro
 
-This is a template for integrating [**Privy**](https://www.privy.io/) and [**`permissionless.js` (Pimlico)**](https://docs.pimlico.io/permissionless) into a [NextJS](https://nextjs.org/) project. Check out the deployed app [here](https://permissionless-example.privy.io/)!
+This is a template for integrating [**Privy**](https://www.privy.io/) and [**`permissionless.js` (Pimlico)**](https://docs.pimlico.io/permissionless) into a [NextJS](https://nextjs.org/) project.
 
 In this demo app, a user can login with their email or Google account, and get a Privy embedded wallet. Once the user has logged in and created an embedded wallet, `permissionless.js` will create a **smart wallet** for the user behind the scenes, which can then be used to incorporate gas sponsorship, batched transactions, and more into your app. 
 
