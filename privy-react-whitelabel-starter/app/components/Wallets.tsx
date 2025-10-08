@@ -3,10 +3,10 @@ import React, {useEffect, useState} from 'react';
 import {
   usePrivy,
   useWallets,
-  useSolanaWallets,
   WalletWithMetadata,
   useGuestAccounts,
 } from '@privy-io/react-auth';
+import {useWallets as useSolanaWallets, useCreateWallet as useCreateSolanaWallet} from '@privy-io/react-auth/solana';
 import {useCreateWallet as useCreateExtendedWallet} from '@privy-io/react-auth/extended-chains';
 import {useRouter} from 'next/navigation';
 import {ToastContainer, toast} from 'react-toastify';
@@ -20,7 +20,8 @@ export default function Wallets() {
 
   const {ready, authenticated, createWallet: createEthereumWallet, user} = usePrivy();
   const {wallets: ethereumWallets} = useWallets();
-  const {createWallet: createSolanaWallet, wallets: solanaWallets} = useSolanaWallets();
+  const {wallets: solanaWallets} = useSolanaWallets();
+  const {createWallet: createSolanaWallet} = useCreateSolanaWallet();
   const {createWallet: createExtendedWallet} = useCreateExtendedWallet();
   const {createGuestAccount} = useGuestAccounts();
   const [showSmartWallet, setShowSmartWallet] = useState(false);

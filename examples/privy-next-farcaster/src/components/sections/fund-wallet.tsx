@@ -3,7 +3,7 @@
 import { useState, useMemo, useEffect } from "react";
 import {
   useFundWallet as useFundWalletEvm,
-  useSolanaWallets as useWalletsSolana,
+  useWallets as useWalletsSolana,
   useWallets as useWalletsEvm,
 } from "@privy-io/react-auth";
 import Section from "../reusables/section";

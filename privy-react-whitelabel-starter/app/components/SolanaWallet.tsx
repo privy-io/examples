@@ -1,11 +1,11 @@
 import React, {useState} from 'react';
-import {usePrivy, ConnectedSolanaWallet} from '@privy-io/react-auth';
+import {usePrivy} from '@privy-io/react-auth';
+import {ConnectedStandardSolanaWallet, useSignMessage, useSignAndSendTransaction} from '@privy-io/react-auth/solana';
 import {PublicKey, Transaction, Connection, SystemProgram} from '@solana/web3.js';
 import {toast} from 'react-toastify';
-import {useSignMessage} from '@privy-io/react-auth/solana';
 
 interface SolanaWalletProps {
-  wallet: ConnectedSolanaWallet;
+  wallet: ConnectedStandardSolanaWallet;
   index: number;
 }
 
@@ -13,6 +13,7 @@ const SolanaWallet: React.FC<SolanaWalletProps> = ({wallet, index}) => {
   const [showSignMessage, setShowSignMessage] = useState(false);
   const [showSendTransaction, setShowSendTransaction] = useState(false);
   const {signMessage} = useSignMessage();
+  const {signAndSendTransaction} = useSignAndSendTransaction();
 
   const customSolanaSendTransaction = async () => {
     try {
@@ -36,8 +37,11 @@ const SolanaWallet: React.FC<SolanaWalletProps> = ({wallet, index}) => {
       );
 
       // Send transaction
-      const txHash = await wallet.sendTransaction!(transaction, connection);
-      toast.success(`Transaction sent successfully! ${txHash}`);
+      const receipt = await signAndSendTransaction({
+        transaction: transaction.serialize({ verifySignatures: false }),
+        wallet,
+      });
+      toast.success(`Transaction sent successfully! ${receipt.signature}`);
     } catch (error: any) {
       toast.error(`Failed to send transaction: ${error?.message}`);
     }
@@ -45,12 +49,12 @@ const SolanaWallet: React.FC<SolanaWalletProps> = ({wallet, index}) => {
 
   const customSignMessage = async () => {
     try {
-      const signature = await signMessage({
+      const signatureOutput = await signMessage({
         message: Buffer.from('Your message here'),
-        options: {address: wallet.address},
+        wallet,
       });
 
-      toast.success(`Message signed successfully! ${signature}`);
+      toast.success(`Message signed successfully! ${signatureOutput.signature}`);
     } catch (error: any) {
       toast.error(`Failed to sign message: ${error?.message}`);
     }
