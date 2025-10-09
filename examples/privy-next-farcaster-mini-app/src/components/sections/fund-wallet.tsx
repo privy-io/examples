@@ -3,7 +3,7 @@
 import { useState, useMemo, useEffect } from "react";
 import {
   useFundWallet as useFundWalletEvm,
-  useSolanaWallets as useWalletsSolana,
+  useWallets as useWalletsSolana,
   useWallets as useWalletsEvm,
 } from "@privy-io/react-auth";
 import Section from "../reusables/section";
@@ -63,9 +63,12 @@ const FundWallet = () => {
       return;
     }
     try {
-      fundWalletEvm(selectedWallet.address, {
-        amount: "1",
-        ...(asset && { asset }),
+      fundWalletEvm({
+        address: selectedWallet.address,
+        options: {
+          amount: "1",
+          ...(asset && { asset }),
+        },
       });
     } catch (error) {
       console.log(error);
@@ -78,9 +81,12 @@ const FundWallet = () => {
       return;
     }
     try {
-      fundWalletSolana(selectedWallet.address, {
-        amount: "1",
-        ...(asset && { asset }),
+      fundWalletSolana({
+        address: selectedWallet.address,
+        options: {
+          amount: "1",
+          ...(asset && { asset }),
+        },
       });
     } catch (error) {
       console.log(error);

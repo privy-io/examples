@@ -5,7 +5,10 @@ import Head from "next/head";
 import OnrampModal from "../components/onramp";
 import { ethers } from "ethers";
 import { useWallets } from "@privy-io/react-auth";
-import { useSolanaWallets } from "@privy-io/react-auth/solana";
+import {
+  useWallets as useSolanaWallets,
+  useExportWallet,
+} from "@privy-io/react-auth/solana";
 import { mainnet } from "viem/chains";
 
 function formatAddress(address?: string | null) {
@@ -27,8 +30,8 @@ export default function HomePage() {
   } = usePrivy();
 
   const { wallets: evmWallets } = useWallets();
-  const { wallets: solanaWallets, exportWallet: exportSolanaWallet } =
-    useSolanaWallets();
+  const { wallets: solanaWallets } = useSolanaWallets();
+  const { exportWallet: exportSolanaWallet } = useExportWallet();
 
   const router = useRouter();
   // Signature produced using `signMessage`

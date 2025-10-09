@@ -9,10 +9,10 @@ import {
   useSignTypedData,
 } from "@privy-io/react-auth";
 import {
-  useSendTransaction as useSendTransactionSolana,
+  useSignAndSendTransaction as useSendTransactionSolana,
   useSignMessage as useSignMessageSolana,
   useSignTransaction as useSignTransactionSolana,
-  useConnectedStandardWallets,
+  useWallets as useWalletsSolana,
 } from "@privy-io/react-auth/solana";
 import bs58 from "bs58";
 import {
@@ -38,8 +38,8 @@ const WalletActions = () => {
   const { wallets: walletsEvm } = useWallets();
   const { signMessage: signMessageSolana } = useSignMessageSolana();
   const { signTransaction: signTransactionSolana } = useSignTransactionSolana();
-  const { sendTransaction: sendTransactionSolana } = useSendTransactionSolana();
-  const { wallets: walletsSolana } = useConnectedStandardWallets();
+  const { signAndSendTransaction: sendTransactionSolana } = useSendTransactionSolana();
+  const { wallets: walletsSolana } = useWalletsSolana();
 
   const allWallets = useMemo((): WalletInfo[] => {
     const evmWallets: WalletInfo[] = walletsEvm.map((wallet) => ({

@@ -23,9 +23,9 @@ const EmbeddedWallet = () => {
 
 	const onSign = async () => {
 		try {
-			const _signature = await signMessage(
-				'I logged into the Privy PWA demo and signed this message!'
-			)
+			const { signature: _signature } = await signMessage({
+				message: 'I logged into the Privy PWA demo and signed this message!'
+			})
 			setSignature(_signature)
 		} catch (e) {
 			console.error('Signature failed with error ', e)

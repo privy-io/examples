@@ -9,10 +9,10 @@ import {
   useSignTypedData,
 } from "@privy-io/react-auth";
 import {
-  useSendTransaction as useSendTransactionSolana,
+  useSignAndSendTransaction as useSendTransactionSolana,
   useSignMessage as useSignMessageSolana,
   useSignTransaction as useSignTransactionSolana,
-  useConnectedStandardWallets,
+  useWallets as useWalletsSolana,
 } from "@privy-io/react-auth/solana";
 import bs58 from "bs58";
 import {
@@ -38,8 +38,8 @@ const WalletActions = () => {
   const { wallets: walletsEvm } = useWallets();
   const { signMessage: signMessageSolana } = useSignMessageSolana();
   const { signTransaction: signTransactionSolana } = useSignTransactionSolana();
-  const { sendTransaction: sendTransactionSolana } = useSendTransactionSolana();
-  const { wallets: walletsSolana } = useConnectedStandardWallets();
+  const { signAndSendTransaction: sendTransactionSolana } = useSendTransactionSolana();
+  const { wallets: walletsSolana } = useWalletsSolana();
 
   const allWallets = useMemo((): WalletInfo[] => {
     const evmWallets: WalletInfo[] = walletsEvm.map((wallet) => ({
@@ -93,16 +93,21 @@ const WalletActions = () => {
     }
     try {
       const message = "Hello world";
+      const wallet = walletsSolana.find((v) => v.address === selectedWallet.address);
+      if (!wallet) {
+        showErrorToast("Wallet not found");
+        return;
+      }
       const signatureUint8Array = await signMessageSolana({
         message: new TextEncoder().encode(message),
+        wallet,
         options: {
-          address: selectedWallet.address,
           uiOptions: {
             title: "Sign this message",
           },
         },
       });
-      const signature = bs58.encode(signatureUint8Array);
+      const signature = bs58.encode(signatureUint8Array.signature);
       showSuccessToast(`Solana Message signed: ${signature.slice(0, 10)}...`);
     } catch (error) {
       console.log(error);
@@ -139,11 +144,15 @@ const WalletActions = () => {
     try {
       const connection = new Connection("https://api.mainnet-beta.solana.com");
       const transaction = new Transaction();
+      const wallet = walletsSolana.find((v) => v.address === selectedWallet.address);
+      if (!wallet) {
+        showErrorToast("Wallet not found");
+        return;
+      }
 
       const signedTransaction = await signTransactionSolana({
-        transaction: transaction,
-        connection: connection,
-        address: selectedWallet.address,
+        transaction: transaction.serialize({ verifySignatures: false }),
+        wallet,
       });
       console.log(signedTransaction);
       showSuccessToast("Solana Transaction signed successfully");
@@ -194,10 +203,14 @@ const WalletActions = () => {
       transaction.recentBlockhash = latestBlockhash.blockhash;
       transaction.feePayer = new PublicKey(selectedWallet.address);
 
+      const wallet = walletsSolana.find((v) => v.address === selectedWallet.address);
+      if (!wallet) {
+        showErrorToast("Wallet not found");
+        return;
+      }
       const receipt = await sendTransactionSolana({
-        transaction: transaction,
-        connection: connection,
-        address: selectedWallet.address,
+        transaction: transaction.serialize({ verifySignatures: false }),
+        wallet,
       });
       console.log(receipt);
 

@@ -12,11 +12,11 @@ const Index = () => {
 	const { ready, authenticated } = usePrivy()
 	const { login } = useLogin({
 		// Set up an `onComplete` callback to run when `login` completes
-		onComplete(user, isNewUser, wasPreviouslyAuthenticated) {
+		onComplete({ user, isNewUser, wasAlreadyAuthenticated }) {
 			console.log('🔑 ✅ Login success', {
 				user,
 				isNewUser,
-				wasPreviouslyAuthenticated,
+				wasAlreadyAuthenticated,
 			})
 			router.push('/dashboard')
 		},

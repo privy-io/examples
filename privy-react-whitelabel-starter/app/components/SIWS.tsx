@@ -1,6 +1,6 @@
 'use client';
 import {useConnectWallet, useLoginWithSiws} from '@privy-io/react-auth';
-import {useConnectedStandardWallets} from '@privy-io/react-auth/solana';
+import {useWallets as useWalletsSolana} from '@privy-io/react-auth/solana';
 import {toast} from 'react-toastify';
 
 const toBase64 = (bytes: Uint8Array): string => {
@@ -12,7 +12,7 @@ const toBase64 = (bytes: Uint8Array): string => {
 };
 const SIWS = () => {
   const {connectWallet} = useConnectWallet();
-  const {wallets} = useConnectedStandardWallets();
+  const {wallets} = useWalletsSolana();
   const {generateSiwsMessage, loginWithSiws} = useLoginWithSiws();
 
   const handleLoginWithSiws = async () => {

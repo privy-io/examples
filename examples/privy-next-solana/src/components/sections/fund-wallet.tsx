@@ -1,30 +1,42 @@
 "use client";
 
 import { useState, useMemo, useEffect } from "react";
-import { useSolanaWallets as useWalletsSolana } from "@privy-io/react-auth";
+import {
+  useFundWallet as useFundWalletEvm,
+  useWallets as useWalletsEvm,
+  FundWalletConfig,
+} from "@privy-io/react-auth";
+import { useFundWallet as useFundWalletSolana, useWallets as useWalletsSolana, type SolanaFundingConfig } from "@privy-io/react-auth/solana";
 import Section from "../reusables/section";
-import { useFundWallet as useFundWalletSolana } from "@privy-io/react-auth/solana";
 import { showErrorToast } from "../ui/custom-toast";
 
 type WalletInfo = {
   address: string;
-  type: "solana";
+  type: "ethereum" | "solana";
   name: string;
 };
 
 const FundWallet = () => {
+  const { wallets: walletsEvm } = useWalletsEvm();
   const { wallets: walletsSolana } = useWalletsSolana();
+  const { fundWallet: fundWalletEvm } = useFundWalletEvm();
   const { fundWallet: fundWalletSolana } = useFundWalletSolana();
 
   const allWallets = useMemo((): WalletInfo[] => {
+    const evmWallets: WalletInfo[] = walletsEvm.map((wallet) => ({
+      address: wallet.address,
+      type: "ethereum" as const,
+      name: wallet.address,
+    }));
+
     const solanaWallets: WalletInfo[] = walletsSolana.map((wallet) => ({
       address: wallet.address,
       type: "solana" as const,
       name: wallet.address,
     }));
 
-    return solanaWallets;
-  }, [walletsSolana]);
+    return [...evmWallets, ...solanaWallets];
+  }, [walletsEvm, walletsSolana]);
 
   const [selectedWallet, setSelectedWallet] = useState<WalletInfo | null>(null);
 
@@ -34,15 +46,38 @@ const FundWallet = () => {
     }
   }, [allWallets, selectedWallet]);
 
-  const fundWalletSolanaHandler = (asset?: "USDC" | "native-currency") => {
-    if (!selectedWallet) {
+  const isEvmWallet = selectedWallet?.type === "ethereum";
+  const isSolanaWallet = selectedWallet?.type === "solana";
+  const fundWalletEvmHandler = (config?: FundWalletConfig) => {
+    if (!isEvmWallet || !selectedWallet) {
+      showErrorToast("Please select an Ethereum wallet");
+      return;
+    }
+    try {
+      fundWalletEvm({
+        address: selectedWallet.address,
+        options: {
+          amount: "1",
+          ...(config || { asset: "native-currency" }),
+        },
+      });
+    } catch (error) {
+      console.log(error);
+      showErrorToast("Failed to fund wallet. Please try again.");
+    }
+  };
+  const fundWalletSolanaHandler = (config?: SolanaFundingConfig) => {
+    if (!isSolanaWallet || !selectedWallet) {
       showErrorToast("Please select a Solana wallet");
       return;
     }
     try {
-      fundWalletSolana(selectedWallet.address, {
-        amount: "1",
-        ...(asset && { asset }),
+      fundWalletSolana({
+        address: selectedWallet.address,
+        options: {
+          amount: "1",
+          ...(config || { asset: "native-currency" }),
+        },
       });
     } catch (error) {
       console.log(error);
@@ -52,24 +87,95 @@ const FundWallet = () => {
 
   const availableActions = [
     {
+      name: "Fund ETH",
+      function: fundWalletEvmHandler,
+      disabled: !isEvmWallet,
+    },
+    {
+      name: "Fund USDC (EVM)",
+      function: () => {
+        fundWalletEvmHandler({ asset: "USDC", amount: "1" });
+      },
+      disabled: !isEvmWallet,
+    },
+    {
       name: "Fund SOL",
       function: fundWalletSolanaHandler,
-      disabled: false,
+      disabled: !isSolanaWallet,
     },
     {
       name: "Fund USDC (Solana)",
       function: () => {
-        fundWalletSolanaHandler("USDC");
+        fundWalletSolanaHandler({ asset: "USDC", amount: "1" });
       },
-      disabled: false,
+      disabled: !isSolanaWallet,
+    },
+    {
+      name: "Fund 15 USDC via card",
+      function: () => {
+        if (isEvmWallet) {
+          fundWalletEvmHandler({
+            asset: "USDC",
+            amount: "15",
+            defaultFundingMethod: "card",
+          });
+        } else if (isSolanaWallet) {
+          fundWalletSolanaHandler({
+            asset: "USDC",
+            amount: "15",
+            defaultFundingMethod: "card",
+          });
+        } else {
+          showErrorToast("Please select a wallet");
+        }
+      },
+    },
+    {
+      name: "Fund 15 USDC via wallet",
+      function: () => {
+        if (isEvmWallet) {
+          fundWalletEvmHandler({
+            asset: "USDC",
+            amount: "15",
+            defaultFundingMethod: "wallet",
+          });
+        } else if (isSolanaWallet) {
+          fundWalletSolanaHandler({
+            asset: "USDC",
+            amount: "15",
+            defaultFundingMethod: "wallet",
+          });
+        } else {
+          showErrorToast("Please select a wallet");
+        }
+      },
+    },
+    {
+      name: "Fund 15 USDC via exchange",
+      function: () => {
+        if (isEvmWallet) {
+          fundWalletEvmHandler({
+            asset: "USDC",
+            amount: "15",
+            defaultFundingMethod: "exchange",
+          });
+        } else if (isSolanaWallet) {
+          fundWalletSolanaHandler({
+            asset: "USDC",
+            amount: "15",
+            defaultFundingMethod: "exchange",
+          });
+        } else {
+          showErrorToast("Please select a wallet");
+        }
+      },
     },
   ];
-
   return (
     <Section
       name="Fund wallet"
       description={
-        "Fund Solana wallet using a card, exchange, or external wallet. Privy has bridging integration out of the box powered by Relay reservoir."
+        "Fund wallet using a card, exchange, or external wallet. Privy has bridging integration out of the box powered by Relay reservoir."
       }
       filepath="src/components/sections/fund-wallet"
       actions={availableActions}
@@ -87,7 +193,7 @@ const FundWallet = () => {
             value={selectedWallet?.address || ""}
             onChange={(e) => {
               const wallet = allWallets.find(
-                (w) => w.address === e.target.value
+                (w) => w.address === e.target.value,
               );
               setSelectedWallet(wallet || null);
             }}
@@ -100,7 +206,8 @@ const FundWallet = () => {
                 <option value="">Select a wallet</option>
                 {allWallets.map((wallet) => (
                   <option key={wallet.address} value={wallet.address}>
-                    {wallet.address} [solana]
+                    {wallet.address} [
+                    {wallet.type === "ethereum" ? "ethereum" : "solana"}]
                   </option>
                 ))}
               </>
