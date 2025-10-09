@@ -9,10 +9,10 @@ import {
   useSignTypedData,
 } from "@privy-io/react-auth";
 import {
-  useSendTransaction as useSendTransactionSolana,
+  useSignAndSendTransaction as useSignAndSendTransactionSolana,
   useSignMessage as useSignMessageSolana,
   useSignTransaction as useSignTransactionSolana,
-  useConnectedStandardWallets,
+  useWallets as useSolanaWallets,
 } from "@privy-io/react-auth/solana";
 import bs58 from "bs58";
 import {
@@ -38,8 +38,8 @@ const WalletActions = () => {
   const { wallets: walletsEvm } = useWallets();
   const { signMessage: signMessageSolana } = useSignMessageSolana();
   const { signTransaction: signTransactionSolana } = useSignTransactionSolana();
-  const { sendTransaction: sendTransactionSolana } = useSendTransactionSolana();
-  const { wallets: walletsSolana } = useConnectedStandardWallets();
+  const { signAndSendTransaction: signAndSendTransactionSolana } = useSignAndSendTransactionSolana();
+  const { wallets: walletsSolana } = useSolanaWallets();
 
   const allWallets = useMemo((): WalletInfo[] => {
     const evmWallets: WalletInfo[] = walletsEvm.map((wallet) => ({
@@ -92,18 +92,24 @@ const WalletActions = () => {
       return;
     }
     try {
+      const wallet = walletsSolana.find((w) => w.address === selectedWallet.address);
+      if (!wallet) {
+        showErrorToast("Wallet not found");
+        return;
+      }
       const message = "Hello world";
-      const signatureUint8Array = await signMessageSolana({
+      const result = await signMessageSolana({
+        wallet,
         message: new TextEncoder().encode(message),
         options: {
-          address: selectedWallet.address,
           uiOptions: {
             title: "Sign this message",
           },
         },
       });
-      const signature = bs58.encode(signatureUint8Array);
-      showSuccessToast(`Solana Message signed: ${signature.slice(0, 10)}...`);
+      const signature = Array.isArray(result) ? result[0] : result;
+      const signatureBase58 = bs58.encode(signature);
+      showSuccessToast(`Solana Message signed: ${signatureBase58.slice(0, 10)}...`);
     } catch (error) {
       console.log(error);
       showErrorToast("Failed to sign Solana message");
@@ -137,15 +143,31 @@ const WalletActions = () => {
       return;
     }
     try {
+      const wallet = walletsSolana.find((w) => w.address === selectedWallet.address);
+      if (!wallet) {
+        showErrorToast("Wallet not found");
+        return;
+      }
       const connection = new Connection("https://api.mainnet-beta.solana.com");
       const transaction = new Transaction();
 
-      const signedTransaction = await signTransactionSolana({
-        transaction: transaction,
-        connection: connection,
-        address: selectedWallet.address,
+      // Add blockhash and fee payer
+      const { blockhash } = await connection.getLatestBlockhash();
+      transaction.recentBlockhash = blockhash;
+      transaction.feePayer = new PublicKey(selectedWallet.address);
+
+      // Serialize transaction to Uint8Array
+      const serializedTransaction = transaction.serialize({
+        requireAllSignatures: false,
+        verifySignatures: false,
       });
-      console.log(signedTransaction);
+
+      const result = await signTransactionSolana({
+        wallet,
+        transaction: serializedTransaction,
+      });
+      const signedTx = Array.isArray(result) ? result[0] : result;
+      console.log(signedTx);
       showSuccessToast("Solana Transaction signed successfully");
     } catch (error) {
       console.log(error);
@@ -180,6 +202,11 @@ const WalletActions = () => {
       return;
     }
     try {
+      const wallet = walletsSolana.find((w) => w.address === selectedWallet.address);
+      if (!wallet) {
+        showErrorToast("Wallet not found");
+        return;
+      }
       const connection = new Connection("https://api.devnet.solana.com");
       const transaction = new Transaction();
 
@@ -194,11 +221,17 @@ const WalletActions = () => {
       transaction.recentBlockhash = latestBlockhash.blockhash;
       transaction.feePayer = new PublicKey(selectedWallet.address);
 
-      const receipt = await sendTransactionSolana({
-        transaction: transaction,
-        connection: connection,
-        address: selectedWallet.address,
+      // Serialize transaction to Uint8Array
+      const serializedTransaction = transaction.serialize({
+        requireAllSignatures: false,
+        verifySignatures: false,
       });
+
+      const result = await signAndSendTransactionSolana({
+        wallet,
+        transaction: serializedTransaction,
+      });
+      const receipt = Array.isArray(result) ? result[0] : result;
       console.log(receipt);
 
       showSuccessToast("Solana Transaction sent successfully");

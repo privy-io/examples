@@ -8,14 +8,6 @@ export default function Providers({ children }: { children: React.ReactNode }) {
     <PrivyProvider
       appId={process.env.NEXT_PUBLIC_PRIVY_APP_ID!}
       config={{
-        embeddedWallets: {
-          ethereum: {
-            createOnLogin: "users-without-wallets",
-          },
-          solana: {
-            createOnLogin: "users-without-wallets",
-          },
-        },
         appearance: { walletChainType: "ethereum-and-solana" },
         externalWallets: { solana: { connectors: toSolanaWalletConnectors() } },
       }}

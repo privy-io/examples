@@ -3,12 +3,12 @@ import { useState, useMemo, useEffect } from "react";
 import {
   useImportWallet as useImportWalletEvm,
   usePrivy,
-  useSolanaWallets,
   useWallets,
 } from "@privy-io/react-auth";
 import {
   useImportWallet as useImportWalletSolana,
   useExportWallet as useExportWalletSolana,
+  useWallets as useSolanaWallets,
 } from "@privy-io/react-auth/solana";
 import Section from "../reusables/section";
 import { showSuccessToast, showErrorToast } from "@/components/ui/custom-toast";
@@ -40,7 +40,7 @@ const WalletManagement = () => {
       address: wallet.address,
       type: "solana" as const,
       name: wallet.address,
-      isPrivy: wallet.walletClientType === "privy",
+      isPrivy: true, // Solana wallets from useSolanaWallets are always Privy embedded wallets
     }));
 
     return [...evmWallets, ...solanaWallets];
