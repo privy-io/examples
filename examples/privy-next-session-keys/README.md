@@ -11,7 +11,7 @@ This example showcases how to integrate Privy's embedded wallets with ZeroDev se
 ### 1. Clone the Project
 
 ```bash
-mkdir -p privy-next-starter && curl -L https://github.com/privy-io/privy-examples/archive/main.tar.gz | tar -xz --strip=2 -C privy-next-starter privy-examples-main/privy-next-starter && cd privy-next-starter
+mkdir -p privy-next-session-keys && curl -L https://github.com/privy-io/privy-examples/archive/main.tar.gz | tar -xz --strip=3 -C privy-next-session-keys examples-main/examples/privy-next-session-keys && cd privy-next-session-keys
 ```
 
 ### 2. Install Dependencies

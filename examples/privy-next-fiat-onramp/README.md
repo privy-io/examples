@@ -38,8 +38,7 @@ These are the specific points of integration:
 1. Clone this repository
 
 ```sh
-git clone git@github.com:privy-io/fiat-onramp-demo.git
-cd fiat-onramp-demo
+mkdir -p privy-next-fiat-onramp && curl -L https://github.com/privy-io/privy-examples/archive/main.tar.gz | tar -xz --strip=3 -C privy-next-fiat-onramp examples-main/examples/privy-next-fiat-onramp && cd privy-next-fiat-onramp
 ```
 
 2. Create your `.env.local` file from `.env.local.example`. Fill in your:

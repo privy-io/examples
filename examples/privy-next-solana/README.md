@@ -11,7 +11,7 @@ This example showcases how to get started using Solana with Privy's React SDK in
 ### 1. Clone the Project
 
 ```bash
-mkdir -p privy-next-solana && curl -L https://github.com/privy-io/privy-examples/archive/main.tar.gz | tar -xz --strip=3 -C privy-next-solana privy-examples-main/examples/privy-next-solana && cd privy-next-solana
+mkdir -p privy-next-solana && curl -L https://github.com/privy-io/privy-examples/archive/main.tar.gz | tar -xz --strip=3 -C privy-next-solana examples-main/examples/privy-next-solana && cd privy-next-solana
 ```
 
 ### 2. Install Dependencies
@@ -59,8 +59,9 @@ Open [http://localhost:3000](http://localhost:3000) in your browser to see the a
 Login or sign up using Privy's pre-built modals.
 
 [`src/app/page.tsx`](./src/app/page.tsx)
+
 ```tsx
-import { usePrivy } from "@privy-io/react-auth"; 
+import { usePrivy } from "@privy-io/react-auth";
 const { login } = usePrivy();
 login();
 ```
@@ -70,6 +71,7 @@ login();
 Programmatically create a Solana embedded wallet for your user. Wallets can also be automatically created on login by configuring your PrivyProvider, learn more [here](https://docs.privy.io/basics/react/advanced/automatic-wallet-creation).
 
 [`src/components/sections/create-a-wallet.tsx`](./src/components/sections/create-a-wallet.tsx)
+
 ```tsx
 import { useSolanaWallets } from "@privy-io/react-auth";
 const { createWallet } = useSolanaWallets();
@@ -81,6 +83,7 @@ createWallet();
 Send a transaction on Solana by either prompting your users for confirmation, or abstract away confirmations by enabling headless signing.
 
 [`src/components/sections/wallet-actions.tsx`](./src/components/sections/wallet-actions.tsx)
+
 ```tsx
 import { useSendTransaction } from "@privy-io/react-auth/solana";
 const { sendTransaction } = useSendTransaction();

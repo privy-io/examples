@@ -7,7 +7,7 @@ This example showcases how to get started using Privy's Expo SDK inside an Expo 
 ### 1. Clone the Project
 
 ```bash
-mkdir -p privy-expo-starter && curl -L https://github.com/privy-io/privy-examples/archive/main.tar.gz | tar -xz --strip=2 -C privy-expo-starter privy-examples-main/privy-expo-starter && cd privy-expo-starter
+mkdir -p privy-expo-starter && curl -L https://github.com/privy-io/privy-examples/archive/main.tar.gz | tar -xz --strip=2 -C privy-expo-starter examples-main/privy-expo-starter && cd privy-expo-starter
 ```
 
 ### 2. Install Dependencies

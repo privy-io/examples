@@ -1,6 +1,6 @@
 # Telegram trading bot starter
 
-A Telegram trading bot with Privy authentication, built for Solana trading using Jupiter. 
+A Telegram trading bot with Privy authentication, built for Solana trading using Jupiter.
 
 For a detailed guide on implementing this starter repo, visit [here](https://docs.privy.io/recipes/react/telegram-trading-guide)
 
@@ -20,23 +20,26 @@ For a detailed guide on implementing this starter repo, visit [here](https://doc
 ## Installation
 
 1. Clone the repository:
+
 ```bash
-git clone https://github.com/privy-io/telegram-trading-bot-starter.git
-cd telegram-trading-bot-starter
+mkdir -p privy-node-telegram-trading-bot && curl -L https://github.com/privy-io/privy-examples/archive/main.tar.gz | tar -xz --strip=3 -C privy-node-telegram-trading-bot examples-main/examples/privy-node-telegram-trading-bot && cd privy-node-telegram-trading-bot
 ```
 
 2. Install dependencies:
+
 ```bash
 npm install
 ```
 
 3. Set up environment variables:
+
 ```bash
 # Copy the example environment file
 cp .env.example .env.local
 ```
 
 4. Edit `.env.local` with your credentials:
+
 ```env
 TELEGRAM_BOT_TOKEN=your_telegram_bot_token
 PRIVY_APP_ID=your_privy_app_id
@@ -50,6 +53,7 @@ This starter kit includes a mock database implementation for demonstration purpo
 ## Usage
 
 Start the bot:
+
 ```bash
 npm start
 ```
@@ -61,6 +65,7 @@ npm start
 - `/swap <TOKEN_ADDRESS> <AMOUNT OF SOL>` - Swap SOL for <TOKEN_ADDRESS>
 
 ## Check out:
+
 - `index.js` for core Telegram bot operations and Privy wallet interactions
 - `jupiter.js` for Juptiter API related functions
-- `mockDb.js` for our mocked DB code. 
+- `mockDb.js` for our mocked DB code.
