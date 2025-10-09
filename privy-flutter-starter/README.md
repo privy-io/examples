@@ -7,7 +7,7 @@ This example showcases how to get started using Privy's Flutter SDK inside a Flu
 ### 1. Clone the Project
 
 ```bash
-mkdir -p privy-flutter-starter && curl -L https://github.com/privy-io/privy-examples/archive/main.tar.gz | tar -xz --strip=2 -C privy-flutter-starter privy-examples-main/privy-flutter-starter && cd privy-flutter-starter
+mkdir -p privy-flutter-starter && curl -L https://github.com/privy-io/privy-examples/archive/main.tar.gz | tar -xz --strip=2 -C privy-flutter-starter examples-main/privy-flutter-starter && cd privy-flutter-starter
 ```
 
 ### 2. Install Dependencies
@@ -48,6 +48,7 @@ This will launch the app on your connected device or emulator.
 Login or sign up using Privy's authentication flow for Flutter.
 
 [`lib/main.dart`](./lib/main.dart)
+
 ```dart
 import 'package:privy_flutter/privy_flutter.dart';
 
@@ -60,13 +61,14 @@ final privy = PrivyManager().privy;
 Programmatically create embedded wallets for Ethereum and Solana.
 
 [`lib/features/authenticated/widgets/ethereum_wallets_widget.dart`](./lib/features/authenticated/widgets/ethereum_wallets_widget.dart)
+
 ```dart
 import 'package:privy_flutter/privy_flutter.dart';
 
 // Create Ethereum wallet
 await privy.createEthereumWallet();
 
-// Create Solana wallet  
+// Create Solana wallet
 await privy.createSolanaWallet();
 ```
 
@@ -75,6 +77,7 @@ await privy.createSolanaWallet();
 Send transactions on Ethereum using Flutter SDK's RPC methods.
 
 [`lib/features/wallet/eth_wallet_screen.dart`](./lib/features/wallet/eth_wallet_screen.dart)
+
 ```dart
 import 'package:privy_flutter/privy_flutter.dart';
 

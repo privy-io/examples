@@ -9,8 +9,7 @@ You can see the deployed version at [pwa.privy.io](https://pwa.privy.io/).
 First, clone this repo:
 
 ```sh
-npx degit privy-io/create-privy-pwa my-pwa-project
-cd my-pwa-project
+mkdir -p privy-react-pwa && curl -L https://github.com/privy-io/privy-examples/archive/main.tar.gz | tar -xz --strip=3 -C privy-react-pwa examples-main/examples/privy-react-pwa && cd privy-react-pwa
 ```
 
 Next, install dependencies, _(includes `@privy-io/react-auth`, `viem`, and `next-pwa`:)_

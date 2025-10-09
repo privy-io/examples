@@ -11,7 +11,7 @@ This example showcases how to get started using Privy's React SDK inside a React
 ### 1. Clone the Project
 
 ```bash
-mkdir -p privy-react-whitelabel-starter && curl -L https://github.com/privy-io/privy-examples/archive/main.tar.gz | tar -xz --strip=2 -C privy-react-whitelabel-starter privy-examples-main/privy-react-whitelabel-starter && cd privy-react-whitelabel-starter
+mkdir -p privy-react-whitelabel-starter && curl -L https://github.com/privy-io/privy-examples/archive/main.tar.gz | tar -xz --strip=2 -C privy-react-whitelabel-starter examples-main/privy-react-whitelabel-starter && cd privy-react-whitelabel-starter
 ```
 
 ### 2. Install Dependencies

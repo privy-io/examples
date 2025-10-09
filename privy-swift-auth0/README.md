@@ -7,7 +7,7 @@ This example showcases how to integrate Privy's iOS SDK with Auth0 as a custom a
 ### 1. Clone the Project
 
 ```bash
-mkdir -p privy-swift-auth0 && curl -L https://github.com/privy-io/privy-examples/archive/main.tar.gz | tar -xz --strip=2 -C privy-swift-auth0 privy-examples-main/privy-swift-auth0 && cd privy-swift-auth0
+mkdir -p privy-swift-auth0 && curl -L https://github.com/privy-io/privy-examples/archive/main.tar.gz | tar -xz --strip=2 -C privy-swift-auth0 examples-main/privy-swift-auth0 && cd privy-swift-auth0
 ```
 
 ### 2. Open in Xcode
@@ -21,6 +21,7 @@ open PrivyExampleApp.xcodeproj
 Update your Privy App ID in the configuration:
 
 [`PrivyExampleApp/PrivyManager.swift`](PrivyExampleApp/PrivyManager.swift#L32)
+
 ```swift
 self.privy = Privy(config: PrivyConfig(appId: "your-app-id"))
 ```
@@ -30,6 +31,7 @@ self.privy = Privy(config: PrivyConfig(appId: "your-app-id"))
 Update the Auth0 configuration files with your Auth0 account details:
 
 **Auth0.plist:**
+
 ```xml
 <key>ClientId</key>
 <string>your_auth0_client_id</string>
@@ -39,6 +41,7 @@ Update the Auth0 configuration files with your Auth0 account details:
 
 **Auth0Manager.swift:**
 [`PrivyExampleApp/Auth0Manager.swift`](PrivyExampleApp/Auth0Manager.swift#L22)
+
 ```swift
 .audience("your-auth0-audience")
 ```
@@ -54,6 +57,7 @@ Select a simulator or connected device in Xcode and press `Cmd + R` to build and
 Integrate Auth0 as a custom authentication provider for Privy.
 
 [`PrivyExampleApp/Auth0Manager.swift`](PrivyExampleApp/Auth0Manager.swift)
+
 ```swift
 import Auth0
 
@@ -70,6 +74,7 @@ func login() async throws -> Credentials {
 Configure Privy to use Auth0 tokens for authentication.
 
 [`PrivyExampleApp/PrivyManager.swift`](PrivyExampleApp/PrivyManager.swift)
+
 ```swift
 import PrivySDK
 
@@ -85,6 +90,7 @@ let user = try await privy.loginWithCustomAccessToken()
 Create embedded wallets and perform blockchain operations.
 
 [`PrivyExampleApp/Views/WalletView.swift`](PrivyExampleApp/Views/WalletView.swift)
+
 ```swift
 // Create wallet
 let wallet = try await privy.createWallet()

@@ -11,7 +11,7 @@ This example showcases how to build a Farcaster mini app using Privy's React SDK
 ### 1. Clone the Project
 
 ```bash
-mkdir -p privy-next-farcaster-mini-app && curl -L https://github.com/privy-io/privy-examples/archive/main.tar.gz | tar -xz --strip=2 -C privy-next-farcaster-mini-app privy-examples-main/privy-next-farcaster-mini-app && cd privy-next-farcaster-mini-app
+mkdir -p privy-next-farcaster-mini-app && curl -L https://github.com/privy-io/privy-examples/archive/main.tar.gz | tar -xz --strip=3 -C privy-next-farcaster-mini-app examples-main/examples/privy-next-farcaster-mini-app && cd privy-next-farcaster-mini-app
 ```
 
 ### 2. Install Dependencies
