@@ -2,6 +2,10 @@
 
 This example showcases how to get started using Multi-Chain EVM smart wallets with Privy's React SDK inside a Next.js application.
 
+## 📖 Related Recipe
+
+For a step-by-step guide on integrating smart accounts with wagmi, check out our [Integrating Smart Accounts with Wagmi Recipe](https://docs.privy.io/recipes/account-abstraction/wagmi) in the Privy documentation.
+
 ## Live Demo
 
 [View Demo]({{DEPLOY_URL}})

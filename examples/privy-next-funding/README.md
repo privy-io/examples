@@ -2,6 +2,10 @@
 
 This example showcases how to get started using Privy's native wallet funding flows inside a Next.js application.
 
+## 📖 Related Recipe
+
+For a step-by-step guide on funding wallets with Apple Pay and Google Pay, check out our [Card-based Funding Recipe](https://docs.privy.io/recipes/card-based-funding) in the Privy documentation.
+
 ## Live Demo
 
 [View Demo]({{DEPLOY_URL}})

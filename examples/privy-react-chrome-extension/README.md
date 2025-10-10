@@ -2,6 +2,10 @@
 
 This example showcases how to get started using Privy's React SDK inside a React + Vite application.
 
+## 📖 Related Recipe
+
+For a step-by-step guide on Chrome extension authentication, check out our [Chrome Extension Authentication Recipe](https://docs.privy.io/recipes/react/chrome-extension) in the Privy documentation.
+
 ## Getting Started
 
 ### 1. Clone the Project
