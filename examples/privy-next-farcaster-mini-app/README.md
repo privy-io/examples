@@ -2,6 +2,10 @@
 
 This example showcases how to build a Farcaster mini app using Privy's React SDK inside a Next.js application with automatic Farcaster authentication.
 
+## 📖 Related Recipe
+
+For a step-by-step guide on building Farcaster Mini Apps, check out our [Farcaster Mini Apps Recipe](https://docs.privy.io/recipes/farcaster/mini-apps) in the Privy documentation.
+
 ## Live Demo
 
 [View Demo](https://privy-frames-v2-demo.vercel.app)
