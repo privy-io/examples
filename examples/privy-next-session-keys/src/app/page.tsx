@@ -65,7 +65,7 @@ function Home() {
           />
           <div className="z-10 flex flex-col items-center justify-center w-full h-full">
             <div className="flex h-10 items-center justify-center rounded-[20px] border border-white px-6 text-lg text-white font-abc-favorit">
-              Next.js Demo
+              Session Keys Demo
             </div>
             <div className="text-center mt-4 text-white text-7xl font-medium font-abc-favorit leading-[81.60px]">
               Starter repo
