@@ -60,7 +60,13 @@ function Home() {
   }
 
   return (
-    <div className={`${authenticated ? 'bg-[#E0E7FF66] md:max-h-[100vh] md:overflow-hidden' : 'bg-transparent h-screen overflow-hidden'}`}>
+    <div
+      className={`${
+        authenticated
+          ? "bg-[#E0E7FF66] md:max-h-[100vh] md:overflow-hidden"
+          : "bg-transparent h-screen overflow-hidden"
+      }`}
+    >
       <Header authenticated={authenticated} />
       {authenticated ? (
         <section className="w-full flex flex-col md:flex-row h-screen pt-[60px]">
@@ -93,7 +99,7 @@ function Home() {
           />
           <div className="z-10 flex flex-col items-center justify-center w-full h-full">
             <div className="flex h-10 items-center justify-center rounded-[20px] border border-white px-6 text-lg text-white font-abc-favorit">
-              Farcaster miniapp Demo
+              Farcaster Mini App Demo
             </div>
             <div className="text-center mt-4 text-white text-7xl font-medium font-abc-favorit leading-[81.60px]">
               Starter repo
