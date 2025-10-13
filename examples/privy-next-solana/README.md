@@ -2,6 +2,10 @@
 
 This example showcases how to get started using Solana with Privy's React SDK inside a Next.js application.
 
+## 📖 Related Recipe
+
+For a step-by-step guide on getting started with Privy and Solana, check out our [Getting Started with Privy and Solana Recipe](https://docs.privy.io/recipes/solana/getting-started-with-privy-and-solana) in the Privy documentation.
+
 ## Live Demo
 
 [View Demo]({{DEPLOY_URL}})

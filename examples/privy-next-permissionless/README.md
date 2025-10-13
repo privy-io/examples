@@ -1,5 +1,9 @@
 # Privy x `permissionless` Starter
 
+## 📖 Related Recipe
+
+For a step-by-step guide on custom account abstraction implementation, check out our [Custom Account Abstraction Implementation Recipe](https://docs.privy.io/recipes/account-abstraction/custom-implementation) in the Privy documentation.
+
 ## Live Demo
 
 [https://permissionless-example.privy.io/](https://permissionless-example.privy.io/)
