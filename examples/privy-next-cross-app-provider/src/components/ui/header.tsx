@@ -7,10 +7,18 @@ interface HeaderProps {
 
 export function Header({ authenticated }: HeaderProps) {
   return (
-    <header className={`fixed top-0 left-0 w-full h-[60px] flex flex-row justify-between items-center px-6 z-50 ${authenticated ? 'bg-white border-b border-[#E2E3F0]' : 'bg-transparent border-none backdrop-blur-none'}`}>
+    <header
+      className={`fixed top-0 left-0 w-full h-[60px] flex flex-row justify-between items-center px-6 z-50 ${
+        authenticated
+          ? "bg-white border-b border-[#E2E3F0]"
+          : "bg-transparent border-none backdrop-blur-none"
+      }`}
+    >
       <div className="flex flex-row items-center gap-2 h-[26px]">
         <Image
-          src={authenticated ? "/privy-logo-black.png" : "/privy-logo-white.png"}
+          src={
+            authenticated ? "/privy-logo-black.png" : "/privy-logo-white.png"
+          }
           alt="Privy Logo"
           width={104}
           height={23}
@@ -18,14 +26,24 @@ export function Header({ authenticated }: HeaderProps) {
           priority
         />
 
-        {authenticated && <div className={`text-medium flex h-[22px] items-center justify-center rounded-[11px] border px-[0.375rem] text-[0.75rem] ${authenticated ? 'border-primary text-primary' : 'border-white text-white'}`}>
-          Next.js Demo
-        </div>}
+        {authenticated && (
+          <div
+            className={`text-medium flex h-[22px] items-center justify-center rounded-[11px] border px-[0.375rem] text-[0.75rem] ${
+              authenticated
+                ? "border-primary text-primary"
+                : "border-white text-white"
+            }`}
+          >
+            Cross App Provider Demo
+          </div>
+        )}
       </div>
 
       <div className="flex flex-row justify-end items-center gap-4 h-9">
         <a
-          className={`flex flex-row items-center gap-1 cursor-pointer ${authenticated ? 'text-primary' : 'text-white'}`}
+          className={`flex flex-row items-center gap-1 cursor-pointer ${
+            authenticated ? "text-primary" : "text-white"
+          }`}
           href="https://docs.privy.io/basics/react/installation"
           target="_blank"
           rel="noreferrer"
