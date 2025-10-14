@@ -48,7 +48,7 @@ const FundWallet = () => {
 
   const isEvmWallet = selectedWallet?.type === "ethereum";
   const isSolanaWallet = selectedWallet?.type === "solana";
-  const fundWalletEvmHandler = (
+  const fundWalletEvmHandler = async (
     asset?:
       | {
           erc20: Hex;
@@ -61,7 +61,7 @@ const FundWallet = () => {
       return;
     }
     try {
-      fundWalletEvm(selectedWallet.address, {
+      await fundWalletEvm(selectedWallet.address, {
         amount: "1",
         ...(asset && { asset }),
       });
@@ -70,13 +70,13 @@ const FundWallet = () => {
       showErrorToast("Failed to fund wallet. Please try again.");
     }
   };
-  const fundWalletSolanaHandler = (asset?: "USDC" | "native-currency") => {
+  const fundWalletSolanaHandler = async (asset?: "USDC" | "native-currency") => {
     if (!isSolanaWallet || !selectedWallet) {
       showErrorToast("Please select a Solana wallet");
       return;
     }
     try {
-      fundWalletSolana(selectedWallet.address, {
+      await fundWalletSolana(selectedWallet.address, {
         amount: "1",
         ...(asset && { asset }),
       });
