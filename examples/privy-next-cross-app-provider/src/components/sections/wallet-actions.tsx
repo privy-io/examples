@@ -19,7 +19,6 @@ import {
   address,
   appendTransactionMessageInstruction,
   compileTransaction,
-  compileTransactionMessage,
   createNoopSigner,
   createSolanaRpc,
   createTransactionMessage,

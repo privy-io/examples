@@ -16,11 +16,18 @@ import {
 } from "@privy-io/react-auth/solana";
 import bs58 from "bs58";
 import {
-  Connection,
-  PublicKey,
-  SystemProgram,
-  Transaction,
-} from "@solana/web3.js";
+  address,
+  appendTransactionMessageInstruction,
+  compileTransaction,
+  createNoopSigner,
+  createSolanaRpc,
+  createTransactionMessage,
+  getBase64EncodedWireTransaction,
+  pipe,
+  setTransactionMessageFeePayer,
+  setTransactionMessageLifetimeUsingBlockhash,
+} from "@solana/kit";
+import { getTransferSolInstruction } from "@solana-program/system";
 import Section from "../reusables/section";
 import { showSuccessToast, showErrorToast } from "@/components/ui/custom-toast";
 
@@ -158,17 +165,35 @@ const WalletActions = () => {
     }
 
     try {
-      const connection = new Connection(
-        process.env.NEXT_PUBLIC_SOLANA_MAINNET_RPC_URL!,
+      const client = createSolanaRpc("https://api.devnet.solana.com");
+      const { value: blockhash } = await client.getLatestBlockhash().send();
+
+      const solTransferInstruction = getTransferSolInstruction({
+        amount: 1000000,
+        destination: address("Enter_Destination_Address_Here"),
+        source: createNoopSigner(address(selectedWallet.address)),
+      });
+
+      const transaction = pipe(
+        createTransactionMessage({ version: 0 }),
+        (tx) =>
+          setTransactionMessageFeePayer(address(selectedWallet.address), tx),
+        (tx) => appendTransactionMessageInstruction(solTransferInstruction, tx),
+        (tx) => setTransactionMessageLifetimeUsingBlockhash(blockhash, tx),
+        (tx) => compileTransaction(tx),
+        (tx) => getBase64EncodedWireTransaction(tx),
       );
-      const transaction = new Transaction();
-      transaction.recentBlockhash = (
-        await connection.getLatestBlockhash()
-      ).blockhash;
-      transaction.feePayer = new PublicKey(selectedWallet.address);
+
+      const wallet = walletsSolana.find(
+        (v) => v.address === selectedWallet.address,
+      );
+      if (!wallet) {
+        showErrorToast("Wallet not found");
+        return;
+      }
 
       const signedTransaction = await signTransactionSolana({
-        transaction: transaction.serialize({ verifySignatures: false }),
+        transaction: Buffer.from(transaction, "base64"),
         wallet,
       });
       console.log(signedTransaction);
@@ -216,25 +241,37 @@ const WalletActions = () => {
     }
 
     try {
-      const connection = new Connection("https://api.devnet.solana.com");
-      const transaction = new Transaction();
+      const client = createSolanaRpc("https://api.devnet.solana.com");
+      const { value: blockhash } = await client.getLatestBlockhash().send();
 
-      const transferInstruction = SystemProgram.transfer({
-        fromPubkey: new PublicKey(selectedWallet.address),
-        toPubkey: new PublicKey(selectedWallet.address),
-        lamports: 1_000_000_000,
+      const solTransferInstruction = getTransferSolInstruction({
+        amount: 1000000,
+        destination: address(selectedWallet.address),
+        source: createNoopSigner(address(selectedWallet.address)),
       });
-      transaction.add(transferInstruction);
 
-      const latestBlockhash = await connection.getLatestBlockhash();
-      transaction.recentBlockhash = latestBlockhash.blockhash;
-      transaction.feePayer = new PublicKey(selectedWallet.address);
+      const transaction = pipe(
+        createTransactionMessage({ version: 0 }),
+        (tx) =>
+          setTransactionMessageFeePayer(address(selectedWallet.address), tx),
+        (tx) => appendTransactionMessageInstruction(solTransferInstruction, tx),
+        (tx) => setTransactionMessageLifetimeUsingBlockhash(blockhash, tx),
+        (tx) => compileTransaction(tx),
+        (tx) => getBase64EncodedWireTransaction(tx),
+      );
 
+      const wallet = walletsSolana.find(
+        (v) => v.address === selectedWallet.address,
+      );
+      if (!wallet) {
+        showErrorToast("Wallet not found");
+        return;
+      }
       const receipt = await sendTransactionSolana({
-        transaction: transaction.serialize({ verifySignatures: false }),
+        transaction: Buffer.from(transaction, "base64"),
         wallet,
       });
-      console.log(receipt.signature);
+      console.log(receipt);
 
       showSuccessToast("Solana Transaction sent successfully");
     } catch (error) {
