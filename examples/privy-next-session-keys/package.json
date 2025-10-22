@@ -15,7 +15,6 @@
     "@solana-program/system": "0.8.0",
     "@solana-program/token": "0.6.0",
     "@solana/kit": "3.0.3",
-    "@solana/spl-token": "^0.4.14",
     "@zerodev/ecdsa-validator": "^5.4.9",
     "@zerodev/permissions": "^5.6.2",
     "@zerodev/sdk": "^5.5.2",

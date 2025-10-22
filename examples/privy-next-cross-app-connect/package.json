@@ -17,7 +17,6 @@
     "@solana-program/system": "0.8.0",
     "@solana-program/token": "0.6.0",
     "@solana/kit": "3.0.3",
-    "@solana/spl-token": "^0.4.14",
     "@tanstack/react-query": "^5.89.0",
     "bs58": "^6.0.0",
     "next": "15.5.3",
