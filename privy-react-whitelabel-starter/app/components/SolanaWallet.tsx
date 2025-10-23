@@ -1,11 +1,27 @@
 import React, {useState} from 'react';
-import {usePrivy, ConnectedSolanaWallet} from '@privy-io/react-auth';
-import {PublicKey, Transaction, Connection, SystemProgram} from '@solana/web3.js';
+import {usePrivy} from '@privy-io/react-auth';
+import {
+  ConnectedStandardSolanaWallet,
+  useSignMessage,
+  useSignAndSendTransaction,
+} from '@privy-io/react-auth/solana';
+import {
+  address,
+  appendTransactionMessageInstruction,
+  compileTransaction,
+  createNoopSigner,
+  createSolanaRpc,
+  createTransactionMessage,
+  getBase64EncodedWireTransaction,
+  pipe,
+  setTransactionMessageFeePayer,
+  setTransactionMessageLifetimeUsingBlockhash,
+} from '@solana/kit';
+import {getTransferSolInstruction} from '@solana-program/system';
 import {toast} from 'react-toastify';
-import {useSignMessage} from '@privy-io/react-auth/solana';
 
 interface SolanaWalletProps {
-  wallet: ConnectedSolanaWallet;
+  wallet: ConnectedStandardSolanaWallet;
   index: number;
 }
 
@@ -13,31 +29,39 @@ const SolanaWallet: React.FC<SolanaWalletProps> = ({wallet, index}) => {
   const [showSignMessage, setShowSignMessage] = useState(false);
   const [showSendTransaction, setShowSendTransaction] = useState(false);
   const {signMessage} = useSignMessage();
+  const {signAndSendTransaction} = useSignAndSendTransaction();
 
   const customSolanaSendTransaction = async () => {
     try {
       // Configure your connection to point to the correct Solana network
-      let connection = new Connection('https://api.devnet.solana.com');
+      const client = createSolanaRpc('https://api.devnet.solana.com');
 
       // Fetch the recent blockhash
-      let {blockhash} = await connection.getLatestBlockhash();
+      const {value: blockhash} = await client.getLatestBlockhash().send();
 
-      // Build out the transaction object for your desired program
-      // https://solana-labs.github.io/solana-web3.js/classes/Transaction.html
-      let transaction = new Transaction({
-        recentBlockhash: blockhash,
-        feePayer: new PublicKey(wallet.address),
-      }).add(
-        SystemProgram.transfer({
-          fromPubkey: new PublicKey(wallet.address),
-          toPubkey: new PublicKey('4tFqt2qzaNsnZqcpjPiyqYw9LdRzxaZdX2ewPncYEWLA'),
-          lamports: 1000000000, // 1 SOL = 1,000,000,000 lamports
-        }),
+      // Build the transfer instruction
+      const solTransferInstruction = getTransferSolInstruction({
+        amount: 1000000000, // 1 SOL = 1,000,000,000 lamports
+        destination: address('4tFqt2qzaNsnZqcpjPiyqYw9LdRzxaZdX2ewPncYEWLA'),
+        source: createNoopSigner(address(wallet.address)),
+      });
+
+      // Build the transaction using the functional pipeline approach
+      const transaction = pipe(
+        createTransactionMessage({version: 0}),
+        (tx) => setTransactionMessageFeePayer(address(wallet.address), tx),
+        (tx) => appendTransactionMessageInstruction(solTransferInstruction, tx),
+        (tx) => setTransactionMessageLifetimeUsingBlockhash(blockhash, tx),
+        (tx) => compileTransaction(tx),
+        (tx) => getBase64EncodedWireTransaction(tx),
       );
 
       // Send transaction
-      const txHash = await wallet.sendTransaction!(transaction, connection);
-      toast.success(`Transaction sent successfully! ${txHash}`);
+      const receipt = await signAndSendTransaction({
+        transaction: Buffer.from(transaction, 'base64'),
+        wallet,
+      });
+      toast.success(`Transaction sent successfully! ${receipt.signature}`);
     } catch (error: any) {
       toast.error(`Failed to send transaction: ${error?.message}`);
     }
@@ -45,12 +69,12 @@ const SolanaWallet: React.FC<SolanaWalletProps> = ({wallet, index}) => {
 
   const customSignMessage = async () => {
     try {
-      const signature = await signMessage({
+      const signatureOutput = await signMessage({
         message: Buffer.from('Your message here'),
-        options: {address: wallet.address},
+        wallet,
       });
 
-      toast.success(`Message signed successfully! ${signature}`);
+      toast.success(`Message signed successfully! ${signatureOutput.signature}`);
     } catch (error: any) {
       toast.error(`Failed to sign message: ${error?.message}`);
     }

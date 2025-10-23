@@ -9,18 +9,25 @@ import {
   useSignTypedData,
 } from "@privy-io/react-auth";
 import {
-  useSendTransaction as useSendTransactionSolana,
+  useSignAndSendTransaction as useSendTransactionSolana,
   useSignMessage as useSignMessageSolana,
   useSignTransaction as useSignTransactionSolana,
-  useConnectedStandardWallets,
+  useWallets as useWalletsSolana,
 } from "@privy-io/react-auth/solana";
 import bs58 from "bs58";
 import {
-  Connection,
-  PublicKey,
-  SystemProgram,
-  Transaction,
-} from "@solana/web3.js";
+  address,
+  appendTransactionMessageInstruction,
+  compileTransaction,
+  createNoopSigner,
+  createSolanaRpc,
+  createTransactionMessage,
+  getBase64EncodedWireTransaction,
+  pipe,
+  setTransactionMessageFeePayer,
+  setTransactionMessageLifetimeUsingBlockhash,
+} from "@solana/kit";
+import { getTransferSolInstruction } from "@solana-program/system";
 import Section from "../reusables/section";
 import { showSuccessToast, showErrorToast } from "@/components/ui/custom-toast";
 
@@ -38,8 +45,9 @@ const WalletActions = () => {
   const { wallets: walletsEvm } = useWallets();
   const { signMessage: signMessageSolana } = useSignMessageSolana();
   const { signTransaction: signTransactionSolana } = useSignTransactionSolana();
-  const { sendTransaction: sendTransactionSolana } = useSendTransactionSolana();
-  const { wallets: walletsSolana } = useConnectedStandardWallets();
+  const { signAndSendTransaction: sendTransactionSolana } =
+    useSendTransactionSolana();
+  const { wallets: walletsSolana } = useWalletsSolana();
 
   const allWallets = useMemo((): WalletInfo[] => {
     const evmWallets: WalletInfo[] = walletsEvm.map((wallet) => ({
@@ -91,18 +99,28 @@ const WalletActions = () => {
       showErrorToast("Please select a Solana wallet");
       return;
     }
+
+    const wallet = walletsSolana.find(
+      (v) => v.address === selectedWallet.address
+    );
+
+    if (!wallet) {
+      showErrorToast("Could not find the selected Solana wallet");
+      return;
+    }
+
     try {
       const message = "Hello world";
       const signatureUint8Array = await signMessageSolana({
         message: new TextEncoder().encode(message),
+        wallet,
         options: {
-          address: selectedWallet.address,
           uiOptions: {
             title: "Sign this message",
           },
         },
       });
-      const signature = bs58.encode(signatureUint8Array);
+      const signature = bs58.encode(signatureUint8Array.signature);
       showSuccessToast(`Solana Message signed: ${signature.slice(0, 10)}...`);
     } catch (error) {
       console.log(error);
@@ -136,14 +154,39 @@ const WalletActions = () => {
       showErrorToast("Please select a Solana wallet");
       return;
     }
+
+    const wallet = walletsSolana.find(
+      (v) => v.address === selectedWallet.address
+    );
+
+    if (!wallet) {
+      showErrorToast("Could not find the selected Solana wallet");
+      return;
+    }
+
     try {
-      const connection = new Connection("https://api.mainnet-beta.solana.com");
-      const transaction = new Transaction();
+      const client = createSolanaRpc("https://api.devnet.solana.com");
+      const { value: blockhash } = await client.getLatestBlockhash().send();
+
+      const solTransferInstruction = getTransferSolInstruction({
+        amount: 1000000,
+        destination: address("Enter_Destination_Address_Here"),
+        source: createNoopSigner(address(selectedWallet.address)),
+      });
+
+      const transaction = pipe(
+        createTransactionMessage({ version: 0 }),
+        (tx) =>
+          setTransactionMessageFeePayer(address(selectedWallet.address), tx),
+        (tx) => appendTransactionMessageInstruction(solTransferInstruction, tx),
+        (tx) => setTransactionMessageLifetimeUsingBlockhash(blockhash, tx),
+        (tx) => compileTransaction(tx),
+        (tx) => getBase64EncodedWireTransaction(tx)
+      );
 
       const signedTransaction = await signTransactionSolana({
-        transaction: transaction,
-        connection: connection,
-        address: selectedWallet.address,
+        transaction: Buffer.from(transaction, "base64"),
+        wallet,
       });
       console.log(signedTransaction);
       showSuccessToast("Solana Transaction signed successfully");
@@ -179,25 +222,39 @@ const WalletActions = () => {
       showErrorToast("Please select a Solana wallet");
       return;
     }
+
+    const wallet = walletsSolana.find(
+      (v) => v.address === selectedWallet.address
+    );
+
+    if (!wallet) {
+      showErrorToast("Could not find the selected Solana wallet");
+      return;
+    }
+
     try {
-      const connection = new Connection("https://api.devnet.solana.com");
-      const transaction = new Transaction();
+      const client = createSolanaRpc("https://api.devnet.solana.com");
+      const { value: blockhash } = await client.getLatestBlockhash().send();
 
-      const transferInstruction = SystemProgram.transfer({
-        fromPubkey: new PublicKey(selectedWallet.address),
-        toPubkey: new PublicKey(selectedWallet.address),
-        lamports: 1000000,
+      const solTransferInstruction = getTransferSolInstruction({
+        amount: 1000000,
+        destination: address(selectedWallet.address),
+        source: createNoopSigner(address(selectedWallet.address)),
       });
-      transaction.add(transferInstruction);
 
-      const latestBlockhash = await connection.getLatestBlockhash();
-      transaction.recentBlockhash = latestBlockhash.blockhash;
-      transaction.feePayer = new PublicKey(selectedWallet.address);
+      const transaction = pipe(
+        createTransactionMessage({ version: 0 }),
+        (tx) =>
+          setTransactionMessageFeePayer(address(selectedWallet.address), tx),
+        (tx) => appendTransactionMessageInstruction(solTransferInstruction, tx),
+        (tx) => setTransactionMessageLifetimeUsingBlockhash(blockhash, tx),
+        (tx) => compileTransaction(tx),
+        (tx) => getBase64EncodedWireTransaction(tx)
+      );
 
       const receipt = await sendTransactionSolana({
-        transaction: transaction,
-        connection: connection,
-        address: selectedWallet.address,
+        transaction: Buffer.from(transaction, "base64"),
+        wallet,
       });
       console.log(receipt);
 

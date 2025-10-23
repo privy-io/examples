@@ -3,12 +3,12 @@ import { useState, useMemo, useEffect } from "react";
 import {
   useImportWallet as useImportWalletEvm,
   usePrivy,
-  useSolanaWallets,
   useWallets,
 } from "@privy-io/react-auth";
 import {
   useImportWallet as useImportWalletSolana,
   useExportWallet as useExportWalletSolana,
+  useWallets as useWalletsSolana,
 } from "@privy-io/react-auth/solana";
 import Section from "../reusables/section";
 import { showSuccessToast, showErrorToast } from "@/components/ui/custom-toast";
@@ -22,7 +22,7 @@ type WalletInfo = {
 
 const WalletManagement = () => {
   const { wallets: walletsEvm } = useWallets();
-  const { wallets: walletsSolana } = useSolanaWallets();
+  const { wallets: walletsSolana } = useWalletsSolana();
   const { exportWallet: exportWalletEvm } = usePrivy();
   const { importWallet: importWalletEvm } = useImportWalletEvm();
   const { exportWallet: exportWalletSolana } = useExportWalletSolana();

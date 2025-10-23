@@ -28,7 +28,7 @@ function Home() {
       {!!address ? (
         <section className="w-full flex flex-col md:flex-row h-screen pt-[60px]">
           <div className="flex-grow overflow-y-auto h-full p-4 pl-8">
-            <button className="button" onClick={disconnect}>
+            <button className="button" onClick={() => disconnect()}>
               <ArrowLeftIcon className="h-4 w-4" strokeWidth={2} /> Disconnect
             </button>
 

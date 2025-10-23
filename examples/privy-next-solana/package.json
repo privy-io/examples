@@ -10,17 +10,17 @@
   },
   "dependencies": {
     "@heroicons/react": "^2.2.0",
-    "@privy-io/react-auth": "^2.25.0",
-    "@solana-program/system": "0.7.0",
-    "@solana-program/token": "0.5.1",
-    "@solana/kit": "2.3.0",
-    "@solana/spl-token": "^0.4.14",
-    "@solana/web3.js": "^1.98.4",
+    "@privy-io/react-auth": "^3.1.0",
+    "@solana-program/memo": "^0.8.0",
+    "@solana-program/system": "0.8.0",
+    "@solana-program/token": "0.6.0",
+    "@solana/kit": "3.0.3",
     "bs58": "^6.0.0",
     "next": "15.5.3",
     "react": "19.1.0",
     "react-dom": "19.1.0",
-    "react-toastify": "^11.0.5"
+    "react-toastify": "^11.0.5",
+    "viem": "^2.37.6"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

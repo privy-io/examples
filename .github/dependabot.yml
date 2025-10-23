@@ -6,7 +6,8 @@
 version: 2
 updates:
   - package-ecosystem: "npm" # See documentation for possible values
-    directory: "/" # Location of package manifests. Using "/" is more efficient.
+    directories:
+      - "**/*" # Location of package manifests. Using "/" is more efficient.
     schedule:
       interval: "weekly"
     # Allow updates only for packages matching this pattern

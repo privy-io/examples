@@ -3,15 +3,11 @@
 import { useState, useMemo, useEffect } from "react";
 import {
   useFundWallet as useFundWalletEvm,
-  useSolanaWallets as useWalletsSolana,
   useWallets as useWalletsEvm,
   FundWalletConfig,
-  SolanaFundingConfig,
 } from "@privy-io/react-auth";
+import { useFundWallet as useFundWalletSolana, useWallets as useWalletsSolana, type SolanaFundingConfig } from "@privy-io/react-auth/solana";
 import Section from "../reusables/section";
-
-import { useFundWallet as useFundWalletSolana } from "@privy-io/react-auth/solana";
-import type { Hex } from "viem";
 import { showErrorToast } from "../ui/custom-toast";
 
 type WalletInfo = {
@@ -58,9 +54,12 @@ const FundWallet = () => {
       return;
     }
     try {
-      fundWalletEvm(selectedWallet.address, {
-        amount: "1",
-        ...(config || { asset: "native-currency", config: {} }),
+      fundWalletEvm({
+        address: selectedWallet.address,
+        options: {
+          amount: "1",
+          ...(config || { asset: "native-currency" }),
+        },
       });
     } catch (error) {
       console.log(error);
@@ -73,9 +72,12 @@ const FundWallet = () => {
       return;
     }
     try {
-      fundWalletSolana(selectedWallet.address, {
-        amount: "1",
-        ...(config || { asset: "native-currency" }),
+      fundWalletSolana({
+        address: selectedWallet.address,
+        options: {
+          amount: "1",
+          ...(config || { asset: "native-currency" }),
+        },
       });
     } catch (error) {
       console.log(error);
@@ -92,7 +94,7 @@ const FundWallet = () => {
     {
       name: "Fund USDC (EVM)",
       function: () => {
-        fundWalletEvmHandler({ asset: "USDC", config: {} });
+        fundWalletEvmHandler({ asset: "USDC", amount: "1" });
       },
       disabled: !isEvmWallet,
     },
@@ -104,7 +106,7 @@ const FundWallet = () => {
     {
       name: "Fund USDC (Solana)",
       function: () => {
-        fundWalletSolanaHandler({ asset: "USDC" });
+        fundWalletSolanaHandler({ asset: "USDC", amount: "1" });
       },
       disabled: !isSolanaWallet,
     },

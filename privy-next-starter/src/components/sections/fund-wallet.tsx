@@ -3,9 +3,9 @@
 import { useState, useMemo, useEffect } from "react";
 import {
   useFundWallet as useFundWalletEvm,
-  useSolanaWallets as useWalletsSolana,
   useWallets as useWalletsEvm,
 } from "@privy-io/react-auth";
+import { useWallets as useWalletsSolana } from "@privy-io/react-auth/solana";
 import Section from "../reusables/section";
 
 import { useFundWallet as useFundWalletSolana } from "@privy-io/react-auth/solana";
@@ -56,16 +56,19 @@ const FundWallet = () => {
           erc20: Hex;
         }
       | "USDC"
-      | "native-currency"
+      | "native-currency",
   ) => {
     if (!isEvmWallet || !selectedWallet) {
       showErrorToast("Please select an Ethereum wallet");
       return;
     }
     try {
-      fundWalletEvm(selectedWallet.address, {
-        amount: "1",
-        ...(asset && { asset }),
+      fundWalletEvm({
+        address: selectedWallet.address,
+        options: {
+          amount: "1",
+          ...(asset && { asset }),
+        },
       });
     } catch (error) {
       console.log(error);
@@ -78,9 +81,12 @@ const FundWallet = () => {
       return;
     }
     try {
-      fundWalletSolana(selectedWallet.address, {
-        amount: "1",
-        ...(asset && { asset }),
+      fundWalletSolana({
+        address: selectedWallet.address,
+        options: {
+          amount: "1",
+          ...(asset && { asset }),
+        },
       });
     } catch (error) {
       console.log(error);
@@ -136,7 +142,7 @@ const FundWallet = () => {
             value={selectedWallet?.address || ""}
             onChange={(e) => {
               const wallet = allWallets.find(
-                (w) => w.address === e.target.value
+                (w) => w.address === e.target.value,
               );
               setSelectedWallet(wallet || null);
             }}

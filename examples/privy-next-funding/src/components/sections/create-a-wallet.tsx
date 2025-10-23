@@ -2,8 +2,8 @@
 
 import {
   useCreateWallet as useCreateEvmWallet,
-  useSolanaWallets,
 } from "@privy-io/react-auth";
+import { useCreateWallet as useCreateSolanaWallet } from "@privy-io/react-auth/solana";
 import { useCreateWallet as useCreateWalletExtendedChains } from "@privy-io/react-auth/extended-chains";
 import Section from "../reusables/section";
 import { showSuccessToast, showErrorToast } from "../ui/custom-toast";
@@ -22,7 +22,7 @@ type SupportedExtendedChains =
 const CreateAWallet = () => {
   const { createWallet: createWalletExtendedChains } =
     useCreateWalletExtendedChains();
-  const { createWallet: createWalletSolana } = useSolanaWallets();
+  const { createWallet: createWalletSolana } = useCreateSolanaWallet();
   const { createWallet: createWalletEvm } = useCreateEvmWallet({
     onSuccess: ({ wallet }) => {
       showSuccessToast("EVM wallet created successfully.");
