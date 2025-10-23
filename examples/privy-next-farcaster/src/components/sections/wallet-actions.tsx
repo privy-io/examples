@@ -85,7 +85,7 @@ const WalletActions = () => {
       const message = "Hello, world!";
       const { signature } = await signMessageEvm(
         { message },
-        { address: selectedWallet.address },
+        { address: selectedWallet.address }
       );
       showSuccessToast(`EVM Message signed: ${signature.slice(0, 10)}...`);
     } catch (error) {
@@ -102,7 +102,7 @@ const WalletActions = () => {
     try {
       const message = "Hello world";
       const wallet = walletsSolana.find(
-        (w) => w.address === selectedWallet.address,
+        (w) => w.address === selectedWallet.address
       );
       if (!wallet) {
         showErrorToast("Wallet not found");
@@ -133,7 +133,7 @@ const WalletActions = () => {
     try {
       const transaction = await signTransactionEvm(
         { to: "0xE3070d3e4309afA3bC9a6b057685743CF42da77C", value: 10000 },
-        { address: selectedWallet.address },
+        { address: selectedWallet.address }
       );
       const result =
         typeof transaction === "string"
@@ -168,16 +168,8 @@ const WalletActions = () => {
         (tx) => appendTransactionMessageInstruction(solTransferInstruction, tx),
         (tx) => setTransactionMessageLifetimeUsingBlockhash(blockhash, tx),
         (tx) => compileTransaction(tx),
-        (tx) => getBase64EncodedWireTransaction(tx),
+        (tx) => getBase64EncodedWireTransaction(tx)
       );
-
-      const wallet = walletsSolana.find(
-        (v) => v.address === selectedWallet.address,
-      );
-      if (!wallet) {
-        showErrorToast("Wallet not found");
-        return;
-      }
 
       const signedTransaction = await signTransactionSolana({
         transaction: Buffer.from(transaction, "base64"),
@@ -199,7 +191,7 @@ const WalletActions = () => {
     try {
       const transaction = await sendTransactionEvm(
         { to: "0xE3070d3e4309afA3bC9a6b057685743CF42da77C", value: 10000 },
-        { address: selectedWallet.address },
+        { address: selectedWallet.address }
       );
       const result =
         typeof transaction === "string"
@@ -234,16 +226,9 @@ const WalletActions = () => {
         (tx) => appendTransactionMessageInstruction(solTransferInstruction, tx),
         (tx) => setTransactionMessageLifetimeUsingBlockhash(blockhash, tx),
         (tx) => compileTransaction(tx),
-        (tx) => getBase64EncodedWireTransaction(tx),
+        (tx) => getBase64EncodedWireTransaction(tx)
       );
 
-      const wallet = walletsSolana.find(
-        (v) => v.address === selectedWallet.address,
-      );
-      if (!wallet) {
-        showErrorToast("Wallet not found");
-        return;
-      }
       const receipt = await sendTransactionSolana({
         transaction: Buffer.from(transaction, "base64"),
         wallet,
@@ -315,12 +300,12 @@ const WalletActions = () => {
       const embeddedWallet = walletsEvm.find(
         (wallet) =>
           wallet.walletClientType === "privy" &&
-          wallet.address === selectedWallet.address,
+          wallet.address === selectedWallet.address
       );
 
       if (!embeddedWallet) {
         showErrorToast(
-          "Selected wallet must be an embedded Privy wallet for raw hash signing",
+          "Selected wallet must be an embedded Privy wallet for raw hash signing"
         );
         return;
       }
@@ -407,7 +392,7 @@ const WalletActions = () => {
             value={selectedWallet?.address || ""}
             onChange={(e) => {
               const wallet = allWallets.find(
-                (w) => w.address === e.target.value,
+                (w) => w.address === e.target.value
               );
               setSelectedWallet(wallet || null);
             }}
