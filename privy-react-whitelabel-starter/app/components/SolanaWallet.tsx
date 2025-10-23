@@ -1,7 +1,23 @@
 import React, {useState} from 'react';
 import {usePrivy} from '@privy-io/react-auth';
-import {ConnectedStandardSolanaWallet, useSignMessage, useSignAndSendTransaction} from '@privy-io/react-auth/solana';
-import {PublicKey, Transaction, Connection, SystemProgram} from '@solana/web3.js';
+import {
+  ConnectedStandardSolanaWallet,
+  useSignMessage,
+  useSignAndSendTransaction,
+} from '@privy-io/react-auth/solana';
+import {
+  address,
+  appendTransactionMessageInstruction,
+  compileTransaction,
+  createNoopSigner,
+  createSolanaRpc,
+  createTransactionMessage,
+  getBase64EncodedWireTransaction,
+  pipe,
+  setTransactionMessageFeePayer,
+  setTransactionMessageLifetimeUsingBlockhash,
+} from '@solana/kit';
+import {getTransferSolInstruction} from '@solana-program/system';
 import {toast} from 'react-toastify';
 
 interface SolanaWalletProps {
@@ -18,27 +34,31 @@ const SolanaWallet: React.FC<SolanaWalletProps> = ({wallet, index}) => {
   const customSolanaSendTransaction = async () => {
     try {
       // Configure your connection to point to the correct Solana network
-      let connection = new Connection('https://api.devnet.solana.com');
+      const client = createSolanaRpc('https://api.devnet.solana.com');
 
       // Fetch the recent blockhash
-      let {blockhash} = await connection.getLatestBlockhash();
+      const {value: blockhash} = await client.getLatestBlockhash().send();
 
-      // Build out the transaction object for your desired program
-      // https://solana-labs.github.io/solana-web3.js/classes/Transaction.html
-      let transaction = new Transaction({
-        recentBlockhash: blockhash,
-        feePayer: new PublicKey(wallet.address),
-      }).add(
-        SystemProgram.transfer({
-          fromPubkey: new PublicKey(wallet.address),
-          toPubkey: new PublicKey('4tFqt2qzaNsnZqcpjPiyqYw9LdRzxaZdX2ewPncYEWLA'),
-          lamports: 1000000000, // 1 SOL = 1,000,000,000 lamports
-        }),
+      // Build the transfer instruction
+      const solTransferInstruction = getTransferSolInstruction({
+        amount: 1000000000, // 1 SOL = 1,000,000,000 lamports
+        destination: address('4tFqt2qzaNsnZqcpjPiyqYw9LdRzxaZdX2ewPncYEWLA'),
+        source: createNoopSigner(address(wallet.address)),
+      });
+
+      // Build the transaction using the functional pipeline approach
+      const transaction = pipe(
+        createTransactionMessage({version: 0}),
+        (tx) => setTransactionMessageFeePayer(address(wallet.address), tx),
+        (tx) => appendTransactionMessageInstruction(solTransferInstruction, tx),
+        (tx) => setTransactionMessageLifetimeUsingBlockhash(blockhash, tx),
+        (tx) => compileTransaction(tx),
+        (tx) => getBase64EncodedWireTransaction(tx),
       );
 
       // Send transaction
       const receipt = await signAndSendTransaction({
-        transaction: transaction.serialize({ verifySignatures: false }),
+        transaction: Buffer.from(transaction, 'base64'),
         wallet,
       });
       toast.success(`Transaction sent successfully! ${receipt.signature}`);

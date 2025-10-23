@@ -151,6 +151,16 @@ const WalletActions = () => {
       showErrorToast("Please select a Solana wallet");
       return;
     }
+
+    const wallet = walletsSolana.find(
+      (v) => v.address === selectedWallet.address
+    );
+
+    if (!wallet) {
+      showErrorToast("Could not find the selected Solana wallet");
+      return;
+    }
+
     try {
       const client = createSolanaRpc("https://api.devnet.solana.com");
       const { value: blockhash } = await client.getLatestBlockhash().send();
@@ -209,6 +219,16 @@ const WalletActions = () => {
       showErrorToast("Please select a Solana wallet");
       return;
     }
+
+    const wallet = walletsSolana.find(
+      (v) => v.address === selectedWallet.address
+    );
+
+    if (!wallet) {
+      showErrorToast("Could not find the selected Solana wallet");
+      return;
+    }
+
     try {
       const client = createSolanaRpc("https://api.devnet.solana.com");
       const { value: blockhash } = await client.getLatestBlockhash().send();
