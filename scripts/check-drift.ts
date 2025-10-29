@@ -12,7 +12,7 @@
 import fs from "fs";
 import path from "path";
 import { glob } from "glob";
-import { execSync } from "child_process";
+import { execFileSync } from "child_process";
 
 interface SyncManifest {
   bases: Array<{
@@ -32,6 +32,22 @@ interface SyncManifest {
 
 const REPO_ROOT = path.resolve(__dirname, "..");
 
+function assertWithinRepo(root: string, candidatePath: string): void {
+  const resolved = path.resolve(candidatePath);
+  const normalizedRoot = path.resolve(root) + path.sep;
+  if (!resolved.startsWith(normalizedRoot)) {
+    throw new Error(`Path escapes repository root: ${candidatePath}`);
+  }
+}
+
+function sanitizeRelativePath(relPath: string): string {
+  const normalized = path.normalize(relPath);
+  if (path.isAbsolute(normalized) || normalized.startsWith(".." + path.sep)) {
+    throw new Error(`Unsafe relative path detected: ${relPath}`);
+  }
+  return normalized;
+}
+
 function loadManifest(): SyncManifest {
   const manifestPath = path.join(REPO_ROOT, ".sync-manifest.json");
   return JSON.parse(fs.readFileSync(manifestPath, "utf-8"));
@@ -41,7 +57,8 @@ function getDiff(file1: string, file2: string): string | null {
   if (!fs.existsSync(file1) || !fs.existsSync(file2)) return null;
 
   try {
-    const diff = execSync(`diff -u "${file1}" "${file2}"`, {
+    // Use execFileSync to avoid invoking a shell and prevent injection
+    const diff = execFileSync("diff", ["-u", file1, file2], {
       encoding: "utf-8",
       stdio: ["pipe", "pipe", "ignore"],
     });
@@ -70,9 +87,30 @@ function getFiles(basePath: string, patterns: string[]): string[] {
   const allFiles: string[] = [];
 
   for (const pattern of patterns) {
-    const fullPattern = path.join(basePath, pattern);
+    // Sanitize pattern to prevent path traversal
+    const safePattern = pattern.replace(/\.\./g, "").replace(/^\/+/, "");
+    const fullPattern = path.join(basePath, safePattern);
+    // Ensure the resolved path stays within basePath
+    const resolvedPattern = path.resolve(fullPattern);
+    if (
+      !resolvedPattern.startsWith(path.resolve(basePath) + path.sep) &&
+      resolvedPattern !== path.resolve(basePath)
+    ) {
+      continue; // Skip patterns that would escape basePath
+    }
     const matches = glob.sync(fullPattern, { nodir: true });
-    allFiles.push(...matches.map((f) => path.relative(basePath, f)));
+    // Validate all matched files are within basePath
+    const validatedMatches = matches
+      .map((f) => {
+        const relPath = path.relative(basePath, f);
+        try {
+          return sanitizeRelativePath(relPath);
+        } catch {
+          return null;
+        }
+      })
+      .filter((f): f is string => f !== null);
+    allFiles.push(...validatedMatches);
   }
 
   return [...new Set(allFiles)];
@@ -87,7 +125,8 @@ function checkDrift(
   console.log(`📦 Base: ${base.name}`);
   console.log(`${"=".repeat(80)}\n`);
 
-  const basePath = path.join(REPO_ROOT, base.path);
+  const basePath = path.resolve(REPO_ROOT, base.path);
+  assertWithinRepo(REPO_ROOT, basePath);
   const syncPatterns = [...base.syncRules.always, ...base.syncRules.sections];
   const filesToCheck = getFiles(basePath, syncPatterns);
 
@@ -103,7 +142,8 @@ function checkDrift(
   let totalDrifted = 0;
 
   for (const target of targets) {
-    const targetPath = path.join(REPO_ROOT, target);
+    const targetPath = path.resolve(REPO_ROOT, target);
+    assertWithinRepo(REPO_ROOT, targetPath);
     if (!fs.existsSync(targetPath)) continue;
 
     const drifted: Array<{ file: string; category: string }> = [];
@@ -121,8 +161,9 @@ function checkDrift(
         continue;
       }
 
-      const srcFile = path.join(basePath, relPath);
-      const destFile = path.join(targetPath, relPath);
+      const safeRel = sanitizeRelativePath(relPath);
+      const srcFile = path.join(basePath, safeRel);
+      const destFile = path.join(targetPath, safeRel);
 
       if (!fs.existsSync(destFile)) {
         missing.push(relPath);
