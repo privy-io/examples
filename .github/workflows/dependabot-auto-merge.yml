@@ -1,5 +1,7 @@
 name: Dependabot auto-merge
-on: pull_request
+on:
+  pull_request_review:
+    types: [submitted]
 
 permissions:
   contents: write
@@ -8,7 +10,7 @@ permissions:
 jobs:
   dependabot:
     runs-on: ubuntu-latest
-    if: github.event.pull_request.user.login == 'dependabot[bot]' && github.repository == 'privy-io/examples'
+    if: github.event.pull_request.user.login == 'dependabot[bot]' && github.repository == 'privy-io/examples' && github.event.review.state == 'approved'
     steps:
       - name: Dependabot metadata
         id: metadata
