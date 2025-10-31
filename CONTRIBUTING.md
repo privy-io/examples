@@ -104,16 +104,34 @@ cd examples/privy-next-farcaster
 
 ```bash
 # 1. Create new component in base
-vim privy-next-starter/src/components/sections/analytics.tsx
+code privy-next-starter/src/components/sections/analytics.tsx
 
 # 2. Sync it
 pnpm sync --folder=analytics --apply
 
 # 3. Import in each example's page.tsx
-vim examples/privy-next-wagmi/src/app/page.tsx
+code examples/privy-next-wagmi/src/app/page.tsx
 # Add: import Analytics from "@/components/sections/analytics"
 # Add: <Analytics />
 ```
+
+---
+
+## Commands
+
+`check-drift` compares files between base starters and examples to find files that have diverged. It shows:
+
+- 🔴 **Critical** - "always" sync files that differ (should match base)
+- 🟡 **Warning** - "section" files that differ (might be intentional)
+- ❌ **Missing** - Files in base but not in examples
+
+---
+
+`pnpm sync` previews what would be copied from base starters to examples (no files are changed). `pnpm sync:apply` performs the copies.
+
+- `pnpm sync` – dry run; shows planned updates, skips, and up-to-date files
+- `pnpm sync:apply` – actually writes changes to examples
+- Scopes: add `--target=<example>` and/or `--folder=<path-fragment>` to limit the sync
 
 ---
 
