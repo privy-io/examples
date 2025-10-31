@@ -28,7 +28,7 @@ importers:
         version: 3.0.3(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.8.3)(ws@8.18.3)
       '@tailwindcss/vite':
         specifier: ^4.1.13
-        version: 4.1.15(vite@7.1.12(jiti@2.6.1)(lightningcss@1.30.2))
+        version: 4.1.15(vite@7.1.12(@types/node@24.9.2)(jiti@2.6.1)(lightningcss@1.30.2))
       bs58:
         specifier: ^6.0.0
         version: 6.0.0
@@ -51,6 +51,9 @@ importers:
       '@eslint/js':
         specifier: ^9.33.0
         version: 9.38.0
+      '@types/node':
+        specifier: ^24.9.2
+        version: 24.9.2
       '@types/react':
         specifier: ^19.1.10
         version: 19.2.2
@@ -59,7 +62,7 @@ importers:
         version: 19.2.2(@types/react@19.2.2)
       '@vitejs/plugin-react':
         specifier: ^5.0.0
-        version: 5.0.4(vite@7.1.12(jiti@2.6.1)(lightningcss@1.30.2))
+        version: 5.0.4(vite@7.1.12(@types/node@24.9.2)(jiti@2.6.1)(lightningcss@1.30.2))
       eslint:
         specifier: ^9.33.0
         version: 9.38.0(jiti@2.6.1)
@@ -80,10 +83,10 @@ importers:
         version: 8.46.2(eslint@9.38.0(jiti@2.6.1))(typescript@5.8.3)
       vite:
         specifier: ^7.1.2
-        version: 7.1.12(jiti@2.6.1)(lightningcss@1.30.2)
+        version: 7.1.12(@types/node@24.9.2)(jiti@2.6.1)(lightningcss@1.30.2)
       vite-plugin-node-polyfills:
         specifier: ^0.24.0
-        version: 0.24.0(rollup@4.52.5)(vite@7.1.12(jiti@2.6.1)(lightningcss@1.30.2))
+        version: 0.24.0(rollup@4.52.5)(vite@7.1.12(@types/node@24.9.2)(jiti@2.6.1)(lightningcss@1.30.2))
 
 packages:
 
@@ -1150,6 +1153,9 @@ packages:
 
   '@types/json-schema@7.0.15':
     resolution: {integrity: sha512-5+fP8P8MFNC+AyZCDxrB2pkZFPGzqQWUzpSeuuVLvm8VMcorNYavBqoFcxK8bQz4Qsbn4oUEEem4wDLfcysGHA==}
+
+  '@types/node@24.9.2':
+    resolution: {integrity: sha512-uWN8YqxXxqFMX2RqGOrumsKeti4LlmIMIyV0lgut4jx7KQBcBiW6vkDtIBvHnHIquwNfJhk8v2OtmO8zXWHfPA==}
 
   '@types/react-dom@19.2.2':
     resolution: {integrity: sha512-9KQPoO6mZCi7jcIStSnlOWn2nEF3mNmyr3rIAsGnAbQKYbRLyqmeSc39EVgtxXVia+LMT8j3knZLAZAh+xLmrw==}
@@ -4578,12 +4584,12 @@ snapshots:
       '@tailwindcss/oxide-win32-arm64-msvc': 4.1.15
       '@tailwindcss/oxide-win32-x64-msvc': 4.1.15
 
-  '@tailwindcss/vite@4.1.15(vite@7.1.12(jiti@2.6.1)(lightningcss@1.30.2))':
+  '@tailwindcss/vite@4.1.15(vite@7.1.12(@types/node@24.9.2)(jiti@2.6.1)(lightningcss@1.30.2))':
     dependencies:
       '@tailwindcss/node': 4.1.15
       '@tailwindcss/oxide': 4.1.15
       tailwindcss: 4.1.15
-      vite: 7.1.12(jiti@2.6.1)(lightningcss@1.30.2)
+      vite: 7.1.12(@types/node@24.9.2)(jiti@2.6.1)(lightningcss@1.30.2)
 
   '@tanstack/react-virtual@3.13.12(react-dom@19.2.0(react@19.2.0))(react@19.2.0)':
     dependencies:
@@ -4617,6 +4623,10 @@ snapshots:
   '@types/estree@1.0.8': {}
 
   '@types/json-schema@7.0.15': {}
+
+  '@types/node@24.9.2':
+    dependencies:
+      undici-types: 7.16.0
 
   '@types/react-dom@19.2.2(@types/react@19.2.2)':
     dependencies:
@@ -4723,7 +4733,7 @@ snapshots:
       '@typescript-eslint/types': 8.46.2
       eslint-visitor-keys: 4.2.1
 
-  '@vitejs/plugin-react@5.0.4(vite@7.1.12(jiti@2.6.1)(lightningcss@1.30.2))':
+  '@vitejs/plugin-react@5.0.4(vite@7.1.12(@types/node@24.9.2)(jiti@2.6.1)(lightningcss@1.30.2))':
     dependencies:
       '@babel/core': 7.28.4
       '@babel/plugin-transform-react-jsx-self': 7.27.1(@babel/core@7.28.4)
@@ -4731,7 +4741,7 @@ snapshots:
       '@rolldown/pluginutils': 1.0.0-beta.38
       '@types/babel__core': 7.20.5
       react-refresh: 0.17.0
-      vite: 7.1.12(jiti@2.6.1)(lightningcss@1.30.2)
+      vite: 7.1.12(@types/node@24.9.2)(jiti@2.6.1)(lightningcss@1.30.2)
     transitivePeerDependencies:
       - supports-color
 
@@ -7066,15 +7076,15 @@ snapshots:
       - utf-8-validate
       - zod
 
-  vite-plugin-node-polyfills@0.24.0(rollup@4.52.5)(vite@7.1.12(jiti@2.6.1)(lightningcss@1.30.2)):
+  vite-plugin-node-polyfills@0.24.0(rollup@4.52.5)(vite@7.1.12(@types/node@24.9.2)(jiti@2.6.1)(lightningcss@1.30.2)):
     dependencies:
       '@rollup/plugin-inject': 5.0.5(rollup@4.52.5)
       node-stdlib-browser: 1.3.1
-      vite: 7.1.12(jiti@2.6.1)(lightningcss@1.30.2)
+      vite: 7.1.12(@types/node@24.9.2)(jiti@2.6.1)(lightningcss@1.30.2)
     transitivePeerDependencies:
       - rollup
 
-  vite@7.1.12(jiti@2.6.1)(lightningcss@1.30.2):
+  vite@7.1.12(@types/node@24.9.2)(jiti@2.6.1)(lightningcss@1.30.2):
     dependencies:
       esbuild: 0.25.11
       fdir: 6.5.0(picomatch@4.0.3)
@@ -7083,6 +7093,7 @@ snapshots:
       rollup: 4.52.5
       tinyglobby: 0.2.15
     optionalDependencies:
+      '@types/node': 24.9.2
       fsevents: 2.3.3
       jiti: 2.6.1
       lightningcss: 1.30.2
