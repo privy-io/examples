@@ -12,8 +12,8 @@ importers:
         specifier: ^2.2.0
         version: 2.2.0(react@19.1.0)
       '@privy-io/cross-app-provider':
-        specifier: ^0.1.1
-        version: 0.1.1
+        specifier: ^0.2.0
+        version: 0.2.0
       '@privy-io/react-auth':
         specifier: ^3.5.0
         version: 3.5.0(@solana-program/memo@0.8.0(@solana/kit@3.0.3(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.18.3)))(@solana-program/system@0.8.0(@solana/kit@3.0.3(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.18.3)))(@solana-program/token@0.6.0(@solana/kit@3.0.3(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.18.3)))(@solana/kit@3.0.3(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.18.3))(@types/react@19.2.2)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(typescript@5.9.3)(use-sync-external-store@1.6.0(react@19.1.0))(zod@3.25.76)
@@ -473,8 +473,8 @@ packages:
   '@privy-io/chains@0.0.4':
     resolution: {integrity: sha512-q5B9QP2+/jSxKIzb63uzIJ0hTBPMdsigrrUFjYSWtFFmLtaw0+jCEBcI3S9GmwIiROivbdBRSERfBbY1Wb6UpQ==}
 
-  '@privy-io/cross-app-provider@0.1.1':
-    resolution: {integrity: sha512-GCK37jJtDgo596YXfOlyG7lHDz+MDRXk93AzUHTgFnzEK4e61G5USSPX7i5V1xdWzczfoHhPEtegn+umszMd2A==}
+  '@privy-io/cross-app-provider@0.2.0':
+    resolution: {integrity: sha512-0hvEhqIkYZkpwdylbq46hxqtOO9v+X3HSP/dD2pk54fWjK88n4Yu9xCJLSFNFxkttJ0qeTlIwnjEAzY5nrCbqQ==}
 
   '@privy-io/ethereum@0.0.2':
     resolution: {integrity: sha512-FnJ1dzgg/tij4jLeKHLlZM9uNk4WN+iIOkc8CG0FZKUQxqXH60Fs/dMF6Xbndd5CQkUO8LUU7FLom/405VKXpQ==}
@@ -3540,7 +3540,7 @@ snapshots:
 
   '@privy-io/chains@0.0.4': {}
 
-  '@privy-io/cross-app-provider@0.1.1':
+  '@privy-io/cross-app-provider@0.2.0':
     dependencies:
       '@noble/curves': 1.9.7
       '@privy-io/web-storage': 0.0.1
@@ -3983,7 +3983,7 @@ snapshots:
 
   '@scure/bip32@1.7.0':
     dependencies:
-      '@noble/curves': 1.9.1
+      '@noble/curves': 1.9.7
       '@noble/hashes': 1.8.0
       '@scure/base': 1.2.6
 
