@@ -3,33 +3,29 @@
 import { PrivyProvider } from "@privy-io/react-auth";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { createConfig, WagmiProvider } from "@privy-io/wagmi";
-import { http, defineChain } from "viem";
+import { http } from "viem";
+import { tempoTestnet } from "tempo.ts/chains";
 
 export const alphaUsd = "0x20c0000000000000000000000000000000000001" as const;
 
 const queryClient = new QueryClient();
 
-export const tempoChain = defineChain({
-  id: 42429,
-  name: "Tempo Testnet",
-  nativeCurrency: {
-    name: "AlphaUSD",
-    symbol: "AUSD",
-    decimals: 6,
-  },
+export const tempoChain = tempoTestnet({
+  feeToken: alphaUsd,
   rpcUrls: {
     default: {
       http: ["/api/rpc"],
     },
   },
-  blockExplorers: {
-    default: {
-      name: "Tempo Explorer",
-      url: "https://explore.tempo.xyz",
-    },
+  nativeCurrency: {
+    name: "AlphaUSD",
+    symbol: "AUSD",
+    decimals: 6,
   },
-  testnet: true,
-});
+  contracts: {
+    multicall3: undefined,
+  }
+})
 
 export const wagmiConfig = createConfig({
   chains: [tempoChain],
