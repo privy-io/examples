@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/privy-logo-black.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Privy Vanilla JS Starter</title>
+  </head>
+  <body>
+    <!-- Header -->
+    <header id="header" class="header">
+      <div class="header-left">
+        <img id="header-logo" src="/privy-logo-white.svg" alt="Privy Logo" class="logo" />
+        <div id="demo-badge" class="demo-badge hidden">Vanilla JS Demo</div>
+      </div>
+      <div class="header-right">
+        <a href="https://docs.privy.io/guide/core-js" target="_blank" class="docs-link">
+          Docs
+          <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+          </svg>
+        </a>
+        <button class="button-primary hidden md:block">
+          <a href="https://dashboard.privy.io/" target="_blank" class="button-link">
+            <span>Go to dashboard</span>
+            <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+          </a>
+        </button>
+      </div>
+    </header>
+
+    <!-- Main App Container -->
+    <div id="app">
+      <!-- Loading Screen -->
+      <div id="loading-screen" class="loading-screen">
+        <div class="loader"></div>
+      </div>
+
+      <!-- Login Screen -->
+      <section id="login-screen" class="login-screen hidden">
+        <div class="login-content">
+          <div class="demo-badge-large">Vanilla JS Demo</div>
+          <h1 class="login-title">Starter repo</h1>
+          <p class="login-subtitle">Get started developing with Privy using our Vanilla JS starter repo</p>
+          <button id="login-btn" class="button-primary button-large">Get started</button>
+        </div>
+      </section>
+
+      <!-- Authenticated Screen -->
+      <section id="authenticated-screen" class="authenticated-screen hidden">
+        <div class="main-content">
+          <button id="logout-btn" class="button logout-button">
+            <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+            Logout
+          </button>
+
+          <div id="sections-container"></div>
+        </div>
+
+        <!-- User Object Sidebar -->
+        <div class="user-sidebar">
+          <div class="user-sidebar-header">
+            <h3>User object</h3>
+            <p class="user-sidebar-subtitle">This is the user object returned from Privy</p>
+          </div>
+          <pre id="user-object" class="user-object-display"></pre>
+        </div>
+      </section>
+
+      <!-- Auth Modal -->
+      <div id="auth-modal" class="modal hidden">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h3>Login with Email</h3>
+            <button id="close-modal" class="close-button">&times;</button>
+          </div>
+          <div id="email-input-container" class="modal-body">
+            <label for="email-input">Email address</label>
+            <input type="email" id="email-input" placeholder="Enter your email" autocomplete="email" />
+            <button id="send-code-btn" class="button-primary full-width">Send code</button>
+          </div>
+          <div id="otp-input-container" class="modal-body hidden">
+            <label for="otp-input">Enter verification code</label>
+            <input type="text" id="otp-input" placeholder="000000" autocomplete="one-time-code" maxlength="6" />
+            <button id="verify-code-btn" class="button-primary full-width">Verify</button>
+            <button id="back-to-email-btn" class="button-outline full-width">Back</button>
+          </div>
+          <div id="auth-error" class="error-message hidden"></div>
+        </div>
+      </div>
+
+      <!-- Toast Notifications -->
+      <div id="toast-container" class="toast-container"></div>
+    </div>
+
+    <!-- Privy Iframe (required for embedded wallet) -->
+    <iframe id="privy-iframe" style="display: none;"></iframe>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
