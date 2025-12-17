@@ -12,11 +12,43 @@ import {
   PublicKey,
   LAMPORTS_PER_SOL
 } from '@solana/web3.js';
+import { createWalletClient, custom } from 'viem';
+import { mainnet } from 'viem/chains';
+import { base64 } from '@scure/base';
 
 // Static state to persist across re-renders
 const walletActionsState = {
   selectedWallet: null,
   lastResult: null
+};
+
+// Helper function to get MetaMask provider specifically
+const getMetaMaskProvider = () => {
+  if (window.ethereum) {
+    // If there are multiple providers, find MetaMask
+    if (window.ethereum.providers) {
+      return window.ethereum.providers.find(p => p.isMetaMask);
+    }
+    // If only one provider and it's MetaMask
+    if (window.ethereum.isMetaMask) {
+      return window.ethereum;
+    }
+  }
+  return null;
+};
+
+// Helper function to get Phantom provider
+const getPhantomProvider = () => {
+  if ('phantom' in window) {
+    const provider = window.phantom?.solana;
+    if (provider?.isPhantom) {
+      return provider;
+    }
+  }
+  if (window.solana?.isPhantom) {
+    return window.solana;
+  }
+  return null;
 };
 
 /**
@@ -47,6 +79,19 @@ export class WalletActions {
 
   render(onUpdate) {
     this.onUpdate = onUpdate;
+    
+    // Get wallets and set initial selection BEFORE creating the section
+    const wallets = this.getAllWallets();
+    
+    // Set initial selection (preserve current selection if exists)
+    if (this.selectedWallet && wallets.find(w => w.address === this.selectedWallet.address)) {
+      // Keep current selection
+    } else if (wallets.length > 0) {
+      // Set to first wallet if no selection
+      this.selectedWallet = wallets[0];
+    }
+    
+    // Now create section with actions based on selected wallet
     const section = createSection({
       name: 'Wallet actions',
       description: 'Sign messages, typed data, and transactions for both EVM and Solana wallets.',
@@ -65,23 +110,17 @@ export class WalletActions {
     `;
 
     const select = selectorDiv.querySelector('select');
-    const wallets = this.getAllWallets();
 
     wallets.forEach(wallet => {
       const option = document.createElement('option');
       option.value = wallet.address;
-      option.textContent = `${wallet.address} [${wallet.type}]`;
+      option.textContent = `${wallet.address} [${wallet.type.toUpperCase()}] (${wallet.label})`;
       select.appendChild(option);
     });
 
-    // Set initial selection (preserve current selection if exists)
-    if (this.selectedWallet && wallets.find(w => w.address === this.selectedWallet.address)) {
-      // Keep current selection
+    // Set the select element to show the selected wallet
+    if (this.selectedWallet) {
       select.value = this.selectedWallet.address;
-    } else if (wallets.length > 0) {
-      // Set to first wallet if no selection
-      this.selectedWallet = wallets[0];
-      select.value = wallets[0].address;
     }
 
     select.addEventListener('change', (e) => {
@@ -124,17 +163,26 @@ export class WalletActions {
     
     if (this.user?.linked_accounts) {
       this.user.linked_accounts.forEach(account => {
-        if (account.type === 'wallet' && account.wallet_client_type === 'privy') {
+        if (account.type === 'wallet') {
+          const isEmbedded = account.wallet_client_type === 'privy';
+          const walletLabel = isEmbedded ? 'Embedded' : (account.wallet_client_type || 'External');
+          
           if (account.chain_type === 'ethereum') {
             wallets.push({
               address: account.address,
               type: 'ethereum',
+              isEmbedded,
+              walletClientType: account.wallet_client_type,
+              label: walletLabel,
               account
             });
           } else if (account.chain_type === 'solana') {
             wallets.push({
               address: account.address,
               type: 'solana',
+              isEmbedded,
+              walletClientType: account.wallet_client_type,
+              label: walletLabel,
               account
             });
           }
@@ -148,6 +196,7 @@ export class WalletActions {
   getActions() {
     const isEthereum = this.selectedWallet?.type === 'ethereum';
     const isSolana = this.selectedWallet?.type === 'solana';
+    const isEmbedded = this.selectedWallet?.isEmbedded;
 
     return [
       {
@@ -167,7 +216,7 @@ export class WalletActions {
       },
       {
         name: 'Sign transaction (EVM)',
-        disabled: !isEthereum,
+        disabled: !isEthereum || !isEmbedded,  // Only works with embedded wallets
         function: () => this.signTransactionEvm()
       },
       {
@@ -192,20 +241,52 @@ export class WalletActions {
     if (!this.selectedWallet) return;
 
     try {
-      const wallet = getUserEmbeddedEthereumWallet(this.user);
-      const { entropyId, entropyIdVerifier } = getEntropyDetailsFromUser(this.user);
-
-      const provider = await this.privy.embeddedWallet.getEthereumProvider({
-        wallet,
-        entropyId,
-        entropyIdVerifier
-      });
-
       const message = 'Hello, world!';
-      const signature = await provider.request({
-        method: 'personal_sign',
-        params: [message, wallet.address]
-      });
+      let signature;
+
+      if (this.selectedWallet.isEmbedded) {
+        // Use embedded wallet
+        const wallet = getUserEmbeddedEthereumWallet(this.user);
+        const { entropyId, entropyIdVerifier } = getEntropyDetailsFromUser(this.user);
+
+        const provider = await this.privy.embeddedWallet.getEthereumProvider({
+          wallet,
+          entropyId,
+          entropyIdVerifier
+        });
+
+        signature = await provider.request({
+          method: 'personal_sign',
+          params: [message, wallet.address]
+        });
+      } else {
+        // Use external wallet (MetaMask)
+        const provider = getMetaMaskProvider();
+        if (!provider) {
+          throw new Error('MetaMask is not installed or not accessible.');
+        }
+
+        // Request accounts to ensure wallet is connected and get current account
+        const accounts = await provider.request({ method: 'eth_requestAccounts' });
+        
+        if (!accounts || accounts.length === 0) {
+          throw new Error('No accounts found. Please connect your wallet.');
+        }
+
+        // Use the first connected account (current active account in MetaMask)
+        const currentAccount = accounts[0];
+        console.log('Using MetaMask account:', currentAccount);
+
+        const client = createWalletClient({
+          chain: mainnet,
+          transport: custom(provider)
+        });
+
+        signature = await client.signMessage({
+          account: currentAccount,
+          message: message,
+        });
+      }
 
       this.lastResult = signature;
       showToast('Message signed successfully!', 'success');
@@ -223,27 +304,44 @@ export class WalletActions {
     if (!this.selectedWallet) return;
 
     try {
-      const account = getUserEmbeddedSolanaWallet(this.user);
-      const { entropyId, entropyIdVerifier } = getEntropyDetailsFromUser(this.user);
-
-      const provider = await this.privy.embeddedWallet.getSolanaProvider(
-        account,
-        entropyId,
-        entropyIdVerifier
-      );
-
       const message = 'Hello, world!';
-      // Convert message to base64
-      const messageBase64 = btoa(message);
-      
-      const result = await provider.request({
-        method: 'signMessage',
-        params: { message: messageBase64 }
-      });
+      let signature;
 
-      this.lastResult = result.signature || JSON.stringify(result);
+      if (this.selectedWallet.isEmbedded) {
+        // Use embedded wallet
+        const account = getUserEmbeddedSolanaWallet(this.user);
+        const { entropyId, entropyIdVerifier } = getEntropyDetailsFromUser(this.user);
+
+        const provider = await this.privy.embeddedWallet.getSolanaProvider(
+          account,
+          entropyId,
+          entropyIdVerifier
+        );
+
+        // Convert message to base64
+        const messageBase64 = btoa(message);
+        
+        const result = await provider.request({
+          method: 'signMessage',
+          params: { message: messageBase64 }
+        });
+
+        signature = result.signature || JSON.stringify(result);
+      } else {
+        // Use external wallet (Phantom, etc.)
+        const phantom = getPhantomProvider();
+        if (!phantom) {
+          throw new Error('Solana wallet not found');
+        }
+
+        const encodedMessage = new TextEncoder().encode(message);
+        const response = await phantom.signMessage(encodedMessage, 'utf8');
+        signature = base64.encode(response.signature);
+      }
+
+      this.lastResult = signature;
       showToast('Message signed successfully!', 'success');
-      console.log('Signature:', result);
+      console.log('Signature:', signature);
       
       // Trigger update to re-render sections
       if (this.onUpdate) this.onUpdate();
@@ -257,15 +355,6 @@ export class WalletActions {
     if (!this.selectedWallet) return;
 
     try {
-      const wallet = getUserEmbeddedEthereumWallet(this.user);
-      const { entropyId, entropyIdVerifier } = getEntropyDetailsFromUser(this.user);
-
-      const provider = await this.privy.embeddedWallet.getEthereumProvider({
-        wallet,
-        entropyId,
-        entropyIdVerifier
-      });
-
       const typedData = {
         domain: {
           name: 'Example App',
@@ -298,10 +387,54 @@ export class WalletActions {
         }
       };
 
-      const signature = await provider.request({
-        method: 'eth_signTypedData_v4',
-        params: [wallet.address, JSON.stringify(typedData)]
-      });
+      let signature;
+
+      if (this.selectedWallet.isEmbedded) {
+        // Use embedded wallet
+        const wallet = getUserEmbeddedEthereumWallet(this.user);
+        const { entropyId, entropyIdVerifier } = getEntropyDetailsFromUser(this.user);
+
+        const provider = await this.privy.embeddedWallet.getEthereumProvider({
+          wallet,
+          entropyId,
+          entropyIdVerifier
+        });
+
+        signature = await provider.request({
+          method: 'eth_signTypedData_v4',
+          params: [wallet.address, JSON.stringify(typedData)]
+        });
+      } else {
+        // Use external wallet (MetaMask)
+        const provider = getMetaMaskProvider();
+        if (!provider) {
+          throw new Error('MetaMask is not installed or not accessible.');
+        }
+
+        // Request accounts to ensure wallet is connected and get current account
+        const accounts = await provider.request({ method: 'eth_requestAccounts' });
+        
+        if (!accounts || accounts.length === 0) {
+          throw new Error('No accounts found. Please connect your wallet.');
+        }
+
+        // Use the first connected account (current active account in MetaMask)
+        const currentAccount = accounts[0];
+        console.log('Using MetaMask account:', currentAccount);
+
+        const client = createWalletClient({
+          chain: mainnet,
+          transport: custom(provider)
+        });
+
+        signature = await client.signTypedData({
+          account: currentAccount,
+          domain: typedData.domain,
+          types: typedData.types,
+          primaryType: typedData.primaryType,
+          message: typedData.message,
+        });
+      }
 
       this.lastResult = signature;
       showToast('Typed data signed successfully!', 'success');
@@ -319,31 +452,54 @@ export class WalletActions {
     if (!this.selectedWallet) return;
 
     try {
-      const wallet = getUserEmbeddedEthereumWallet(this.user);
-      const { entropyId, entropyIdVerifier } = getEntropyDetailsFromUser(this.user);
+      let signedTx;
 
-      const provider = await this.privy.embeddedWallet.getEthereumProvider({
-        wallet,
-        entropyId,
-        entropyIdVerifier
-      });
+      if (this.selectedWallet.isEmbedded) {
+        // Use embedded wallet
+        const wallet = getUserEmbeddedEthereumWallet(this.user);
+        const { entropyId, entropyIdVerifier } = getEntropyDetailsFromUser(this.user);
 
-      // Get current chainId from provider
-      const chainId = await provider.request({ method: 'eth_chainId' });
+        const provider = await this.privy.embeddedWallet.getEthereumProvider({
+          wallet,
+          entropyId,
+          entropyIdVerifier
+        });
 
-      // Zero-value transaction
-      const tx = {
-        from: wallet.address,
-        to: wallet.address,
-        value: '0x0',
-        data: '0x',
-        chainId: chainId
-      };
+        // Get current chainId from provider
+        const chainId = await provider.request({ method: 'eth_chainId' });
 
-      const signedTx = await provider.request({
-        method: 'eth_signTransaction',
-        params: [tx]
-      });
+        // Zero-value transaction
+        const tx = {
+          from: wallet.address,
+          to: wallet.address,
+          value: '0x0',
+          data: '0x',
+          chainId: chainId
+        };
+
+        signedTx = await provider.request({
+          method: 'eth_signTransaction',
+          params: [tx]
+        });
+      } else {
+        // Use external wallet (MetaMask, etc.)
+        if (!window.ethereum) {
+          throw new Error('External wallet not found');
+        }
+
+        // Zero-value transaction
+        const tx = {
+          from: this.selectedWallet.address,
+          to: this.selectedWallet.address,
+          value: '0x0',
+          data: '0x',
+        };
+
+        signedTx = await window.ethereum.request({
+          method: 'eth_signTransaction',
+          params: [tx]
+        });
+      }
 
       this.lastResult = signedTx;
       showToast('Transaction signed successfully!', 'success');
@@ -361,29 +517,63 @@ export class WalletActions {
     if (!this.selectedWallet) return;
 
     try {
-      const wallet = getUserEmbeddedEthereumWallet(this.user);
-      const { entropyId, entropyIdVerifier } = getEntropyDetailsFromUser(this.user);
+      let txHash;
 
-      const provider = await this.privy.embeddedWallet.getEthereumProvider({
-        wallet,
-        entropyId,
-        entropyIdVerifier
-      });
+      if (this.selectedWallet.isEmbedded) {
+        // Use embedded wallet
+        const wallet = getUserEmbeddedEthereumWallet(this.user);
+        const { entropyId, entropyIdVerifier } = getEntropyDetailsFromUser(this.user);
 
-      // Get current chainId from provider
-      const chainId = await provider.request({ method: 'eth_chainId' });
+        const provider = await this.privy.embeddedWallet.getEthereumProvider({
+          wallet,
+          entropyId,
+          entropyIdVerifier
+        });
 
-      // Zero-value transaction to self
-      const txHash = await provider.request({
-        method: 'eth_sendTransaction',
-        params: [{
-          from: wallet.address,
-          to: wallet.address,
-          value: '0x0',
-          data: '0x',
-          chainId: chainId
-        }]
-      });
+        // Get current chainId from provider
+        const chainId = await provider.request({ method: 'eth_chainId' });
+
+        // Zero-value transaction to self
+        txHash = await provider.request({
+          method: 'eth_sendTransaction',
+          params: [{
+            from: wallet.address,
+            to: wallet.address,
+            value: '0x0',
+            data: '0x',
+            chainId: chainId
+          }]
+        });
+      } else {
+        // Use external wallet (MetaMask)
+        const provider = getMetaMaskProvider();
+        if (!provider) {
+          throw new Error('MetaMask is not installed or not accessible.');
+        }
+
+        // Request accounts to ensure wallet is connected and get current account
+        const accounts = await provider.request({ method: 'eth_requestAccounts' });
+        
+        if (!accounts || accounts.length === 0) {
+          throw new Error('No accounts found. Please connect your wallet.');
+        }
+
+        // Use the first connected account (current active account in MetaMask)
+        const currentAccount = accounts[0];
+        console.log('Using MetaMask account:', currentAccount);
+
+        const client = createWalletClient({
+          chain: mainnet,
+          transport: custom(provider)
+        });
+
+        // Zero-value transaction to self
+        txHash = await client.sendTransaction({
+          account: currentAccount,
+          to: currentAccount,
+          value: 0n,
+        });
+      }
 
       this.lastResult = txHash;
       showToast('Transaction sent successfully!', 'success');
@@ -401,15 +591,6 @@ export class WalletActions {
     if (!this.selectedWallet) return;
 
     try {
-      const account = getUserEmbeddedSolanaWallet(this.user);
-      const { entropyId, entropyIdVerifier } = getEntropyDetailsFromUser(this.user);
-
-      const provider = await this.privy.embeddedWallet.getSolanaProvider(
-        account,
-        entropyId,
-        entropyIdVerifier
-      );
-
       // Create connection to Solana devnet
       const connection = new Connection('https://api.devnet.solana.com', 'confirmed');
       
@@ -419,20 +600,43 @@ export class WalletActions {
       // Create a zero-value transfer transaction to self
       const transaction = new Transaction().add(
         SystemProgram.transfer({
-          fromPubkey: new PublicKey(account.address),
-          toPubkey: new PublicKey(account.address),
+          fromPubkey: new PublicKey(this.selectedWallet.address),
+          toPubkey: new PublicKey(this.selectedWallet.address),
           lamports: 0, // Zero value transfer
         })
       );
 
       transaction.recentBlockhash = blockhash;
-      transaction.feePayer = new PublicKey(account.address);
+      transaction.feePayer = new PublicKey(this.selectedWallet.address);
 
-      // Sign the transaction
-      const signedTx = await provider.request({
-        method: 'signTransaction',
-        params: { transaction }
-      });
+      let signedTx;
+
+      if (this.selectedWallet.isEmbedded) {
+        // Use embedded wallet
+        const account = getUserEmbeddedSolanaWallet(this.user);
+        const { entropyId, entropyIdVerifier } = getEntropyDetailsFromUser(this.user);
+
+        const provider = await this.privy.embeddedWallet.getSolanaProvider(
+          account,
+          entropyId,
+          entropyIdVerifier
+        );
+
+        // Sign the transaction
+        signedTx = await provider.request({
+          method: 'signTransaction',
+          params: { transaction }
+        });
+      } else {
+        // Use external wallet (Phantom, etc.)
+        const phantom = getPhantomProvider();
+        if (!phantom) {
+          throw new Error('Solana wallet not found');
+        }
+
+        // Sign transaction with Phantom
+        signedTx = await phantom.signTransaction(transaction);
+      }
 
       // Extract signature from the signed transaction
       const txSignature = signedTx.signature || signedTx.signatures?.[0] || JSON.stringify(signedTx);
@@ -452,15 +656,6 @@ export class WalletActions {
     if (!this.selectedWallet) return;
 
     try {
-      const account = getUserEmbeddedSolanaWallet(this.user);
-      const { entropyId, entropyIdVerifier } = getEntropyDetailsFromUser(this.user);
-
-      const provider = await this.privy.embeddedWallet.getSolanaProvider(
-        account,
-        entropyId,
-        entropyIdVerifier
-      );
-
       // Create connection to Solana devnet
       const connection = new Connection('https://api.devnet.solana.com', 'confirmed');
       
@@ -470,24 +665,48 @@ export class WalletActions {
       // Create a zero-value transfer transaction to self
       const transaction = new Transaction().add(
         SystemProgram.transfer({
-          fromPubkey: new PublicKey(account.address),
-          toPubkey: new PublicKey(account.address),
+          fromPubkey: new PublicKey(this.selectedWallet.address),
+          toPubkey: new PublicKey(this.selectedWallet.address),
           lamports: 0, // Zero value transfer
         })
       );
 
       transaction.recentBlockhash = blockhash;
-      transaction.feePayer = new PublicKey(account.address);
+      transaction.feePayer = new PublicKey(this.selectedWallet.address);
 
-      // Sign and send the transaction
-      const signature = await provider.request({
-        method: 'signAndSendTransaction',
-        params: { 
-          transaction,
-          connection,
-          options: { skipPreflight: false }
+      let signature;
+
+      if (this.selectedWallet.isEmbedded) {
+        // Use embedded wallet
+        const account = getUserEmbeddedSolanaWallet(this.user);
+        const { entropyId, entropyIdVerifier } = getEntropyDetailsFromUser(this.user);
+
+        const provider = await this.privy.embeddedWallet.getSolanaProvider(
+          account,
+          entropyId,
+          entropyIdVerifier
+        );
+
+        // Sign and send the transaction
+        signature = await provider.request({
+          method: 'signAndSendTransaction',
+          params: { 
+            transaction,
+            connection,
+            options: { skipPreflight: false }
+          }
+        });
+      } else {
+        // Use external wallet (Phantom, etc.)
+        const phantom = getPhantomProvider();
+        if (!phantom) {
+          throw new Error('Solana wallet not found');
         }
-      });
+
+        // Sign and send transaction with Phantom
+        const { signature: sig } = await phantom.signAndSendTransaction(transaction);
+        signature = sig;
+      }
 
       this.lastResult = signature;
       showToast('Transaction sent successfully!', 'success');

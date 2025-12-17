@@ -18,7 +18,7 @@ async function init() {
         <h2 style="color: #ef4444; margin-bottom: 1rem;">Initialization Error</h2>
         <p style="color: #6b7280;">Please check your .env file and ensure VITE_PRIVY_APP_ID is set.</p>
         <p style="color: #6b7280; margin-top: 0.5rem; font-size: 0.875rem;">${error.message}</p>
-      </div>
+    </div>
     `;
   }
 }

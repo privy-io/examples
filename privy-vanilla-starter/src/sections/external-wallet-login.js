@@ -11,15 +11,34 @@ export class ExternalWalletLogin {
 
   async loginWithMetaMask() {
     try {
-      if (!window.ethereum) {
+      // Get the MetaMask provider specifically
+      const getMetaMask = () => {
+        if (!window.ethereum) return null;
+        
+        // If ethereum.providers exists, find MetaMask
+        if (window.ethereum.providers) {
+          return window.ethereum.providers.find(p => p.isMetaMask);
+        }
+        
+        // Otherwise use window.ethereum if it's MetaMask
+        if (window.ethereum.isMetaMask) {
+          return window.ethereum;
+        }
+        
+        return null;
+      };
+
+      const provider = getMetaMask();
+      
+      if (!provider) {
         showToast('MetaMask is not installed. Please install MetaMask to continue.', 'error');
         return;
       }
 
-      // Create wallet client with viem
+      // Create wallet client with viem using the specific provider
       const client = createWalletClient({
         chain: mainnet,
-        transport: custom(window.ethereum)
+        transport: custom(provider)
       });
 
       // Request account access
@@ -76,21 +95,60 @@ export class ExternalWalletLogin {
         showToast('MetaMask: User rejected the request', 'error');
       } else if (error.code === -32002) {
         showToast('MetaMask: Request already pending. Please check MetaMask.', 'error');
+      } else if (error.message?.includes('User rejected')) {
+        showToast('MetaMask: Connection rejected', 'error');
       } else {
-        showToast(`Login failed: ${error.message}`, 'error');
+        console.error('Full error details:', error);
+        showToast(`Login failed: ${error.message}. Try refreshing the page.`, 'error');
       }
     }
   }
 
   async loginWithPhantom() {
     try {
-      if (!window.solana || !window.solana.isPhantom) {
+      // Get the Phantom provider specifically
+      const getPhantom = () => {
+        if ('phantom' in window) {
+          const provider = window.phantom?.solana;
+          if (provider?.isPhantom) {
+            return provider;
+          }
+        }
+        // Fallback to window.solana if it's Phantom
+        if (window.solana?.isPhantom) {
+          return window.solana;
+        }
+        return null;
+      };
+
+      const phantom = getPhantom();
+      
+      if (!phantom) {
         showToast('Phantom wallet is not installed. Please install Phantom to continue.', 'error');
         return;
       }
 
-      // Connect to Phantom
-      const resp = await window.solana.connect();
+      console.log('Phantom detected:', {
+        isPhantom: phantom.isPhantom,
+        isConnected: phantom.isConnected,
+        publicKey: phantom.publicKey?.toString()
+      });
+
+      // Ensure clean state - disconnect if already connected
+      if (phantom.isConnected) {
+        console.log('Phantom already connected, disconnecting first...');
+        try {
+          await phantom.disconnect();
+          // Wait a bit for disconnect to complete
+          await new Promise(resolve => setTimeout(resolve, 300));
+        } catch (e) {
+          console.log('Disconnect error (continuing anyway):', e);
+        }
+      }
+
+      // Connect to Phantom with explicit options
+      console.log('Attempting to connect to Phantom...');
+      const resp = await phantom.connect({ onlyIfTrusted: false });
       const address = resp.publicKey.toString();
 
       console.log('SIWS Login - Address:', address);
@@ -121,7 +179,7 @@ Resources:
 
       // Sign message with Phantom
       const encodedMessage = new TextEncoder().encode(message);
-      const response = await window.solana.signMessage(encodedMessage, 'utf8');
+      const response = await phantom.signMessage(encodedMessage, 'utf8');
       
       // Convert Uint8Array signature to base64 using @scure/base
       const signature = base64.encode(response.signature);
@@ -147,8 +205,11 @@ Resources:
       console.error('Phantom login error:', error);
       if (error.code === 4001) {
         showToast('Phantom: User rejected the request', 'error');
+      } else if (error.message?.includes('Unexpected error')) {
+        showToast('Phantom: Please refresh the page and try again', 'error');
       } else {
-        showToast(`Login failed: ${error.message}`, 'error');
+        console.error('Full error details:', error);
+        showToast(`Login failed: ${error.message}. Try refreshing the page.`, 'error');
       }
     }
   }
