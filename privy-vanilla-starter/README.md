@@ -31,6 +31,9 @@ Update `.env` with your Privy app credentials:
 # Public - Safe to expose in the browser
 VITE_PRIVY_APP_ID=your_app_id_here
 VITE_PRIVY_APP_CLIENT_ID=your_client_id_here  # Optional
+
+# Additional Signer ID for delegation (optional)
+VITE_SESSION_SIGNER_ID=your_signer_id_here
 ```
 
 **Important:** Variables prefixed with `VITE_` are exposed to the browser. Get your credentials from the [Privy Dashboard](https://dashboard.privy.io).
@@ -292,7 +295,34 @@ await privy.embeddedWallet.create({});
 await privy.embeddedWallet.createSolana();
 ```
 
-### 7. Sign Messages and Transactions
+### 7. Additional Signers
+
+Manage additional signers for embedded wallets. Additional signers allow granting and revoking server-side access to wallets.
+
+[`src/sections/session-signers.js`](./src/sections/session-signers.js)
+
+```javascript
+import { addSessionSigners, removeSessionSigners } from '@privy-io/js-sdk-core';
+
+// Add session signers to a wallet (TEE execution)
+await addSessionSigners({
+  client: privy,
+  wallet: ethWallet,
+  signers: [{
+    signer_id: import.meta.env.VITE_SESSION_SIGNER_ID,
+    override_policy_ids: []
+  }]
+});
+
+// Remove session signers from a wallet
+await removeSessionSigners({
+  client: privy,
+  wallet: ethWallet
+});
+```
+
+
+### 8. Sign Messages and Transactions
 
 Send transactions on both Ethereum and Solana with comprehensive wallet action support.
 
