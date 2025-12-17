@@ -70,7 +70,50 @@ window.addEventListener('message', (e) => {
 });
 ```
 
-### 2. Authenticate with Email
+### 2. Login with External Wallets
+
+Support login with external wallets like MetaMask (Ethereum) and Phantom (Solana) using SIWE and SIWS.
+
+[`src/sections/external-wallet-login.js`](./src/sections/external-wallet-login.js)
+
+```javascript
+// MetaMask login with SIWE (using viem)
+import { createWalletClient, custom, getAddress } from 'viem';
+
+const client = createWalletClient({
+  transport: custom(window.ethereum)
+});
+
+const [address] = await client.requestAddresses();
+const chainId = await client.getChainId();
+
+const { message } = await privy.auth.siwe.init(
+  { address: getAddress(address), chainId: `eip155:${chainId}` },
+  window.location.host,
+  window.location.origin
+);
+
+const signature = await client.signMessage({
+  account: address,
+  message: message,
+});
+
+const session = await privy.auth.siwe.loginWithSiwe(signature);
+
+// Phantom login with SIWS
+const resp = await window.solana.connect();
+const { nonce } = await privy.auth.siws.fetchNonce({ 
+  address: resp.publicKey.toString() 
+});
+
+const message = createSiwsMessage(/* ... */);
+const signedMessage = await window.solana.signMessage(encodedMessage);
+const signature = btoa(String.fromCharCode(...signedMessage.signature));
+
+const session = await privy.auth.siws.login({ message, signature });
+```
+
+### 3. Authenticate with Email
 
 Login or sign up using passwordless email authentication with OTP codes.
 
@@ -92,7 +135,7 @@ const session = await privy.auth.email.loginWithCode(
 );
 ```
 
-### 3. Create Embedded Wallets
+### 4. Create Embedded Wallets
 
 Programmatically create embedded wallets for Ethereum and Solana blockchains.
 
@@ -106,7 +149,7 @@ await privy.embeddedWallet.create({});
 await privy.embeddedWallet.createSolana();
 ```
 
-### 4. Sign Messages and Transactions
+### 5. Sign Messages and Transactions
 
 Send transactions on both Ethereum and Solana with comprehensive wallet action support.
 

@@ -1,4 +1,5 @@
 import { showToast } from '../utils/toast.js';
+import { ExternalWalletLogin } from '../sections/external-wallet-login.js';
 
 /**
  * Manages authentication flow
@@ -9,7 +10,21 @@ export class AuthManager {
     this.authStateListeners = [];
     this.currentUser = null;
     this.userLoadPromise = null;
+    this.externalWalletLogin = new ExternalWalletLogin(
+      privyClient,
+      this.onExternalWalletLoginSuccess.bind(this)
+    );
     this.setupModal();
+  }
+
+  /**
+   * Handle successful external wallet login
+   */
+  onExternalWalletLoginSuccess(session) {
+    this.currentUser = session.user;
+    this.userLoadPromise = null;
+    this.closeModal();
+    this.notifyAuthStateChange();
   }
 
   /**
@@ -45,6 +60,17 @@ export class AuthManager {
     const emailContainer = document.getElementById('email-input-container');
     const otpContainer = document.getElementById('otp-input-container');
     const errorDisplay = document.getElementById('auth-error');
+    const metamaskBtn = document.getElementById('metamask-login-btn');
+    const phantomBtn = document.getElementById('phantom-login-btn');
+
+    // External wallet login
+    metamaskBtn.addEventListener('click', () => {
+      this.externalWalletLogin.loginWithMetaMask();
+    });
+
+    phantomBtn.addEventListener('click', () => {
+      this.externalWalletLogin.loginWithPhantom();
+    });
 
     // Close modal
     closeBtn.addEventListener('click', () => this.closeModal());
