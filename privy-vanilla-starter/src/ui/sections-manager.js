@@ -4,6 +4,7 @@ import { CreateWallet } from '../sections/create-wallet.js';
 import { LinkAccounts } from '../sections/link-accounts.js';
 import { UnlinkAccounts } from '../sections/unlink-accounts.js';
 import { SessionSigners } from '../sections/session-signers.js';
+import { MFA } from '../sections/mfa.js';
 import { showToast } from '../utils/toast.js';
 import {
   getUserEmbeddedEthereumWallet,
@@ -40,6 +41,10 @@ export class SectionsManager {
     const sessionSignersSection = new SessionSigners(this.privy);
     this.container.appendChild(sessionSignersSection.render(user, () => this.refreshUser()));
   
+    // MFA section
+    const mfaSection = new MFA(this.privy);
+    this.container.appendChild(mfaSection.render(user, () => this.refreshUser()));
+
     // Link Accounts section
     const linkAccountsSection = new LinkAccounts(this.privy);
     this.container.appendChild(linkAccountsSection.render(user, () => this.refreshUser()));

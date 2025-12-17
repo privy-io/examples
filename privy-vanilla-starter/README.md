@@ -303,7 +303,103 @@ await privy.auth.oauth.unlink(provider, subject);
 - OAuth providers (Google, Twitter, Discord, GitHub, Apple, LinkedIn, Spotify, TikTok)
 - Wallets
 
-### 6. Create Embedded Wallets
+### 6. Multi-Factor Authentication (MFA)
+
+Add an extra layer of security to your account by enrolling in MFA methods: SMS, TOTP (authenticator apps), and Passkey.
+
+[`src/sections/mfa.js`](./src/sections/mfa.js)
+
+#### Enroll SMS MFA
+```javascript
+// Step 1: Initialize SMS MFA enrollment
+await privy.mfa.initEnrollMfa({ 
+  method: 'sms', 
+  phoneNumber: '+1234567890' 
+});
+
+// Step 2: Submit verification code
+await privy.mfa.submitEnrollMfa({ 
+  method: 'sms', 
+  phoneNumber: '+1234567890',
+  code: '123456'
+});
+```
+
+#### Enroll TOTP MFA
+```javascript
+// Step 1: Initialize TOTP MFA enrollment (returns QR code)
+const { authUrl, secret } = await privy.mfa.initEnrollMfa({ 
+  method: 'totp' 
+});
+// Display authUrl as QR code for user to scan with authenticator app
+
+// Step 2: Submit verification code from authenticator
+await privy.mfa.submitEnrollMfa({ 
+  method: 'totp', 
+  code: '123456' 
+});
+```
+
+#### Enroll Passkey MFA
+```javascript
+// Enroll existing passkeys for MFA
+const passkeyAccounts = user.linked_accounts.filter(
+  account => account.type === 'passkey'
+);
+const credentialIds = passkeyAccounts.map(account => account.credential_id);
+
+await privy.mfa.submitEnrollMfa({ 
+  method: 'passkey', 
+  credentialIds 
+});
+```
+
+#### Unenroll MFA
+
+MFA unenrollment requires MFA verification to prevent unauthorized removal. This starter demonstrates the proper flow:
+
+```javascript
+// Set up MFA verification listener
+const mfaListener = async () => {
+  await handleMfaVerification(user);
+};
+
+privy.mfaPromises.on('mfaRequired', mfaListener);
+
+try {
+  // Unenroll SMS or TOTP
+  await privy.mfa.unenrollMfa('sms'); // or 'totp'
+  
+  // For Passkey, use submitEnrollMfa with empty credentialIds
+  await privy.mfa.submitEnrollMfa({ 
+    method: 'passkey', 
+    credentialIds: [],
+    removeForLogin: false
+  });
+} finally {
+  privy.mfaPromises.off('mfaRequired', mfaListener);
+}
+```
+
+The MFA verification flow:
+1. Listen for `mfaRequired` events via `privy.mfaPromises`
+2. Prompt user for verification (SMS code, TOTP code, or Passkey)
+3. Submit verification by resolving `privy.mfaPromises.rootPromise.current`:
+   ```javascript
+   privy.mfaPromises.rootPromise.current.resolve({
+     mfaMethod: 'totp', // or 'sms', 'passkey'
+     mfaCode: code,     // string for SMS/TOTP, or authenticatorResponse for Passkey
+     relyingParty: window.location.hostname
+   });
+   ```
+4. Complete unenrollment after successful verification
+
+**MFA Methods:**
+- **SMS**: Receive verification codes via text message
+- **TOTP**: Use authenticator apps (Google Authenticator, Authy, etc.)
+- **Passkey**: Use device biometrics (must link passkey first)
+
+### 7. Create Embedded Wallets
 
 Programmatically create embedded wallets for Ethereum and Solana blockchains.
 
@@ -317,7 +413,7 @@ await privy.embeddedWallet.create({});
 await privy.embeddedWallet.createSolana();
 ```
 
-### 7. Additional Signers
+### 8. Additional Signers
 
 Manage additional signers for embedded wallets. Additional signers allow granting and revoking server-side access to wallets.
 
@@ -344,7 +440,7 @@ await removeSessionSigners({
 ```
 
 
-### 8. Sign Messages and Transactions
+### 9. Sign Messages and Transactions
 
 Send transactions on both Ethereum and Solana with comprehensive wallet action support.
 
