@@ -1,6 +1,8 @@
 import { createSection } from '../utils/section-builder.js';
 import { WalletActions } from '../sections/wallet-actions.js';
 import { CreateWallet } from '../sections/create-wallet.js';
+import { LinkAccounts } from '../sections/link-accounts.js';
+import { UnlinkAccounts } from '../sections/unlink-accounts.js';
 import { showToast } from '../utils/toast.js';
 import {
   getUserEmbeddedEthereumWallet,
@@ -32,6 +34,14 @@ export class SectionsManager {
     // Wallet actions section
     const walletActionsSection = new WalletActions(this.privy, user);
     this.container.appendChild(walletActionsSection.render(() => this.refreshUser()));
+  
+    // Link Accounts section
+    const linkAccountsSection = new LinkAccounts(this.privy);
+    this.container.appendChild(linkAccountsSection.render(user, () => this.refreshUser()));
+
+    // Unlink Accounts section
+    const unlinkAccountsSection = new UnlinkAccounts(this.privy);
+    this.container.appendChild(unlinkAccountsSection.render(user, () => this.refreshUser()));
   }
 
   /**

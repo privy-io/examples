@@ -32,46 +32,80 @@ export class OAuthLogin {
     const error = urlParams.get('privy_oauth_error') || urlParams.get('error');
     const errorDescription = urlParams.get('privy_oauth_error_description') || urlParams.get('error_description');
 
+    // Check if this is a link action (not login)
+    const oauthAction = sessionStorage.getItem('privy_oauth_action');
+    const storedProvider = sessionStorage.getItem('privy_oauth_provider');
+
     if (error) {
       console.error('OAuth error:', error, errorDescription);
       showToast(`OAuth error: ${errorDescription || error}`, 'error');
-      // Clean URL
+      // Clean up
+      sessionStorage.removeItem('privy_oauth_action');
+      sessionStorage.removeItem('privy_oauth_provider');
       window.history.replaceState({}, document.title, window.location.pathname);
       return;
     }
 
     if (authorizationCode && stateCode) {
       try {
-        console.log('Processing OAuth callback...', { provider });
-        showToast('Completing login...', 'success');
+        // Check if this is a link action
+        if (oauthAction === 'link') {
+          console.log('Processing OAuth link callback...', { provider: storedProvider || provider });
+          showToast('Linking account...', 'success');
 
-        // Complete the OAuth login
-        const session = await this.privy.auth.oauth.loginWithCode(
-          authorizationCode,
-          stateCode,
-          provider, // provider from URL
-          undefined, // codeType
-          'login-or-sign-up',
-          {
-            embedded: {
-              ethereum: { createOnLogin: 'user-without-wallets' },
-              solana: { createOnLogin: 'user-without-wallets' }
+          // Complete the OAuth link
+          await this.privy.auth.oauth.linkWithCode(
+            authorizationCode,
+            stateCode,
+            storedProvider || provider,
+            undefined
+          );
+
+          console.log('OAuth link successful');
+          showToast(`${storedProvider || provider} account linked successfully!`, 'success');
+          
+          // Clean up
+          sessionStorage.removeItem('privy_oauth_action');
+          sessionStorage.removeItem('privy_oauth_provider');
+          window.history.replaceState({}, document.title, window.location.pathname);
+          
+          // Refresh the page to show updated user
+          window.location.reload();
+        } else {
+          // This is a login action
+          console.log('Processing OAuth login callback...', { provider });
+          showToast('Completing login...', 'success');
+
+          // Complete the OAuth login
+          const session = await this.privy.auth.oauth.loginWithCode(
+            authorizationCode,
+            stateCode,
+            provider, // provider from URL
+            undefined, // codeType
+            'login-or-sign-up',
+            {
+              embedded: {
+                ethereum: { createOnLogin: 'user-without-wallets' },
+                solana: { createOnLogin: 'user-without-wallets' }
+              }
             }
-          }
-        );
+          );
 
-        console.log('OAuth login successful:', session.user);
-        
-        // Clean URL
-        window.history.replaceState({}, document.title, window.location.pathname);
-        
-        // Notify success
-        this.onLoginSuccess(session);
-        showToast('Login successful!', 'success');
+          console.log('OAuth login successful:', session.user);
+          
+          // Clean URL
+          window.history.replaceState({}, document.title, window.location.pathname);
+          
+          // Notify success
+          this.onLoginSuccess(session);
+          showToast('Login successful!', 'success');
+        }
       } catch (error) {
-        console.error('OAuth login error:', error);
-        showToast(`Login failed: ${error.message}`, 'error');
-        // Clean URL
+        console.error('OAuth callback error:', error);
+        showToast(`Failed: ${error.message}`, 'error');
+        // Clean up
+        sessionStorage.removeItem('privy_oauth_action');
+        sessionStorage.removeItem('privy_oauth_provider');
         window.history.replaceState({}, document.title, window.location.pathname);
       }
     }

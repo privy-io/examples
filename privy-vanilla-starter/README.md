@@ -208,7 +208,77 @@ if (authorizationCode && stateCode) {
 
 **Note:** The OAuth flow uses full-page redirects. The user will be redirected to the OAuth provider, then back to your app after authentication.
 
-### 4. Create Embedded Wallets
+### 4. Link Accounts
+
+Allow users to link multiple authentication methods to their account.
+
+[`src/sections/link-accounts.js`](./src/sections/link-accounts.js)
+
+#### Link Email
+```javascript
+// Send code to email
+await privy.auth.email.sendCode(email);
+
+// Link email with code
+await privy.auth.email.linkWithCode(email, code);
+```
+
+#### Link Phone
+```javascript
+// Send SMS code
+await privy.auth.phone.sendCode(phoneNumber);
+
+// Link phone with code
+await privy.auth.phone.linkWithCode(phoneNumber, code);
+```
+
+#### Link OAuth Accounts
+```javascript
+// Generate OAuth URL for linking
+const redirectURI = window.location.href;
+const { url } = await privy.auth.oauth.generateURL('google', redirectURI);
+
+// Redirect to OAuth provider
+window.location.href = url;
+
+// After redirect, complete the link
+await privy.auth.oauth.linkWithCode(
+  authorizationCode,
+  stateCode,
+  'google'
+);
+```
+
+**Supported Link Methods:**
+- Email (with OTP verification)
+- Phone/SMS (with OTP verification)
+- OAuth providers (Google, Twitter, Discord, GitHub, Apple, LinkedIn, Spotify, TikTok)
+- Wallets (via SIWE/SIWS)
+
+### 5. Unlink Accounts
+
+Remove linked authentication methods from a user's account.
+
+[`src/sections/unlink-accounts.js`](./src/sections/unlink-accounts.js)
+
+```javascript
+// Unlink email
+await privy.auth.email.unlink(emailAddress);
+
+// Unlink phone
+await privy.auth.phone.unlink(phoneNumber);
+
+// Unlink OAuth account
+await privy.auth.oauth.unlink(provider, subject);
+```
+
+**Supported Unlink Methods:**
+- Email
+- Phone/SMS
+- OAuth providers (Google, Twitter, Discord, GitHub, Apple, LinkedIn, Spotify, TikTok)
+- Wallets
+
+### 6. Create Embedded Wallets
 
 Programmatically create embedded wallets for Ethereum and Solana blockchains.
 
@@ -222,7 +292,7 @@ await privy.embeddedWallet.create({});
 await privy.embeddedWallet.createSolana();
 ```
 
-### 5. Sign Messages and Transactions
+### 7. Sign Messages and Transactions
 
 Send transactions on both Ethereum and Solana with comprehensive wallet action support.
 
