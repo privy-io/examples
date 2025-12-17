@@ -1,9 +1,26 @@
 import { createSection } from '../utils/section-builder.js';
 import { showToast } from '../utils/toast.js';
+import { startRegistration } from '@simplewebauthn/browser';
+
+/**
+ * Convert snake_case keys to camelCase recursively
+ */
+function toCamelCase(obj) {
+  if (Array.isArray(obj)) {
+    return obj.map(item => toCamelCase(item));
+  } else if (obj !== null && typeof obj === 'object') {
+    return Object.keys(obj).reduce((result, key) => {
+      const camelKey = key.replace(/_([a-z])/g, (_, letter) => letter.toUpperCase());
+      result[camelKey] = toCamelCase(obj[key]);
+      return result;
+    }, {});
+  }
+  return obj;
+}
 
 /**
  * Link/Unlink Accounts Section
- * Allows users to link and unlink various account types (email, phone, OAuth, wallets)
+ * Allows users to link and unlink various account types (email, phone, OAuth, wallets, passkeys)
  */
 export class LinkAccounts {
   constructor(privyClient) {
@@ -305,6 +322,42 @@ export class LinkAccounts {
           } catch (error) {
             console.error('Link GitHub error:', error);
             showToast(error.message || 'Failed to initiate GitHub link', 'error');
+          }
+        }
+      },
+
+      // Link Passkey
+      {
+        name: 'Link Passkey',
+        function: async () => {
+          try {
+            // Step 1: Get registration options from Privy
+            const response = await this.privy.auth.passkey.generateRegistrationOptions();
+
+            // Extract and convert options from snake_case to camelCase
+            const options = toCamelCase(response.options);
+
+            // Step 2: Prompt user to create passkey using browser WebAuthn API
+            const registrationResponse = await startRegistration(options);
+
+            // Step 3: Link the passkey to user's account
+            await this.privy.auth.passkey.linkWithPasskey(registrationResponse);
+
+            showToast('Passkey linked successfully!', 'success');
+            onUpdate();
+          } catch (error) {
+            console.error('Link passkey error:', error);
+            
+            // Handle specific errors
+            if (error.name === 'NotAllowedError') {
+              showToast('Passkey creation was cancelled or timed out', 'error');
+            } else if (error.name === 'InvalidStateError') {
+              showToast('This passkey is already registered', 'error');
+            } else if (error.name === 'NotSupportedError') {
+              showToast('Passkeys are not supported on this device/browser', 'error');
+            } else {
+              showToast(error.message || 'Failed to link passkey', 'error');
+            }
           }
         }
       }

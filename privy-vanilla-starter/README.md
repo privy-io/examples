@@ -257,6 +257,28 @@ await privy.auth.oauth.linkWithCode(
 - Phone/SMS (with OTP verification)
 - OAuth providers (Google, Twitter, Discord, GitHub, Apple, LinkedIn, Spotify, TikTok)
 - Wallets (via SIWE/SIWS)
+- Passkeys (WebAuthn)
+
+#### Link Passkey
+
+Link a passkey to your account for passwordless authentication using biometrics or device PIN.
+
+```javascript
+import { startRegistration } from '@simplewebauthn/browser';
+
+// Step 1: Get registration options from Privy
+const response = await privy.auth.passkey.generateRegistrationOptions();
+
+// Convert snake_case to camelCase for WebAuthn API
+const options = toCamelCase(response.options);
+
+// Step 2: Prompt user to create passkey using browser WebAuthn API
+const registrationResponse = await startRegistration(options);
+
+// Step 3: Link the passkey to user's account
+await privy.auth.passkey.linkWithPasskey(registrationResponse);
+```
+
 
 ### 5. Unlink Accounts
 
