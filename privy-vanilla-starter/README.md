@@ -135,6 +135,79 @@ const session = await privy.auth.email.loginWithCode(
 );
 ```
 
+### 3a. Authenticate with SMS
+
+Login or sign up using SMS authentication with OTP codes.
+
+[`src/sections/sms-login.js`](./src/sections/sms-login.js)
+
+```javascript
+// Send SMS OTP code
+await privy.auth.sms.sendCode(phoneNumber);
+
+// Verify code and login
+const session = await privy.auth.sms.loginWithCode(
+  phoneNumber,
+  code,
+  undefined,
+  {
+    ethereum: { createOnLogin: 'user-without-wallets' },
+    solana: { createOnLogin: 'user-without-wallets' }
+  }
+);
+```
+
+### 3b. Authenticate with OAuth (Google, Twitter, Discord, GitHub, etc.)
+
+Login or sign up using OAuth providers with full-page redirect flow.
+
+[`src/sections/oauth-login.js`](./src/sections/oauth-login.js)
+
+```javascript
+// Step 1: Generate OAuth URL and redirect to provider
+const redirectURI = window.location.href.split('?')[0];
+const { url } = await privy.auth.oauth.generateURL('google', redirectURI);
+
+// Redirect user to OAuth provider
+window.location.href = url;
+
+// Step 2: After OAuth provider redirects back, complete login
+// The URL will contain 'code' and 'state' query parameters
+const urlParams = new URLSearchParams(window.location.search);
+const authorizationCode = urlParams.get('code');
+const stateCode = urlParams.get('state');
+
+if (authorizationCode && stateCode) {
+  const session = await privy.auth.oauth.loginWithCode(
+    authorizationCode,
+    stateCode,
+    undefined, // provider (optional)
+    undefined, // codeType
+    'login-or-sign-up',
+    {
+      embedded: {
+        ethereum: { createOnLogin: 'user-without-wallets' },
+        solana: { createOnLogin: 'user-without-wallets' }
+      }
+    }
+  );
+}
+```
+
+**Supported OAuth Providers:**
+- Google
+- Twitter (X)
+- Discord
+- GitHub
+- Apple
+- LinkedIn
+- Spotify
+- TikTok
+- Instagram
+- Line
+
+**Note:** The OAuth flow uses full-page redirects. The user will be redirected to the OAuth provider, then back to your app after authentication.
+
 ### 4. Create Embedded Wallets
 
 Programmatically create embedded wallets for Ethereum and Solana blockchains.

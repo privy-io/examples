@@ -1,5 +1,7 @@
 import { showToast } from '../utils/toast.js';
 import { ExternalWalletLogin } from '../sections/external-wallet-login.js';
+import { SmsLogin } from '../sections/sms-login.js';
+import { OAuthLogin } from '../sections/oauth-login.js';
 
 /**
  * Manages authentication flow
@@ -14,6 +16,14 @@ export class AuthManager {
       privyClient,
       this.onExternalWalletLoginSuccess.bind(this)
     );
+    this.smsLogin = new SmsLogin(
+      privyClient,
+      this.onSmsLoginSuccess.bind(this)
+    );
+    this.oauthLogin = new OAuthLogin(
+      privyClient,
+      this.onOAuthLoginSuccess.bind(this)
+    );
     this.setupModal();
   }
 
@@ -21,6 +31,26 @@ export class AuthManager {
    * Handle successful external wallet login
    */
   onExternalWalletLoginSuccess(session) {
+    this.currentUser = session.user;
+    this.userLoadPromise = null;
+    this.closeModal();
+    this.notifyAuthStateChange();
+  }
+
+  /**
+   * Handle successful SMS login
+   */
+  onSmsLoginSuccess(session) {
+    this.currentUser = session.user;
+    this.userLoadPromise = null;
+    this.closeModal();
+    this.notifyAuthStateChange();
+  }
+
+  /**
+   * Handle successful OAuth login
+   */
+  onOAuthLoginSuccess(session) {
     this.currentUser = session.user;
     this.userLoadPromise = null;
     this.closeModal();
@@ -62,6 +92,26 @@ export class AuthManager {
     const errorDisplay = document.getElementById('auth-error');
     const metamaskBtn = document.getElementById('metamask-login-btn');
     const phantomBtn = document.getElementById('phantom-login-btn');
+    
+    // SMS login elements
+    const phoneInput = document.getElementById('phone-input');
+    const sendSmsCodeBtn = document.getElementById('send-sms-code-btn');
+    const smsOtpInput = document.getElementById('sms-otp-input');
+    const verifySmsCodeBtn = document.getElementById('verify-sms-code-btn');
+    const backToPhoneBtn = document.getElementById('back-to-phone-btn');
+    const phoneContainer = document.getElementById('phone-input-container');
+    const smsOtpContainer = document.getElementById('sms-otp-input-container');
+    
+    // OAuth buttons
+    const googleLoginBtn = document.getElementById('google-login-btn');
+    const twitterLoginBtn = document.getElementById('twitter-login-btn');
+    const discordLoginBtn = document.getElementById('discord-login-btn');
+    const githubLoginBtn = document.getElementById('github-login-btn');
+
+    // Tab buttons
+    const emailTabBtn = document.getElementById('email-tab-btn');
+    const smsTabBtn = document.getElementById('sms-tab-btn');
+    const socialTabBtn = document.getElementById('social-tab-btn');
 
     // External wallet login
     metamaskBtn.addEventListener('click', () => {
@@ -70,6 +120,36 @@ export class AuthManager {
 
     phantomBtn.addEventListener('click', () => {
       this.externalWalletLogin.loginWithPhantom();
+    });
+
+    // OAuth login handlers
+    googleLoginBtn?.addEventListener('click', () => {
+      this.oauthLogin.loginWithGoogle();
+    });
+
+    twitterLoginBtn?.addEventListener('click', () => {
+      this.oauthLogin.loginWithTwitter();
+    });
+
+    discordLoginBtn?.addEventListener('click', () => {
+      this.oauthLogin.loginWithDiscord();
+    });
+
+    githubLoginBtn?.addEventListener('click', () => {
+      this.oauthLogin.loginWithGithub();
+    });
+
+    // Tab switching
+    emailTabBtn?.addEventListener('click', () => {
+      this.switchTab('email');
+    });
+
+    smsTabBtn?.addEventListener('click', () => {
+      this.switchTab('sms');
+    });
+
+    socialTabBtn?.addEventListener('click', () => {
+      this.switchTab('social');
     });
 
     // Close modal
@@ -123,10 +203,12 @@ export class AuthManager {
         const session = await this.privy.auth.email.loginWithCode(
           this.currentEmail,
           code,
-          undefined,
+          'login-or-sign-up',
           {
-            ethereum: { createOnLogin: 'user-without-wallets' },
-            solana: { createOnLogin: 'user-without-wallets' }
+            embedded: {
+              ethereum: { createOnLogin: 'user-without-wallets' },
+              solana: { createOnLogin: 'user-without-wallets' }
+            }
           }
         );
         
@@ -155,6 +237,66 @@ export class AuthManager {
       otpInput.value = '';
     });
 
+    // SMS login handlers
+    sendSmsCodeBtn?.addEventListener('click', async () => {
+      const phone = phoneInput.value.trim();
+      if (!phone) {
+        this.showError('Please enter a phone number');
+        return;
+      }
+
+      sendSmsCodeBtn.disabled = true;
+      sendSmsCodeBtn.textContent = 'Sending...';
+      
+      try {
+        await this.smsLogin.sendCode(phone);
+        phoneContainer.classList.add('hidden');
+        smsOtpContainer.classList.remove('hidden');
+        errorDisplay.classList.add('hidden');
+        
+        // Focus SMS OTP input
+        setTimeout(() => smsOtpInput.focus(), 100);
+      } catch (error) {
+        console.error('Send SMS code error:', error);
+        this.showError(error.message || 'Failed to send SMS code');
+      } finally {
+        sendSmsCodeBtn.disabled = false;
+        sendSmsCodeBtn.textContent = 'Send code';
+      }
+    });
+
+    // Verify SMS code
+    verifySmsCodeBtn?.addEventListener('click', async () => {
+      const code = smsOtpInput.value.trim();
+      if (!code) {
+        this.showError('Please enter the verification code');
+        return;
+      }
+
+      verifySmsCodeBtn.disabled = true;
+      verifySmsCodeBtn.textContent = 'Verifying...';
+
+      try {
+        await this.smsLogin.verifyCode(code);
+        // Success handled by callback
+      } catch (error) {
+        console.error('Verify SMS code error:', error);
+        this.showError(error.message || 'Invalid code. Please try again.');
+      } finally {
+        verifySmsCodeBtn.disabled = false;
+        verifySmsCodeBtn.textContent = 'Verify';
+      }
+    });
+
+    // Back to phone
+    backToPhoneBtn?.addEventListener('click', () => {
+      smsOtpContainer.classList.add('hidden');
+      phoneContainer.classList.remove('hidden');
+      errorDisplay.classList.add('hidden');
+      smsOtpInput.value = '';
+      this.smsLogin.reset();
+    });
+
     // Enter key handlers
     emailInput.addEventListener('keypress', (e) => {
       if (e.key === 'Enter') sendCodeBtn.click();
@@ -163,6 +305,66 @@ export class AuthManager {
     otpInput.addEventListener('keypress', (e) => {
       if (e.key === 'Enter') verifyCodeBtn.click();
     });
+
+    phoneInput?.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') sendSmsCodeBtn.click();
+    });
+
+    smsOtpInput?.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') verifySmsCodeBtn.click();
+    });
+  }
+
+  /**
+   * Switch between authentication tabs
+   */
+  switchTab(tab) {
+    const emailContainer = document.getElementById('email-input-container');
+    const phoneContainer = document.getElementById('phone-input-container');
+    const socialContainer = document.getElementById('social-login-container');
+    const otpContainer = document.getElementById('otp-input-container');
+    const smsOtpContainer = document.getElementById('sms-otp-input-container');
+    const errorDisplay = document.getElementById('auth-error');
+
+    const emailTabBtn = document.getElementById('email-tab-btn');
+    const smsTabBtn = document.getElementById('sms-tab-btn');
+    const socialTabBtn = document.getElementById('social-tab-btn');
+
+    const modalHeader = document.querySelector('.modal-header h3');
+
+    // Hide all containers
+    emailContainer?.classList.add('hidden');
+    phoneContainer?.classList.add('hidden');
+    socialContainer?.classList.add('hidden');
+    otpContainer?.classList.add('hidden');
+    smsOtpContainer?.classList.add('hidden');
+    errorDisplay?.classList.add('hidden');
+
+    // Remove active class from all tabs
+    emailTabBtn?.classList.remove('active');
+    smsTabBtn?.classList.remove('active');
+    socialTabBtn?.classList.remove('active');
+
+    // Show selected tab
+    switch (tab) {
+      case 'email':
+        emailContainer?.classList.remove('hidden');
+        emailTabBtn?.classList.add('active');
+        modalHeader.textContent = 'Login with Email';
+        setTimeout(() => document.getElementById('email-input')?.focus(), 100);
+        break;
+      case 'sms':
+        phoneContainer?.classList.remove('hidden');
+        smsTabBtn?.classList.add('active');
+        modalHeader.textContent = 'Login with SMS';
+        setTimeout(() => document.getElementById('phone-input')?.focus(), 100);
+        break;
+      case 'social':
+        socialContainer?.classList.remove('hidden');
+        socialTabBtn?.classList.add('active');
+        modalHeader.textContent = 'Login with Social';
+        break;
+    }
   }
 
   /**
@@ -170,21 +372,21 @@ export class AuthManager {
    */
   openLoginModal() {
     const modal = document.getElementById('auth-modal');
-    const emailContainer = document.getElementById('email-input-container');
-    const otpContainer = document.getElementById('otp-input-container');
-    const errorDisplay = document.getElementById('auth-error');
     const emailInput = document.getElementById('email-input');
     const otpInput = document.getElementById('otp-input');
+    const phoneInput = document.getElementById('phone-input');
+    const smsOtpInput = document.getElementById('sms-otp-input');
 
     modal.classList.remove('hidden');
-    emailContainer.classList.remove('hidden');
-    otpContainer.classList.add('hidden');
-    errorDisplay.classList.add('hidden');
+    
+    // Reset inputs
     emailInput.value = '';
     otpInput.value = '';
+    if (phoneInput) phoneInput.value = '';
+    if (smsOtpInput) smsOtpInput.value = '';
     
-    // Focus email input
-    setTimeout(() => emailInput.focus(), 100);
+    // Show email tab by default
+    this.switchTab('email');
   }
 
   /**
