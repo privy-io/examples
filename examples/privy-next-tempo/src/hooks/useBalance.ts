@@ -1,18 +1,13 @@
 import { alphaUsd } from "@/constants";
 import { useEffect, useState } from "react";
-import { tempo as configureTempo } from "tempo.ts/chains";
-import { Abis } from "tempo.ts/viem";
+import { tempoTestnet } from "viem/chains";
+import { tempoActions } from "viem/tempo";
 import { Address, createPublicClient, formatUnits, webSocket } from "viem";
 
-
-const tempo = configureTempo({
-  feeToken: alphaUsd,
-});
-
 const publicClient = createPublicClient({
-  chain: tempo,
+  chain: tempoTestnet,
   transport: webSocket("wss://rpc.testnet.tempo.xyz"),
-});
+}).extend(tempoActions());
 
 export function useBalance(address: string | undefined) {
   const [balance, setBalance] = useState<string>("0.00");
@@ -29,20 +24,16 @@ export function useBalance(address: string | undefined) {
 
     const fetchBalance = async () => {
       try {
-        const balance = (await publicClient.readContract({
-          address: alphaUsd,
-          abi: Abis.tip20,
-          functionName: "balanceOf",
-          args: [address as Address],
-        })) as unknown as bigint;
+        const metadata = await publicClient.token.getMetadata({
+          token: alphaUsd as Address,
+        });
 
-        const decimals = (await publicClient.readContract({
-          address: alphaUsd,
-          abi: Abis.tip20,
-          functionName: "decimals",
-        })) as unknown as number;
+        const balance = await publicClient.token.getBalance({
+          account: address as Address,
+          token: alphaUsd as Address,
+        });
 
-        const formatted = formatUnits(balance, decimals);
+        const formatted = formatUnits(balance, metadata.decimals);
         const number = parseFloat(formatted);
 
         // Format with compact notation for large numbers
