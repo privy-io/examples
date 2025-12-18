@@ -18,8 +18,8 @@
     "qrcode.react": "^4.2.0",
     "react": "19.1.4",
     "react-dom": "19.1.4",
-    "tempo.ts": "^0.10.5",
-    "viem": "^2.41.2",
+    "tempo.ts": "^0.11.1",
+    "viem": "^2.43.1",
     "zod": "^4.1.13"
   },
   "devDependencies": {

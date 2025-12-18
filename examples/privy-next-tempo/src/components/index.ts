@@ -16,3 +16,4 @@ export { SkeletonButton } from "./SkeletonButton";
 export { SkeletonView } from "./SkeletonView";
 export { LoginView } from "./LoginView";
 export { UserPill } from "./UserPill";
+export { FaucetButton } from "./FaucetButton";

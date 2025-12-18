@@ -1,8 +1,8 @@
 import { alphaUsd } from "@/constants";
 import { toViemAccount, useWallets } from "@privy-io/react-auth";
 import { useState } from "react";
-import { tempo } from "tempo.ts/chains";
-import { tempoActions } from "tempo.ts/viem";
+import { tempoTestnet } from 'viem/chains'
+import { tempoActions } from 'viem/tempo'
 import {
   createWalletClient,
   custom,
@@ -36,7 +36,7 @@ export function useSend() {
       const provider = await wallet.getEthereumProvider();
       const client = createWalletClient({
         account: wallet.address as Address,
-        chain: tempo({ feeToken: alphaUsd }),
+        chain: tempoTestnet,
         transport: custom(provider),
       })
         .extend(walletActions)
