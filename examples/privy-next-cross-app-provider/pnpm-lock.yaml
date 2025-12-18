@@ -12,8 +12,8 @@ importers:
         specifier: ^2.2.0
         version: 2.2.0(react@19.1.0)
       '@privy-io/cross-app-provider':
-        specifier: ^0.1.1
-        version: 0.1.1
+        specifier: ^0.2.0
+        version: 0.2.0
       '@privy-io/react-auth':
         specifier: ^3.8.0
         version: 3.8.0(oooxlojbavewa3ocb4kged4qyu)
@@ -618,8 +618,8 @@ packages:
   '@privy-io/chains@0.0.5':
     resolution: {integrity: sha512-5fOmCOOs7DjGTGnPRv4/2X6/xBKG8fRNrFgNv9ajYdRsKUg86CixszQCYyvZmVxv7XSGrX1oiS1ATAXzfqRmDg==}
 
-  '@privy-io/cross-app-provider@0.1.1':
-    resolution: {integrity: sha512-GCK37jJtDgo596YXfOlyG7lHDz+MDRXk93AzUHTgFnzEK4e61G5USSPX7i5V1xdWzczfoHhPEtegn+umszMd2A==}
+  '@privy-io/cross-app-provider@0.2.0':
+    resolution: {integrity: sha512-0hvEhqIkYZkpwdylbq46hxqtOO9v+X3HSP/dD2pk54fWjK88n4Yu9xCJLSFNFxkttJ0qeTlIwnjEAzY5nrCbqQ==}
 
   '@privy-io/ethereum@0.0.3':
     resolution: {integrity: sha512-FliULRsa9fO5LGj5qq4rh3CKgiZ6eTncr/GOAsfUERPBNiFlw9dXCq8PUnwkSpektL1x/mnkhOEnvKj77KdNfw==}
@@ -4945,7 +4945,7 @@ snapshots:
 
   '@privy-io/chains@0.0.5': {}
 
-  '@privy-io/cross-app-provider@0.1.1':
+  '@privy-io/cross-app-provider@0.2.0':
     dependencies:
       '@noble/curves': 1.9.7
       '@privy-io/web-storage': 0.0.1
@@ -5690,7 +5690,7 @@ snapshots:
 
   '@scure/bip32@1.7.0':
     dependencies:
-      '@noble/curves': 1.9.1
+      '@noble/curves': 1.9.7
       '@noble/hashes': 1.8.0
       '@scure/base': 1.2.6
 
