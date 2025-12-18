@@ -1,6 +1,12 @@
 import { useWallets } from "@privy-io/react-auth";
 import { useState } from "react";
-import { createPublicClient, http } from "viem";
+import { tempoTestnet } from "viem/chains";
+import { tempoActions } from "viem/tempo";
+import {
+  createPublicClient,
+  http,
+  type Address,
+} from "viem";
 
 export function useFaucet() {
   const { wallets } = useWallets();
@@ -23,18 +29,15 @@ export function useFaucet() {
     }
 
     try {
-      // Faucet is a Tempo JSON-RPC method: `tempo_fundAddress`.
-      // We call it directly via the Tempo public RPC.
-      const publicClient = createPublicClient({
+      const client = createPublicClient({
+        chain: tempoTestnet,
         transport: http("https://rpc.testnet.tempo.xyz"),
+      }).extend(tempoActions());
+
+      const txHashes = await client.faucet.fund({
+        account: wallet.address as Address,
       });
 
-      const result = await publicClient.request({
-        method: "tempo_fundAddress",
-        params: [wallet.address],
-      });
-
-      const txHashes = result as readonly `0x${string}`[];
       setHashes(txHashes);
       return txHashes;
     } catch (err) {
