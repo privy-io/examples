@@ -15,6 +15,7 @@ import {
 import { createWalletClient, custom } from 'viem';
 import { mainnet } from 'viem/chains';
 import { base64 } from '@scure/base';
+import { mfaModal } from '../utils/mfa-modal.js';
 
 // Static state to persist across re-renders
 const walletActionsState = {
@@ -59,6 +60,7 @@ export class WalletActions {
     this.privy = privyClient;
     this.user = user;
     this.onUpdate = null;
+    this.mfaListenerAttached = false;
   }
 
   get selectedWallet() {
@@ -80,6 +82,21 @@ export class WalletActions {
   render(onUpdate) {
     this.onUpdate = onUpdate;
     
+    // Set up MFA listener once (only if not already attached)
+    if (!this.mfaListenerAttached) {
+      this.privy.mfaPromises.on('mfaRequired', async () => {
+        console.log('MFA required for wallet action');
+        try {
+          await mfaModal.handleVerification(this.privy, this.user);
+          console.log('MFA verification completed');
+        } catch (error) {
+          console.error('MFA verification failed:', error);
+          showToast('MFA verification failed', 'error');
+        }
+      });
+      this.mfaListenerAttached = true;
+    }
+    
     // Get wallets and set initial selection BEFORE creating the section
     const wallets = this.getAllWallets();
     
@@ -94,7 +111,7 @@ export class WalletActions {
     // Now create section with actions based on selected wallet
     const section = createSection({
       name: 'Wallet actions',
-      description: 'Sign messages, typed data, and transactions for both EVM and Solana wallets.',
+      description: 'Sign messages, typed data, and transactions for both EVM and Solana wallets. MFA verification is automatically triggered when the token expires (~15 mins).',
       filepath: 'src/sections/wallet-actions.js',
       actions: this.getActions()
     });

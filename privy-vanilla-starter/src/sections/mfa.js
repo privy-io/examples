@@ -1,6 +1,6 @@
 import { createSection } from '../utils/section-builder.js';
 import { showToast } from '../utils/toast.js';
-import { startAuthentication } from '@simplewebauthn/browser';
+import { mfaModal } from '../utils/mfa-modal.js';
 
 /**
  * MFA (Multi-Factor Authentication) Section
@@ -9,182 +9,6 @@ import { startAuthentication } from '@simplewebauthn/browser';
 export class MFA {
   constructor(privyClient) {
     this.privy = privyClient;
-    this.setupMfaModal();
-  }
-
-  /**
-   * Setup MFA modal
-   */
-  setupMfaModal() {
-    if (document.getElementById('mfa-modal')) return;
-
-    const modalHTML = `
-      <div id="mfa-modal" class="modal hidden">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h3 id="mfa-modal-title">MFA Enrollment</h3>
-            <button id="mfa-modal-close" class="close-button">&times;</button>
-          </div>
-          <div id="mfa-modal-body" class="modal-body"></div>
-          <div id="mfa-modal-error" class="error-message hidden"></div>
-        </div>
-      </div>
-    `;
-
-    document.body.insertAdjacentHTML('beforeend', modalHTML);
-
-    const modal = document.getElementById('mfa-modal');
-    const closeBtn = document.getElementById('mfa-modal-close');
-    
-    closeBtn.addEventListener('click', () => this.closeMfaModal());
-    modal.addEventListener('click', (e) => {
-      if (e.target === modal) this.closeMfaModal();
-    });
-  }
-
-  openMfaModal(title, bodyHTML) {
-    const modal = document.getElementById('mfa-modal');
-    const modalTitle = document.getElementById('mfa-modal-title');
-    const modalBody = document.getElementById('mfa-modal-body');
-    const errorDisplay = document.getElementById('mfa-modal-error');
-
-    modalTitle.textContent = title;
-    modalBody.innerHTML = bodyHTML;
-    errorDisplay.classList.add('hidden');
-    modal.classList.remove('hidden');
-  }
-
-  closeMfaModal() {
-    const modal = document.getElementById('mfa-modal');
-    modal.classList.add('hidden');
-  }
-
-  showMfaError(message) {
-    const errorDisplay = document.getElementById('mfa-modal-error');
-    errorDisplay.textContent = message;
-    errorDisplay.classList.remove('hidden');
-  }
-
-  /**
-   * Handle MFA verification when required
-   */
-  async handleMfaVerification(user) {
-    return new Promise((resolve, reject) => {
-      // Determine which MFA method to use
-      const mfaMethods = user?.mfa_methods || [];
-      const hasTotp = mfaMethods.some(m => m.type === 'totp');
-      const hasSms = mfaMethods.some(m => m.type === 'sms');
-      const hasPasskey = mfaMethods.some(m => m.type === 'passkey');
-
-      let verificationHtml = '<p>This action requires MFA verification.</p>';
-
-      if (hasTotp) {
-        verificationHtml += `
-          <label for="mfa-verify-code">Enter TOTP code from your authenticator</label>
-          <input type="text" id="mfa-verify-code" placeholder="000000" maxlength="6" />
-          <button id="mfa-verify-btn" class="button-primary full-width">Verify</button>
-        `;
-      } else if (hasSms) {
-        const phoneNumber = mfaMethods.find(m => m.type === 'sms')?.verified_at ? 'your phone' : 'phone';
-        verificationHtml += `
-          <button id="mfa-send-sms-btn" class="button-primary full-width">Send SMS Code to ${phoneNumber}</button>
-          <div id="mfa-sms-verify-container" class="hidden" style="margin-top: 1rem;">
-            <label for="mfa-verify-code">Enter SMS code</label>
-            <input type="text" id="mfa-verify-code" placeholder="000000" maxlength="6" />
-            <button id="mfa-verify-btn" class="button-primary full-width">Verify</button>
-          </div>
-        `;
-      } else if (hasPasskey) {
-        verificationHtml += `
-          <p>Complete the passkey prompt to verify.</p>
-          <button id="mfa-verify-passkey-btn" class="button-primary full-width">Verify with Passkey</button>
-        `;
-      } else {
-        reject(new Error('No MFA methods enrolled'));
-        return;
-      }
-
-      this.openMfaModal('MFA Verification Required', verificationHtml);
-
-      // Handle SMS send button
-      const sendSmsBtn = document.getElementById('mfa-send-sms-btn');
-      if (sendSmsBtn) {
-        sendSmsBtn.addEventListener('click', async () => {
-          try {
-            await this.privy.mfa.sms.sendCode({ phoneNumber: '' }); // Server knows the phone
-            document.getElementById('mfa-sms-verify-container').classList.remove('hidden');
-            showToast('SMS code sent', 'success');
-          } catch (error) {
-            this.showMfaError(error.message || 'Failed to send SMS code');
-          }
-        });
-      }
-
-      // Handle TOTP/SMS verification button
-      const verifyBtn = document.getElementById('mfa-verify-btn');
-      if (verifyBtn) {
-        verifyBtn.addEventListener('click', async () => {
-          const code = document.getElementById('mfa-verify-code').value;
-          if (!code) {
-            this.showMfaError('Please enter the verification code');
-            return;
-          }
-
-          try {
-            // Determine which MFA method to use
-            const mfaMethod = hasTotp ? 'totp' : 'sms';
-            
-            // Submit MFA verification by resolving the rootPromise
-            if (this.privy.mfaPromises.rootPromise.current) {
-              this.privy.mfaPromises.rootPromise.current.resolve({
-                mfaMethod,
-                mfaCode: code,
-                relyingParty: window.location.hostname
-              });
-            }
-            
-            this.closeMfaModal();
-            showToast('MFA verified successfully', 'success');
-            resolve();
-          } catch (error) {
-            console.error('MFA verification error:', error);
-            this.showMfaError(error.message || 'Invalid verification code');
-            reject(error);
-          }
-        });
-      }
-
-      // Handle Passkey verification button
-      const passkeyBtn = document.getElementById('mfa-verify-passkey-btn');
-      if (passkeyBtn) {
-        passkeyBtn.addEventListener('click', async () => {
-          try {
-            // Get passkey authentication options
-            const { options } = await this.privy.mfa.passkey.generateAuthenticationOptions({});
-            
-            // Start passkey authentication
-            const response = await startAuthentication(options);
-            
-            // Submit MFA verification by resolving the rootPromise
-            if (this.privy.mfaPromises.rootPromise.current) {
-              this.privy.mfaPromises.rootPromise.current.resolve({
-                mfaMethod: 'passkey',
-                mfaCode: response,
-                relyingParty: window.location.hostname
-              });
-            }
-            
-            this.closeMfaModal();
-            showToast('MFA verified successfully', 'success');
-            resolve();
-          } catch (error) {
-            console.error('Passkey MFA verification error:', error);
-            this.showMfaError(error.message || 'Passkey verification failed');
-            reject(error);
-          }
-        });
-      }
-    });
   }
 
   render(user, onUpdate) {
@@ -212,7 +36,7 @@ export class MFA {
             return;
           }
 
-          this.openMfaModal('Enroll SMS MFA', `
+          mfaModal.open('Enroll SMS MFA', `
             <label for="mfa-sms-phone">Phone Number</label>
             <input type="tel" id="mfa-sms-phone" placeholder="+1234567890" />
             <button id="mfa-sms-send-btn" class="button-primary full-width">Send Code</button>
@@ -227,7 +51,7 @@ export class MFA {
           document.getElementById('mfa-sms-send-btn').addEventListener('click', async () => {
             const phoneNumber = document.getElementById('mfa-sms-phone').value;
             if (!phoneNumber) {
-              this.showMfaError('Please enter a phone number');
+              mfaModal.showError('Please enter a phone number');
               return;
             }
 
@@ -248,7 +72,7 @@ export class MFA {
             try {
               await this.privy.mfa.submitEnrollMfa({ method: 'sms', phoneNumber, code });
               showToast('SMS MFA enrolled successfully!', 'success');
-              this.closeMfaModal();
+              mfaModal.close();
               onUpdate();
             } catch (error) {
               console.error('Enroll SMS MFA error:', error);
@@ -274,7 +98,7 @@ export class MFA {
             // Using qrserver.com free API to generate QR code
             const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(authUrl)}`;
             
-            this.openMfaModal('Enroll TOTP MFA', `
+            mfaModal.open('Enroll TOTP MFA', `
               <p>Scan this QR code with your authenticator app:</p>
               <div style="text-align: center; margin: 1rem 0;">
                 <img src="${qrCodeUrl}" alt="TOTP QR Code" style="max-width: 200px; border: 1px solid #ccc; padding: 10px; background: white;" />
@@ -294,7 +118,7 @@ export class MFA {
               try {
                 await this.privy.mfa.submitEnrollMfa({ method: 'totp', code });
                 showToast('TOTP MFA enrolled successfully!', 'success');
-                this.closeMfaModal();
+                mfaModal.close();
                 onUpdate();
               } catch (error) {
                 console.error('Enroll TOTP MFA error:', error);
@@ -367,7 +191,7 @@ export class MFA {
             const mfaListener = async () => {
               console.log('MFA verification required');
               try {
-                await this.handleMfaVerification(user);
+                await mfaModal.handleVerification(this.privy, user);
               } catch (error) {
                 console.error('MFA verification failed:', error);
                 throw error;
@@ -414,7 +238,7 @@ export class MFA {
             const mfaListener = async () => {
               console.log('MFA verification required');
               try {
-                await this.handleMfaVerification(user);
+                await mfaModal.handleVerification(this.privy, user);
               } catch (error) {
                 console.error('MFA verification failed:', error);
                 throw error;
@@ -461,7 +285,7 @@ export class MFA {
             const mfaListener = async () => {
               console.log('MFA verification required');
               try {
-                await this.handleMfaVerification(user);
+                await mfaModal.handleVerification(this.privy, user);
               } catch (error) {
                 console.error('MFA verification failed:', error);
                 throw error;

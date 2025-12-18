@@ -2,12 +2,16 @@ import './polyfills.js'; // Must be first
 import './style.css';
 import { initPrivy } from './lib/privy-client.js';
 import { initUI } from './ui/ui-manager.js';
+import { mfaModal } from './utils/mfa-modal.js';
 
 // Initialize the app
 async function init() {
   try {
     // Initialize Privy client
     const privyClient = await initPrivy();
+    
+    // Setup global MFA modal
+    mfaModal.setup();
     
     // Initialize UI with Privy client
     initUI(privyClient);
