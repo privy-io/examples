@@ -1,0 +1,23 @@
+{
+  "name": "privy-vanilla-starter",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@privy-io/js-sdk-core": "^0.58.3",
+    "@scure/base": "^1.1.10",
+    "@simplewebauthn/browser": "^10.0.0",
+    "@simplewebauthn/types": "^10.0.0",
+    "@solana/web3.js": "^1.98.4",
+    "buffer": "^6.0.3",
+    "viem": "^2.21.54"
+  },
+  "devDependencies": {
+    "vite": "^7.2.4"
+  }
+}

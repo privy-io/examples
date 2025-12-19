@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/privy-logo-black.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Privy Vanilla JS Starter</title>
+  </head>
+  <body>
+    <!-- Header -->
+    <header id="header" class="header">
+      <div class="header-left">
+        <img id="header-logo" src="/privy-logo-white.svg" alt="Privy Logo" class="logo" />
+        <div id="demo-badge" class="demo-badge hidden">Vanilla JS Demo</div>
+      </div>
+      <div class="header-right">
+        <a href="https://docs.privy.io/guide/core-js" target="_blank" class="docs-link">
+          Docs
+          <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+          </svg>
+        </a>
+        <button class="button-primary hidden md:block">
+          <a href="https://dashboard.privy.io/" target="_blank" class="button-link">
+            <span>Go to dashboard</span>
+            <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+          </a>
+        </button>
+      </div>
+    </header>
+
+    <!-- Main App Container -->
+    <div id="app">
+      <!-- Loading Screen -->
+      <div id="loading-screen" class="loading-screen">
+        <div class="loader"></div>
+      </div>
+
+      <!-- Login Screen -->
+      <section id="login-screen" class="login-screen hidden">
+        <div class="login-content">
+          <div class="demo-badge-large">Vanilla JS Demo</div>
+          <h1 class="login-title">Starter repo</h1>
+          <p class="login-subtitle">Get started developing with Privy using our Vanilla JS starter repo</p>
+          <button id="login-btn" class="button-primary button-large">Get started</button>
+        </div>
+      </section>
+
+      <!-- Authenticated Screen -->
+      <section id="authenticated-screen" class="authenticated-screen hidden">
+        <div class="main-content">
+          <button id="logout-btn" class="button logout-button">
+            <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+            Logout
+          </button>
+
+          <div id="sections-container"></div>
+        </div>
+
+        <!-- User Object Sidebar -->
+        <div class="user-sidebar">
+          <div class="user-sidebar-header">
+            <h3>User object</h3>
+            <p class="user-sidebar-subtitle">This is the user object returned from Privy</p>
+          </div>
+          <pre id="user-object" class="user-object-display"></pre>
+        </div>
+      </section>
+
+      <!-- Auth Modal -->
+      <div id="auth-modal" class="modal hidden">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h3>Login</h3>
+            <button id="close-modal" class="close-button">&times;</button>
+          </div>
+
+          <!-- Auth Tabs -->
+          <div class="auth-tabs">
+            <button id="email-tab-btn" class="auth-tab active">Email</button>
+            <button id="sms-tab-btn" class="auth-tab">SMS</button>
+            <button id="social-tab-btn" class="auth-tab">Social</button>
+          </div>
+
+          <!-- Email Login -->
+          <div id="email-input-container" class="modal-body">
+            <label for="email-input">Email address</label>
+            <input type="email" id="email-input" placeholder="Enter your email" autocomplete="email" />
+            <button id="send-code-btn" class="button-primary full-width">Send code</button>
+            
+            <div class="divider">
+              <span>OR</span>
+            </div>
+            
+            <button id="metamask-login-btn" class="wallet-button full-width">
+              Login with MetaMask (EVM)
+            </button>
+            
+            <button id="phantom-login-btn" class="wallet-button full-width">
+              Login with Phantom (Solana)
+            </button>
+          </div>
+
+          <!-- Email OTP -->
+          <div id="otp-input-container" class="modal-body hidden">
+            <label for="otp-input">Enter verification code</label>
+            <input type="text" id="otp-input" placeholder="000000" autocomplete="one-time-code" maxlength="6" />
+            <button id="verify-code-btn" class="button-primary full-width">Verify</button>
+            <button id="back-to-email-btn" class="button-outline full-width">Back</button>
+          </div>
+
+          <!-- SMS Login -->
+          <div id="phone-input-container" class="modal-body hidden">
+            <label for="phone-input">Phone number</label>
+            <input type="tel" id="phone-input" placeholder="+1234567890" autocomplete="tel" />
+            <button id="send-sms-code-btn" class="button-primary full-width">Send code</button>
+          </div>
+
+          <!-- SMS OTP -->
+          <div id="sms-otp-input-container" class="modal-body hidden">
+            <label for="sms-otp-input">Enter verification code</label>
+            <input type="text" id="sms-otp-input" placeholder="000000" autocomplete="one-time-code" maxlength="6" />
+            <button id="verify-sms-code-btn" class="button-primary full-width">Verify</button>
+            <button id="back-to-phone-btn" class="button-outline full-width">Back</button>
+          </div>
+
+          <!-- Social/OAuth Login -->
+          <div id="social-login-container" class="modal-body hidden">
+            <button id="google-login-btn" class="oauth-button google-button full-width">
+              <svg class="oauth-icon" viewBox="0 0 24 24">
+                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+              </svg>
+              Continue with Google
+            </button>
+
+            <button id="twitter-login-btn" class="oauth-button twitter-button full-width">
+              <svg class="oauth-icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+              </svg>
+              Continue with Twitter
+            </button>
+
+            <button id="discord-login-btn" class="oauth-button discord-button full-width">
+              <svg class="oauth-icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M20.317 4.492c-1.53-.69-3.17-1.2-4.885-1.49a.075.075 0 0 0-.079.036c-.21.369-.444.85-.608 1.23a18.566 18.566 0 0 0-5.487 0 12.36 12.36 0 0 0-.617-1.23A.077.077 0 0 0 8.562 3c-1.714.29-3.354.8-4.885 1.491a.07.07 0 0 0-.032.027C.533 9.093-.32 13.555.099 17.961a.08.08 0 0 0 .031.055 20.03 20.03 0 0 0 5.993 2.98.078.078 0 0 0 .084-.026 13.83 13.83 0 0 0 1.226-1.963.074.074 0 0 0-.041-.104 13.201 13.201 0 0 1-1.872-.878.075.075 0 0 1-.008-.125c.126-.093.252-.19.372-.287a.075.075 0 0 1 .078-.01c3.927 1.764 8.18 1.764 12.061 0a.075.075 0 0 1 .079.009c.12.098.245.195.372.288a.075.075 0 0 1-.006.125c-.598.344-1.22.635-1.873.877a.075.075 0 0 0-.041.105c.36.687.772 1.341 1.225 1.962a.077.077 0 0 0 .084.028 19.963 19.963 0 0 0 6.002-2.981.076.076 0 0 0 .032-.054c.5-5.094-.838-9.52-3.549-13.442a.06.06 0 0 0-.031-.028zM8.02 15.278c-1.182 0-2.157-1.069-2.157-2.38 0-1.312.956-2.38 2.157-2.38 1.21 0 2.176 1.077 2.157 2.38 0 1.312-.956 2.38-2.157 2.38zm7.975 0c-1.183 0-2.157-1.069-2.157-2.38 0-1.312.955-2.38 2.157-2.38 1.21 0 2.176 1.077 2.157 2.38 0 1.312-.946 2.38-2.157 2.38z"/>
+              </svg>
+              Continue with Discord
+            </button>
+
+            <button id="github-login-btn" class="oauth-button github-button full-width">
+              <svg class="oauth-icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
+              </svg>
+              Continue with GitHub
+            </button>
+          </div>
+
+          <div id="auth-error" class="error-message hidden"></div>
+        </div>
+      </div>
+
+      <!-- Toast Notifications -->
+      <div id="toast-container" class="toast-container"></div>
+    </div>
+
+    <!-- Privy Iframe (required for embedded wallet) -->
+    <iframe id="privy-iframe" style="display: none;"></iframe>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
