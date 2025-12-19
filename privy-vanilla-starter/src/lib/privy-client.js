@@ -52,11 +52,6 @@ export async function initPrivy() {
   };
   window.addEventListener('message', messageListener);
 
-  // Store cleanup function
-  privy._cleanup = () => {
-    window.removeEventListener('message', messageListener);
-  };
-
   privyInstance = privy;
   return privy;
 }
