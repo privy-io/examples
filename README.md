@@ -16,6 +16,7 @@ Perfect starting points for new projects. Each includes authentication, wallet c
 | [`privy-react-starter`](./privy-react-starter)                       | Complete React application with Privy auth |
 | [`privy-react-whitelabel-starter`](./privy-react-whitelabel-starter) | Custom UI without Privy components         |
 | [`privy-swift-auth0`](./privy-swift-auth0)                           | iOS app with Auth0 + Privy integration     |
+| [`privy-vanilla-starter`](./privy-vanilla-starter)                   | Vanilla JavaScript project built with Privy JS Core SDK       |
 
 ## Examples
 
