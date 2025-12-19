@@ -20,9 +20,9 @@ export function useFaucet() {
     setError(null);
     setHashes(null);
 
-    const wallet = wallets[0];
+    const wallet = wallets.find((w) => w.walletClientType === "privy");
     if (!wallet?.address) {
-      const errMsg = "No active wallet";
+      const errMsg = "No Privy embedded wallet found";
       setError(errMsg);
       setIsFunding(false);
       throw new Error(errMsg);

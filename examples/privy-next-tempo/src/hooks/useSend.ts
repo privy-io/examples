@@ -24,9 +24,9 @@ export function useSend() {
     setError(null);
     setTxHash(null);
 
-    const wallet = wallets[0];
+    const wallet = wallets.find((w) => w.walletClientType === "privy");
     if (!wallet?.address) {
-      const errMsg = "No active wallet";
+      const errMsg = "No Privy embedded wallet found";
       setError(errMsg);
       setIsSending(false);
       throw new Error(errMsg);
@@ -45,7 +45,12 @@ export function useSend() {
       const metadata = await client.token.getMetadata({
         token: alphaUsd,
       });
-      const recipient = await getAddress(to);
+      let recipient: Address;
+      if (to.startsWith("0x")) {
+        recipient = to as Address;
+      } else {
+        recipient = await getAddress(to);
+      }
       const { receipt } = await client.token.transferSync({
         to: recipient,
         amount: parseUnits(amount, metadata.decimals),

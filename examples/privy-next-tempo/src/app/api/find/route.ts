@@ -55,7 +55,7 @@ async function getUser(identifier: string) {
   if (!identifier.includes("@")) {
     const user = await privy
       .users()
-      .getByWalletAddress({ address: identifier })
+      .getByPhoneNumber({ number: identifier })
       .catch(() => null);
     if (user) return user;
 
