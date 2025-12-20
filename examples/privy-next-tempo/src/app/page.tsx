@@ -3,6 +3,7 @@
 import {
   ActionButtonsGrid,
   BalanceCard,
+  FaucetButton,
   LoginView,
   ReceiveModal,
   RecentActivity,
@@ -87,6 +88,9 @@ export default function Home() {
                   onCopyAddress={copyToClipboard}
                   loading={loading}
                 />
+                <div className="mb-6">
+                  <FaucetButton />
+                </div>
                 <ActionButtonsGrid
                   onSendClick={() => setShowSend(true)}
                   onReceiveClick={() => setShowReceive(true)}
