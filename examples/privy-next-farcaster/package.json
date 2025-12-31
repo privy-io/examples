@@ -18,7 +18,7 @@
     "@standard-crypto/farcaster-js": "^7.4.0",
     "axios": "^1.12.2",
     "bs58": "^6.0.0",
-    "next": "15.5.3",
+    "next": "15.5.7",
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "react-toastify": "^11.0.5",
@@ -31,7 +31,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
-    "eslint-config-next": "15.5.3",
+    "eslint-config-next": "15.5.7",
     "tailwindcss": "^4",
     "typescript": "^5"
   },
