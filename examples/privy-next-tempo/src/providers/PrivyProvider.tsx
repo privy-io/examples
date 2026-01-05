@@ -32,11 +32,3 @@ export function PrivyProvider({ children }: { children: React.ReactNode }) {
     </BasePrivyProvider>
   );
 }
-
-function ViemProvider({ children }: { children: React.ReactNode }) {
-  const [client, setClient] = useState();
-
-  useEffect(() => {}, []);
-
-  return <>{children}</>;
-}
