@@ -14,7 +14,7 @@
   "dependencies": {
     "@headlessui/react": "^2.2.0",
     "@heroicons/react": "^2.0.12",
-    "@privy-io/react-auth": "^3.9.0",
+    "@privy-io/react-auth": "^3.10.0",
     "@privy-io/server-auth": "1.32.5",
     "@solana-program/memo": "^0.8.0",
     "@solana-program/system": "^0.8.0",
