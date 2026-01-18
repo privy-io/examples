@@ -28,15 +28,19 @@ Copy the example environment file and configure your Privy app credentials:
 cp .env.example .env.local
 ```
 
-Update `.env.local` with your Privy app credentials:
+Update `.env.local` with your Privy app ID:
 
 ```env
-# Public - Safe to expose in the browser
 NEXT_PUBLIC_PRIVY_APP_ID=your_app_id_here
-NEXT_PUBLIC_PRIVY_SIGNER_ID=your_signer_id_here
 ```
 
-**Important:** Variables prefixed with `NEXT_PUBLIC_` are exposed to the browser. Get your credentials from the [Privy Dashboard](https://dashboard.privy.io).
+Get your App ID from the [Privy Dashboard](https://dashboard.privy.io).
+
+**Optional:** To use the Signers feature (server-side wallet access), create a key quorum in **Dashboard > Wallet infrastructure > Authorization keys** and add:
+
+```env
+NEXT_PUBLIC_PRIVY_SIGNER_ID=your_key_quorum_id_here
+```
 
 ### 4. Start Development Server
 
