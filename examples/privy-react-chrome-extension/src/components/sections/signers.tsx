@@ -1,9 +1,7 @@
-"use client";
-
 import { useState, useMemo, useEffect } from "react";
-import { useSessionSigners, useWallets } from "@privy-io/react-auth";
+import { useSigners, useWallets } from "@privy-io/react-auth";
 import Section from "../reusables/section";
-import { showSuccessToast, showErrorToast } from "@/components/ui/custom-toast";
+import { showSuccessToast, showErrorToast } from "../ui/custom-toast";
 
 type WalletInfo = {
   address: string;
@@ -11,9 +9,11 @@ type WalletInfo = {
   name: string;
 };
 
-const SessionSigners = () => {
+const Signers = () => {
   const { wallets } = useWallets();
-  const { addSessionSigners, removeSessionSigners } = useSessionSigners();
+  const { addSigners, removeSigners } = useSigners();
+
+  const signerId = import.meta.env.VITE_PRIVY_SIGNER_ID;
 
   const allWallets = useMemo((): WalletInfo[] => {
     return wallets.map((wallet) => ({
@@ -31,76 +31,80 @@ const SessionSigners = () => {
     }
   }, [allWallets, selectedWallet]);
 
-  const handleAddSessionSigners = async () => {
+  const handleAddSigners = async () => {
+    if (!signerId) {
+      showErrorToast("Please add VITE_PRIVY_SIGNER_ID to your .env file");
+      return;
+    }
     if (!selectedWallet) {
       showErrorToast("Please select a wallet");
       return;
     }
     try {
-      await addSessionSigners({
+      await addSigners({
         address: selectedWallet.address,
         signers: [
           {
-            signerId: process.env.NEXT_PUBLIC_PRIVY_SIGNER_ID!,
+            signerId,
             policyIds: [],
           },
         ],
       });
-      showSuccessToast("Session signer added");
+      showSuccessToast("Signer added");
     } catch (error) {
-      const message = error?.toString?.() ?? "Failed to add session signer";
+      const message = error?.toString?.() ?? "Failed to add signer";
       showErrorToast(message);
     }
   };
 
-  const handleRemoveSessionSigners = async () => {
+  const handleRemoveSigners = async () => {
     if (!selectedWallet) {
       showErrorToast("Please select a wallet");
       return;
     }
     try {
-      await removeSessionSigners({
+      await removeSigners({
         address: selectedWallet.address,
       });
-      showSuccessToast("Session signer removed");
+      showSuccessToast("Signer removed");
     } catch (error) {
-      const message = error?.toString?.() ?? "Failed to remove session signer";
+      const message = error?.toString?.() ?? "Failed to remove signer";
       showErrorToast(message);
     }
   };
 
   const availableActions = [
     {
-      name: "Add session signer",
-      function: handleAddSessionSigners,
+      name: "Add signer",
+      function: handleAddSigners,
       disabled: !selectedWallet,
     },
     {
-      name: "Remove session signer",
-      function: handleRemoveSessionSigners,
+      name: "Remove signer",
+      function: handleRemoveSigners,
       disabled: !selectedWallet,
     },
   ];
 
   return (
     <Section
-      name="Session signers"
+      name="Signers"
       description={
         "Delegate signing to a trusted service for actions like limit orders or scheduled transactions when the user is offline."
       }
-      filepath="src/components/sections/session-signers"
+      filepath="src/components/sections/signers"
       actions={availableActions}
     >
       <div className="mb-4">
         <label
-          htmlFor="session-wallet-select"
+          htmlFor="signer-wallet-select"
           className="block text-sm font-medium mb-2"
         >
           Select wallet:
         </label>
         <div className="relative">
           <select
-            id="session-wallet-select"
+            id="signer-wallet-select"
             value={selectedWallet?.address || ""}
             onChange={(e) => {
               const wallet = allWallets.find(
@@ -144,4 +148,4 @@ const SessionSigners = () => {
   );
 };
 
-export default SessionSigners;
+export default Signers;
