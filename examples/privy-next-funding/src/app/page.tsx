@@ -13,7 +13,7 @@ import FundWallet from "@/components/sections/fund-wallet";
 // import LinkAccounts from "@/components/sections/link-accounts";
 // import UnlinkAccounts from "@/components/sections/unlink-accounts";
 // import WalletActions from "@/components/sections/wallet-actions";
-// import SessionSigners from "@/components/sections/session-signers";
+// import Signers from "@/components/sections/signers";
 // import WalletManagement from "@/components/sections/wallet-management";
 // import MFA from "@/components/sections/mfa";
 
@@ -39,7 +39,7 @@ function Home() {
               {/*<LinkAccounts />
               <UnlinkAccounts />
               <WalletActions />
-              <SessionSigners />
+              <Signers />
               <WalletManagement />
               <MFA />*/}
             </div>
