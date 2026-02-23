@@ -90,16 +90,8 @@ export async function executeMppRequest(
   const timeoutId = setTimeout(() => controller.abort(), 30000);
 
   try {
-    const headers = new Headers(options?.headers);
-    if (process.env.VERCEL_AUTOMATION_BYPASS_SECRET) {
-      headers.set(
-        'x-vercel-protection-bypass',
-        process.env.VERCEL_AUTOMATION_BYPASS_SECRET
-      );
-    }
     const response = await mppx.fetch(url, {
       ...options,
-      headers,
       signal: controller.signal,
     });
     clearTimeout(timeoutId);
