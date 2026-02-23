@@ -187,7 +187,7 @@ export default function ActionsStep() {
                 <p>
                   The{' '}
                   <a
-                    href="https://mpp.dev"
+                    href="https://machinepayments.dev"
                     className="font-medium text-[#5B4FFF] hover:underline"
                   >
                     MPP client
@@ -249,7 +249,7 @@ export default function ActionsStep() {
           </a>{' '}
           and{' '}
           <a
-            href="https://mpp.dev"
+            href="https://machinepayments.dev"
             className="font-medium text-[#5B4FFF] hover:underline"
           >
             MPP

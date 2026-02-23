@@ -90,7 +90,7 @@ export default function Home() {
             Use Privy to give your AI agent wallets. Fund them and watch them
             make autonomous payments using the{" "}
             <a
-              href="https://mpp.dev"
+              href="https://machinepayments.dev"
               target="_blank"
               rel="noopener noreferrer"
               className="font-medium text-[#5B4FFF] hover:underline"
@@ -208,7 +208,7 @@ export default function Home() {
           </a>{" "}
           and{" "}
           <a
-            href="https://mpp.dev"
+            href="https://machinepayments.dev"
             className="font-medium text-[#5B4FFF] hover:underline"
           >
             MPP

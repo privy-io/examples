@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is the **MPP Agent Demo** - a reference implementation showcasing the [MPP](https://mpp.dev) (Machine Payments Protocol) with [Privy's](https://privy.io) server-side agentic wallets. MPP enables machine-to-machine HTTP payments using the `402 Payment Required` status code.
+This is the **MPP Agent Demo** - a reference implementation showcasing the [MPP](https://machinepayments.dev) (Machine Payments Protocol) with [Privy's](https://privy.io) server-side agentic wallets. MPP enables machine-to-machine HTTP payments using the `402 Payment Required` status code.
 
 The demo allows users to create AI agents with their own Ethereum wallets, fund them with PathUSD, and execute autonomous MPP payments on the Tempo blockchain.
 
@@ -204,5 +204,5 @@ Clear the cache: `rm -rf .next && npm run dev`
 
 - [Privy Node SDK](https://www.npmjs.com/package/@privy-io/node)
 - [Privy Agentic Wallets Docs](https://docs.privy.io/recipes/wallets/agentic-wallets)
-- [MPP Protocol](https://mpp.dev)
+- [MPP Protocol](https://machinepayments.dev)
 - [mppx SDK](https://www.npmjs.com/package/mppx)

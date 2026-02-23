@@ -1,10 +1,10 @@
 # MPP Agent Demo
 
-A demo application showcasing the [MPP](https://mpp.dev) (Machine Payments Protocol) with [Privy's](https://privy.io) agentic wallets.
+A demo application showcasing the [MPP](https://machinepayments.dev) (Machine Payments Protocol) with [Privy's](https://privy.io) agentic wallets.
 
 ## What is MPP?
 
-[MPP](https://mpp.dev) is a protocol that enables machine-to-machine payments over HTTP. When a service requires payment, it returns HTTP status `402 Payment Required` with payment details. The client then signs a payment credential and retries the request. Settlement happens on the Tempo blockchain using PathUSD.
+[MPP](https://machinepayments.dev) is a protocol that enables machine-to-machine payments over HTTP. When a service requires payment, it returns HTTP status `402 Payment Required` with payment details. The client then signs a payment credential and retries the request. Settlement happens on the Tempo blockchain using PathUSD.
 
 This demo shows how AI agents can use MPP to autonomously pay for services.
 
@@ -23,7 +23,7 @@ This demo shows how AI agents can use MPP to autonomously pay for services.
 
 ## Tech Stack
 
-- **Protocol**: [MPP](https://mpp.dev) - Machine Payments Protocol
+- **Protocol**: [MPP](https://machinepayments.dev) - Machine Payments Protocol
 - **Wallets**: [@privy-io/node](https://www.npmjs.com/package/@privy-io/node) - Server-side agentic wallets
 - **MPP SDK**: [mppx](https://www.npmjs.com/package/mppx) - Client and server middleware
 - **Blockchain**: Tempo with PathUSD
@@ -124,7 +124,7 @@ Open [http://localhost:3000](http://localhost:3000) to see the demo.
 
 ## Learn More
 
-- [MPP Protocol](https://mpp.dev)
+- [MPP Protocol](https://machinepayments.dev)
 - [mppx SDK](https://www.npmjs.com/package/mppx)
 - [Privy Agentic Wallets](https://docs.privy.io/recipes/wallets/agentic-wallets)
 
