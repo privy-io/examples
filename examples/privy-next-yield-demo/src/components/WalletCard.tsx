@@ -78,7 +78,7 @@ export function WalletCard() {
   };
 
   return (
-    <div className="card">
+    <div className="rounded-2xl p-6 bg-[#F1F2F9]">
       <div className="flex items-start justify-between mb-4">
         <div>
           <h2 className="text-sm font-medium text-[#64668B]">Your Wallet</h2>

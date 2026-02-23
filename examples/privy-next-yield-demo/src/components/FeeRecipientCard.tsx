@@ -51,7 +51,7 @@ export function FeeRecipientCard() {
 
   if (isLoading) {
     return (
-      <div className="card">
+      <div className="rounded-2xl p-6 bg-[#F1F2F9]">
         <h3 className="text-lg font-semibold text-[#040217] mb-4">Vault Info</h3>
         <div className="space-y-3">
           <div className="h-6 w-24 bg-white/50 rounded animate-pulse" />
@@ -63,7 +63,7 @@ export function FeeRecipientCard() {
 
   if (error) {
     return (
-      <div className="card">
+      <div className="rounded-2xl p-6 bg-[#F1F2F9]">
         <h3 className="text-lg font-semibold text-[#040217] mb-4">Vault Info</h3>
         <p className="text-sm text-[#991B1B]">{error}</p>
       </div>
@@ -72,7 +72,7 @@ export function FeeRecipientCard() {
 
   if (!vaultInfo || !vaultId) {
     return (
-      <div className="card">
+      <div className="rounded-2xl p-6 bg-[#F1F2F9]">
         <h3 className="text-lg font-semibold text-[#040217] mb-4">Vault Info</h3>
         <p className="text-sm text-[#64668B]">Vault not configured</p>
       </div>
@@ -90,7 +90,7 @@ export function FeeRecipientCard() {
   };
 
   return (
-    <div className="card">
+    <div className="rounded-2xl p-6 bg-[#F1F2F9]">
       <div className="flex items-start justify-between mb-4">
         <h3 className="text-lg font-semibold text-[#040217]">Vault Info</h3>
       </div>

@@ -83,7 +83,7 @@ export function PositionDisplay() {
 
   if (isLoading) {
     return (
-      <div className="card">
+      <div className="rounded-2xl p-6 bg-[#F1F2F9]">
         <h3 className="text-lg font-semibold text-[#040217] mb-4">Your Position</h3>
         <div className="space-y-3">
           <div className="h-6 w-32 bg-white/50 rounded animate-pulse" />
@@ -96,7 +96,7 @@ export function PositionDisplay() {
 
   if (error) {
     return (
-      <div className="card">
+      <div className="rounded-2xl p-6 bg-[#F1F2F9]">
         <h3 className="text-lg font-semibold text-[#040217] mb-4">Your Position</h3>
         <p className="text-sm text-[#991B1B]">{error}</p>
       </div>
@@ -105,7 +105,7 @@ export function PositionDisplay() {
 
   if (!position || !vaultId) {
     return (
-      <div className="card">
+      <div className="rounded-2xl p-6 bg-[#F1F2F9]">
         <h3 className="text-lg font-semibold text-[#040217] mb-4">Your Position</h3>
         <p className="text-sm text-[#64668B]">
           {!vaultId ? 'Vault not configured' : 'No active position'}
@@ -117,7 +117,7 @@ export function PositionDisplay() {
   const yieldData = calculateYield();
 
   return (
-    <div className="card">
+    <div className="rounded-2xl p-6 bg-[#F1F2F9]">
       <div className="flex items-start justify-between mb-4">
         <h3 className="text-lg font-semibold text-[#040217]">Your Position</h3>
       </div>

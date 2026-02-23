@@ -51,18 +51,3 @@ export function PrivyLogo(
     </svg>
   );
 }
-
-export function PrivyBlobby({ className }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 116 150" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
-      <path
-        d="M58.108 116.216C90.1954 116.216 116.216 90.1954 116.216 58.108C116.216 26.0205 90.1954 0 58.108 0C26.0205 0 0 26.0205 0 58.108C0 90.1954 26.0205 116.216 58.108 116.216Z"
-        fill="currentColor"
-      />
-      <path
-        d="M58.108 150C80.0381 150 97.8189 146.257 97.8189 141.667C97.8189 137.076 80.0502 133.333 58.108 133.333C36.1658 133.333 18.397 137.076 18.397 141.667C18.397 146.257 36.1658 150 58.108 150Z"
-        fill="currentColor"
-      />
-    </svg>
-  );
-}

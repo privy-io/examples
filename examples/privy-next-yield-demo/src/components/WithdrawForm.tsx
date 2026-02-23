@@ -94,7 +94,7 @@ export function WithdrawForm({ onSuccess }: { onSuccess?: () => void }) {
   const isDisabled = status === 'loading' || !embeddedWallet || !vaultId;
 
   return (
-    <div className="card-white">
+    <div className="rounded-2xl p-6 bg-white border border-[#E2E3F0]">
       <h3 className="text-lg font-semibold text-[#040217] mb-4">Withdraw USDC</h3>
 
       <form onSubmit={handleWithdraw} className="space-y-4">
@@ -148,7 +148,7 @@ export function WithdrawForm({ onSuccess }: { onSuccess?: () => void }) {
         <button
           type="submit"
           disabled={isDisabled || !amount}
-          className="btn-secondary w-full"
+          className="button-primary w-full rounded-full"
         >
           {status === 'loading' ? (
             <span className="flex items-center justify-center gap-2">
