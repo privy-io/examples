@@ -59,26 +59,6 @@ export function PositionDisplay() {
     return () => clearInterval(interval);
   }, [privyWalletId, vaultId]);
 
-  const calculateYield = () => {
-    if (!position) return { amount: '0.00', percentage: '0.00' };
-
-    // Yield = assets_in_vault - (total_deposited - total_withdrawn)
-    const deposited = BigInt(position.total_deposited);
-    const withdrawn = BigInt(position.total_withdrawn);
-    const current = BigInt(position.assets_in_vault);
-    const netDeposited = deposited - withdrawn;
-    const yieldAmount = current - netDeposited;
-
-    const percentage = netDeposited > BigInt(0)
-      ? ((Number(yieldAmount) / Number(netDeposited)) * 100).toFixed(2)
-      : '0.00';
-
-    return {
-      amount: formatUSDC(yieldAmount.toString()),
-      percentage,
-    };
-  };
-
   if (isLoading) {
     return (
       <div className="rounded-2xl p-6 bg-[#F1F2F9]">
@@ -112,8 +92,6 @@ export function PositionDisplay() {
     );
   }
 
-  const yieldData = calculateYield();
-
   return (
     <div className="rounded-2xl p-6 bg-[#F1F2F9]">
       <div className="flex items-start justify-between mb-4">
@@ -121,18 +99,18 @@ export function PositionDisplay() {
       </div>
 
       <div className="space-y-4">
-        {/* Current Value */}
+        {/* Assets in Vault */}
         <div>
-          <p className="text-sm text-[#64668B] mb-1">Current Value</p>
+          <p className="text-sm text-[#64668B] mb-1">Assets in Vault</p>
           <div className="flex items-baseline gap-2">
-            <span className="text-3xl font-semibold text-[#040217]">
+            <span className="text-2xl font-semibold text-[#040217]">
               ${formatUSDC(position.assets_in_vault)}
             </span>
             <span className="text-sm text-[#64668B]">{position.asset.symbol}</span>
           </div>
         </div>
 
-        {/* Deposited Amount */}
+        {/* Total Deposited */}
         <div className="flex justify-between items-center py-3 border-t border-[#E2E3F0]">
           <span className="text-sm text-[#64668B]">Total Deposited</span>
           <span className="text-sm font-medium text-[#040217]">
@@ -140,24 +118,27 @@ export function PositionDisplay() {
           </span>
         </div>
 
-        {/* Yield Earned */}
+        {/* Total Withdrawn */}
         <div className="flex justify-between items-center py-3 border-t border-[#E2E3F0]">
-          <span className="text-sm text-[#64668B]">Yield Earned</span>
-          <div className="text-right">
-            <span className="text-sm font-medium text-[#135638]">
-              +${yieldData.amount} {position.asset.symbol}
-            </span>
-            <span className="text-xs text-[#135638] ml-2">
-              (+{yieldData.percentage}%)
-            </span>
-          </div>
+          <span className="text-sm text-[#64668B]">Total Withdrawn</span>
+          <span className="text-sm font-medium text-[#040217]">
+            ${formatUSDC(position.total_withdrawn)} {position.asset.symbol}
+          </span>
         </div>
 
-        {/* Shares */}
+        {/* Shares in Vault */}
         <div className="flex justify-between items-center py-3 border-t border-[#E2E3F0]">
-          <span className="text-sm text-[#64668B]">Vault Shares</span>
-          <span className="text-sm font-mono text-[#040217]">
-            {Number(position.shares_in_vault).toLocaleString()}
+          <span className="text-sm text-[#64668B]">Shares in Vault</span>
+          <span className="text-sm font-medium text-[#040217]">
+            {position.shares_in_vault}
+          </span>
+        </div>
+
+        {/* Asset */}
+        <div className="flex justify-between items-center py-3 border-t border-[#E2E3F0]">
+          <span className="text-sm text-[#64668B]">Asset</span>
+          <span className="text-sm font-medium text-[#040217]">
+            {position.asset.symbol}
           </span>
         </div>
       </div>
