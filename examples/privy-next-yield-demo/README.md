@@ -6,11 +6,12 @@ A demo Next.js app showcasing **Privy Yield** - where users authenticate, receiv
 
 ## Features
 
-- 🔐 **Privy Authentication** - Email, wallet, Google, Apple login
-- 💰 **Embedded Wallets** - Automatic wallet creation on login
-- 📈 **Yield Generation** - Deposit USDC into Morpho vaults on Base
-- 💸 **Easy Withdrawals** - Withdraw principal + earned yield anytime
-- 📊 **Position Tracking** - View your current position and earnings
+- **Privy Authentication** - Email, wallet, Google, Apple login
+- **Embedded Wallets** - Automatic wallet creation on login
+- **Yield Generation** - Deposit USDC into Morpho vaults on Base
+- **Easy Withdrawals** - Withdraw principal + earned yield anytime
+- **Position Tracking** - View your current position and earnings
+- **Transaction History** - Real-time transaction updates via webhooks
 
 ## Tech Stack
 
@@ -37,14 +38,17 @@ Create a `.env.local` file in the root directory:
 NEXT_PUBLIC_PRIVY_APP_ID=your-privy-app-id
 PRIVY_APP_SECRET=your-privy-app-secret
 
-# Vault Configuration  
+# Vault Configuration
 NEXT_PUBLIC_VAULT_ID=your-vault-id
+
+# Webhook Secret (for transaction updates)
+PRIVY_WEBHOOK_SECRET=your-webhook-secret
 
 # Optional: Fee Recipient Address (for display purposes)
 NEXT_PUBLIC_FEE_RECIPIENT=0x...
 ```
 
-Get your Privy credentials from [console.privy.io](https://console.privy.io).
+Get your Privy credentials from [dashboard.privy.io](https://dashboard.privy.io).
 
 ### 3. Run the development server
 
@@ -59,27 +63,32 @@ Open [http://localhost:3000](http://localhost:3000) to see the app.
 ```
 src/
 ├── app/
-│   ├── layout.tsx          # Root layout with PrivyProvider
-│   ├── page.tsx            # Landing/login page
+│   ├── layout.tsx              # Root layout with PrivyProvider
+│   ├── page.tsx                # Landing/login page
+│   ├── globals.css             # Privy Home design system
 │   ├── dashboard/
-│   │   └── page.tsx        # Main dashboard after login
-│   ├── api/
-│   │   ├── deposit/route.ts   # Deposit to vault
-│   │   ├── withdraw/route.ts  # Withdraw from vault
-│   │   ├── position/route.ts  # Get user position (mock)
-│   │   └── vault/route.ts     # Get vault info (mock)
-│   └── globals.css         # Privy Home design system
+│   │   └── page.tsx            # Main dashboard after login
+│   └── api/
+│       ├── deposit/route.ts    # Deposit USDC into vault
+│       ├── withdraw/route.ts   # Withdraw USDC from vault
+│       ├── position/route.ts   # Get user's vault position
+│       ├── vault/route.ts      # Get vault info
+│       ├── transactions/route.ts # Get transaction history
+│       └── webhook/route.ts    # Handle Privy webhook events
 ├── components/
-│   ├── PrivyProvider.tsx   # Privy SDK configuration
-│   ├── WalletCard.tsx      # Wallet address + USDC balance
-│   ├── DepositForm.tsx     # Deposit input + submit
-│   ├── WithdrawForm.tsx    # Withdraw input + submit
-│   ├── PositionDisplay.tsx # User's vault position
-│   ├── FeeRecipientCard.tsx # Vault info display
-│   └── PrivyLogo.tsx       # Privy branding
+│   ├── PrivyProvider.tsx       # Privy SDK configuration
+│   ├── WalletCard.tsx          # Wallet address + USDC balance
+│   ├── DepositForm.tsx         # Deposit input + submit
+│   ├── WithdrawForm.tsx        # Withdraw input + submit
+│   ├── PositionDisplay.tsx     # User's vault position
+│   ├── FeeRecipientCard.tsx    # Vault info display
+│   ├── TransactionHistory.tsx  # Transaction list with status
+│   └── ui/
+│       ├── header.tsx          # App header with navigation
+│       └── fullscreen-loader.tsx # Loading spinner
 └── lib/
-    ├── constants.ts        # USDC address, chain config, utilities
-    └── utils.ts            # Helper functions
+    ├── constants.ts            # USDC address, chain config, utilities
+    └── transaction-store.ts    # In-memory transaction storage
 ```
 
 ## API Routes
@@ -88,10 +97,10 @@ src/
 |-------|--------|-------------|
 | `/api/deposit` | POST | Deposit USDC into the yield vault |
 | `/api/withdraw` | POST | Withdraw USDC from the vault |
-| `/api/position` | GET | Get user's position (mock data) |
-| `/api/vault` | GET | Get vault info (mock data) |
-
-**Note**: Position and vault endpoints return mock data until the Privy API endpoints are fully implemented.
+| `/api/position` | GET | Get user's current vault position |
+| `/api/vault` | GET | Get vault info and APY |
+| `/api/transactions` | GET | Get transaction history for a wallet |
+| `/api/webhook` | POST | Receive Privy webhook events for transaction updates |
 
 ## Design System
 

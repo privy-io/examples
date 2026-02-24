@@ -42,23 +42,22 @@ export async function POST(request: NextRequest) {
     );
 
     // The webhook payload may nest transaction data under a `data` field
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const body = verified as Record<string, any>;
+    const body = verified as Record<string, Record<string, unknown>>;
     const txData = body.data ?? body;
 
     if (txData.id && txData.wallet_id) {
       upsertTransaction({
-        id: txData.id,
-        wallet_id: txData.wallet_id,
-        vault_id: txData.vault_id ?? '',
-        type: txData.type ?? '',
-        status: txData.status ?? '',
-        asset_amount: txData.asset_amount ?? '0',
-        share_amount: txData.share_amount,
-        transaction_id: txData.transaction_id,
-        approval_transaction_id: txData.approval_transaction_id,
-        created_at: txData.created_at ?? Date.now(),
-        updated_at: txData.updated_at ?? Date.now(),
+        id: String(txData.id),
+        wallet_id: String(txData.wallet_id),
+        vault_id: String(txData.vault_id ?? ''),
+        type: String(txData.type ?? ''),
+        status: String(txData.status ?? ''),
+        asset_amount: String(txData.asset_amount ?? '0'),
+        share_amount: txData.share_amount ? String(txData.share_amount) : undefined,
+        transaction_id: txData.transaction_id ? String(txData.transaction_id) : undefined,
+        approval_transaction_id: txData.approval_transaction_id ? String(txData.approval_transaction_id) : undefined,
+        created_at: Number(txData.created_at ?? Date.now()),
+        updated_at: Number(txData.updated_at ?? Date.now()),
       });
     }
 

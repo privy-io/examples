@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { usePrivy, useWallets } from '@privy-io/react-auth';
+import { usePrivy } from '@privy-io/react-auth';
 import { formatUSDC, getVaultId } from '@/lib/constants';
 
 interface Position {
@@ -17,12 +17,10 @@ interface Position {
 
 export function PositionDisplay() {
   const { user } = usePrivy();
-  const { wallets } = useWallets();
   const [position, setPosition] = useState<Position | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const embeddedWallet = wallets.find((wallet) => wallet.walletClientType === 'privy');
   const privyWalletId = user?.linkedAccounts?.find(
     (a): a is Extract<typeof a, { type: 'wallet' }> =>
       a.type === 'wallet' && 'walletClientType' in a && a.walletClientType === 'privy'

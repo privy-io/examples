@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { formatUSDC, getVaultId, getFeeRecipient, truncateAddress } from '@/lib/constants';
+import { getVaultId, getFeeRecipient, truncateAddress } from '@/lib/constants';
 
 interface VaultInfo {
   id: string;

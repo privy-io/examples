@@ -31,20 +31,6 @@ body {
            text-sm leading-5 cursor-pointer;
   }
 
-  .button-outline {
-    @apply flex flex-row items-center
-           px-4 py-2 gap-1 cursor-pointer
-           h-9 rounded-full
-           bg-transparent border border-[#5B4FFF]
-           text-[#5B4FFF] font-medium text-sm leading-tight
-           hover:bg-[#5B4FFF] hover:text-white
-           focus:bg-[#5B4FFF] focus:text-white
-           active:bg-[#4A3EE6]
-           focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2
-           transition-all duration-200 ease-in-out
-           disabled:opacity-50 disabled:cursor-not-allowed;
-  }
-
   .button {
     @apply flex flex-row items-center
            px-3 py-2 gap-3 cursor-pointer

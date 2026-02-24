@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { useEffect, useState, useCallback } from 'react';
-import { usePrivy } from '@privy-io/react-auth';
-import { formatUSDC, truncateAddress } from '@/lib/constants';
+import { useEffect, useState, useCallback } from "react";
+import { usePrivy } from "@privy-io/react-auth";
+import { formatUSDC, truncateAddress } from "@/lib/constants";
 
 interface Transaction {
   id: string;
@@ -19,40 +19,40 @@ interface Transaction {
 
 function formatTimestamp(unixSeconds: number): string {
   const date = new Date(unixSeconds * 1000);
-  return date.toLocaleDateString('en-US', {
-    month: 'short',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
+  return date.toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
   });
 }
 
 function TypeBadge({ type }: { type: string }) {
-  const isDeposit = type === 'deposit';
+  const isDeposit = type === "deposit";
   return (
     <span
       className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${
         isDeposit
-          ? 'bg-[#DCFCE7] text-[#135638]'
-          : 'bg-[#FEE2E2] text-[#991B1B]'
+          ? "bg-[#DCFCE7] text-[#135638]"
+          : "bg-[#FEE2E2] text-[#991B1B]"
       }`}
     >
-      {isDeposit ? 'Deposit' : 'Withdrawal'}
+      {isDeposit ? "Deposit" : "Withdrawal"}
     </span>
   );
 }
 
 function StatusBadge({ status }: { status: string }) {
   const styles: Record<string, string> = {
-    pending: 'bg-[#FEF3C7] text-[#906218]',
-    confirmed: 'bg-[#DCFCE7] text-[#135638]',
-    failed: 'bg-[#FEE2E2] text-[#991B1B]',
+    pending: "bg-[#FEF3C7] text-[#906218]",
+    confirmed: "bg-[#DCFCE7] text-[#135638]",
+    failed: "bg-[#FEE2E2] text-[#991B1B]",
   };
 
   return (
     <span
       className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium capitalize ${
-        styles[status] ?? 'bg-[#F1F2F9] text-[#64668B]'
+        styles[status] ?? "bg-[#F1F2F9] text-[#64668B]"
       }`}
     >
       {status}
@@ -67,8 +67,10 @@ export function TransactionHistory({ refreshKey }: { refreshKey: number }) {
   const [error, setError] = useState<string | null>(null);
 
   const privyWalletId = user?.linkedAccounts?.find(
-    (a): a is Extract<typeof a, { type: 'wallet' }> =>
-      a.type === 'wallet' && 'walletClientType' in a && a.walletClientType === 'privy'
+    (a): a is Extract<typeof a, { type: "wallet" }> =>
+      a.type === "wallet" &&
+      "walletClientType" in a &&
+      a.walletClientType === "privy",
   )?.id;
 
   const fetchTransactions = useCallback(async () => {
@@ -76,19 +78,21 @@ export function TransactionHistory({ refreshKey }: { refreshKey: number }) {
 
     try {
       const response = await fetch(
-        `/api/transactions?wallet_id=${privyWalletId}`
+        `/api/transactions?wallet_id=${privyWalletId}`,
       );
 
       if (!response.ok) {
-        throw new Error('Failed to fetch transactions');
+        throw new Error("Failed to fetch transactions");
       }
 
       const data = await response.json();
       setTransactions(data.transactions);
       setError(null);
     } catch (err) {
-      console.error('Error fetching transactions:', err);
-      setError(err instanceof Error ? err.message : 'Failed to load transactions');
+      console.error("Error fetching transactions:", err);
+      setError(
+        err instanceof Error ? err.message : "Failed to load transactions",
+      );
     } finally {
       setIsLoading(false);
     }
@@ -104,7 +108,9 @@ export function TransactionHistory({ refreshKey }: { refreshKey: number }) {
   if (isLoading) {
     return (
       <div className="rounded-2xl p-6 bg-[#F1F2F9]">
-        <h3 className="text-lg font-semibold text-[#040217] mb-4">Transaction History</h3>
+        <h3 className="text-lg font-semibold text-[#040217] mb-4">
+          Transaction History
+        </h3>
         <div className="space-y-3">
           <div className="h-12 w-full bg-white/50 rounded-xl animate-pulse" />
           <div className="h-12 w-full bg-white/50 rounded-xl animate-pulse" />
@@ -117,7 +123,9 @@ export function TransactionHistory({ refreshKey }: { refreshKey: number }) {
   if (error) {
     return (
       <div className="rounded-2xl p-6 bg-[#F1F2F9]">
-        <h3 className="text-lg font-semibold text-[#040217] mb-4">Transaction History</h3>
+        <h3 className="text-lg font-semibold text-[#040217] mb-4">
+          Transaction History
+        </h3>
         <p className="text-sm text-[#991B1B]">{error}</p>
       </div>
     );
@@ -126,7 +134,9 @@ export function TransactionHistory({ refreshKey }: { refreshKey: number }) {
   if (transactions.length === 0) {
     return (
       <div className="rounded-2xl p-6 bg-[#F1F2F9]">
-        <h3 className="text-lg font-semibold text-[#040217] mb-4">Transaction History</h3>
+        <h3 className="text-lg font-semibold text-[#040217] mb-4">
+          Transaction History
+        </h3>
         <p className="text-sm text-[#64668B]">
           No transactions yet. Make a deposit or withdrawal to get started.
         </p>
@@ -136,12 +146,14 @@ export function TransactionHistory({ refreshKey }: { refreshKey: number }) {
 
   return (
     <div className="rounded-2xl p-6 bg-[#F1F2F9]">
-      <h3 className="text-lg font-semibold text-[#040217] mb-4">Transaction History</h3>
+      <h3 className="text-lg font-semibold text-[#040217] mb-4">
+        Transaction History
+      </h3>
 
       <div className="space-y-2">
         {transactions.map((tx) => {
-          const isDeposit = tx.type === 'deposit';
-          const sign = isDeposit ? '+' : '-';
+          const isDeposit = tx.type === "deposit";
+          const sign = isDeposit ? "+" : "-";
 
           return (
             <div
@@ -154,28 +166,12 @@ export function TransactionHistory({ refreshKey }: { refreshKey: number }) {
                     <TypeBadge type={tx.type} />
                     <StatusBadge status={tx.status} />
                   </div>
-                  <div className="flex items-center gap-2 text-xs text-[#64668B]">
-                    <span>{formatTimestamp(tx.created_at)}</span>
-                    {tx.transaction_id && (
-                      <>
-                        <span>&middot;</span>
-                        <a
-                          href={`https://basescan.org/tx/${tx.transaction_id}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-[#5B4FFF] hover:underline font-mono"
-                        >
-                          {truncateAddress(tx.transaction_id)}
-                        </a>
-                      </>
-                    )}
-                  </div>
                 </div>
               </div>
 
               <span
                 className={`text-sm font-medium whitespace-nowrap ${
-                  isDeposit ? 'text-[#135638]' : 'text-[#991B1B]'
+                  isDeposit ? "text-[#135638]" : "text-[#991B1B]"
                 }`}
               >
                 {sign}${formatUSDC(tx.asset_amount)} USDC
