@@ -22,7 +22,7 @@ const ERC20_ABI = [
 ] as const;
 
 export function WalletCard() {
-  const { user, logout } = usePrivy();
+  const { user } = usePrivy();
   const { wallets } = useWallets();
   const [usdcBalance, setUsdcBalance] = useState<string>('0.00');
   const [isLoading, setIsLoading] = useState(true);
@@ -105,12 +105,6 @@ export function WalletCard() {
             )}
           </div>
         </div>
-        <button
-          onClick={logout}
-          className="text-sm text-[#64668B] hover:text-[#040217] transition-colors"
-        >
-          Sign out
-        </button>
       </div>
 
       <div className="border-t border-[#E2E3F0] pt-4">

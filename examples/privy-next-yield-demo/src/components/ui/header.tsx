@@ -1,15 +1,16 @@
 "use client";
 
-import { ArrowRightIcon, ArrowUpRightIcon } from "@heroicons/react/16/solid";
+import { ArrowLeftIcon, ArrowRightIcon, ArrowUpRightIcon } from "@heroicons/react/16/solid";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 interface HeaderProps {
   authenticated: boolean;
+  onLogout?: () => void;
 }
 
-export function Header({ authenticated }: HeaderProps) {
+export function Header({ authenticated, onLogout }: HeaderProps) {
   const pathname = usePathname();
   return (
     <header
@@ -19,7 +20,7 @@ export function Header({ authenticated }: HeaderProps) {
           : "bg-transparent border-none backdrop-blur-none"
       }`}
     >
-      <div className="flex flex-row items-center gap-2 h-[26px]">
+      <div className="flex flex-row items-center gap-4 h-[26px] font-[family-name:var(--font-inter)]">
         <Image
           src={authenticated ? "./privy-logo-black.svg" : "./privy-logo-white.svg"}
           alt="Privy Logo"
@@ -39,6 +40,16 @@ export function Header({ authenticated }: HeaderProps) {
           >
             Yield Demo
           </div>
+        )}
+
+        {authenticated && onLogout && (
+          <button
+            onClick={onLogout}
+            className="flex flex-row items-center gap-2 px-4 py-1.5 text-sm font-medium text-[#64668B] hover:text-[#040217] bg-white border border-[#E2E3F0] rounded-full cursor-pointer transition-colors"
+          >
+            <ArrowLeftIcon className="h-4 w-4" strokeWidth={2} />
+            Logout
+          </button>
         )}
       </div>
 
@@ -67,29 +78,31 @@ export function Header({ authenticated }: HeaderProps) {
         </nav>
       )}
 
-      <div className="flex flex-row justify-end items-center gap-4 h-9">
+      <div className="flex flex-row justify-end items-center gap-4 h-9 font-[family-name:var(--font-inter)]">
         <a
-          className={`flex flex-row items-center gap-1 cursor-pointer ${
+          className={`flex flex-row items-center gap-1 text-sm font-medium cursor-pointer ${
             authenticated ? "text-primary" : "text-white"
           }`}
           href="https://docs.privy.io/recipes/yield-guide"
           target="_blank"
           rel="noreferrer"
         >
-          <span className="text-sm font-medium">Docs</span> <ArrowUpRightIcon className="h-4 w-4" strokeWidth={2} />
+          Docs <ArrowUpRightIcon className="h-4 w-4" strokeWidth={2} />
         </a>
 
-        <button className="button-primary rounded-full hidden md:block">
-          <a
-            className="flex flex-row items-center gap-2"
-            href="https://dashboard.privy.io/"
-            target="_blank"
-            rel="noreferrer"
-          >
-            <span> Go to dashboard</span>
-            <ArrowRightIcon className="h-4 w-4" strokeWidth={2} />
-          </a>
-        </button>
+        {!authenticated && (
+          <button className="button-primary rounded-full hidden md:block">
+            <a
+              className="flex flex-row items-center gap-2"
+              href="https://dashboard.privy.io/"
+              target="_blank"
+              rel="noreferrer"
+            >
+              <span>Go to dashboard</span>
+              <ArrowRightIcon className="h-4 w-4" strokeWidth={2} />
+            </a>
+          </button>
+        )}
       </div>
     </header>
   );

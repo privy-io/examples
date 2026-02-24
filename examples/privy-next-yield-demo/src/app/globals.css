@@ -18,6 +18,10 @@ body {
   font-family: var(--font-inter), Arial, Helvetica, sans-serif;
 }
 
+button, a, input, select, textarea {
+  font-family: inherit;
+}
+
 @layer components {
   .button-primary {
     @apply bg-[#5B4FFF] hover:bg-[#4A3EE6] focus:bg-[#4A3EE6] active:bg-[#3F35D9]
