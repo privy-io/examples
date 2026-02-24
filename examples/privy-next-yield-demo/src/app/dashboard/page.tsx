@@ -11,6 +11,7 @@ import { DepositForm } from "@/components/DepositForm";
 import { WithdrawForm } from "@/components/WithdrawForm";
 import { PositionDisplay } from "@/components/PositionDisplay";
 import { FeeRecipientCard } from "@/components/FeeRecipientCard";
+import { TransactionHistory } from "@/components/TransactionHistory";
 import { FullScreenLoader } from "@/components/ui/fullscreen-loader";
 import { Header } from "@/components/ui/header";
 
@@ -60,6 +61,7 @@ export default function Dashboard() {
           {/* Right Column - Position & Vault Info */}
           <div className="lg:col-span-2 space-y-6">
             <PositionDisplay key={`position-${refreshKey}`} />
+            <TransactionHistory refreshKey={refreshKey} />
             <FeeRecipientCard />
           </div>
         </div>
