@@ -1,11 +1,16 @@
+"use client";
+
 import { ArrowRightIcon, ArrowUpRightIcon } from "@heroicons/react/16/solid";
 import Image from "next/image";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 interface HeaderProps {
   authenticated: boolean;
 }
 
 export function Header({ authenticated }: HeaderProps) {
+  const pathname = usePathname();
   return (
     <header
       className={`fixed top-0 left-0 w-full h-[60px] flex flex-row justify-between items-center px-6 z-50 ${
@@ -37,16 +42,41 @@ export function Header({ authenticated }: HeaderProps) {
         )}
       </div>
 
+      {authenticated && (
+        <nav className="flex flex-row items-center gap-1">
+          <Link
+            href="/dashboard"
+            className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
+              pathname === "/dashboard"
+                ? "bg-[#F1F2F9] text-[#040217]"
+                : "text-[#64668B] hover:text-[#040217]"
+            }`}
+          >
+            User
+          </Link>
+          <Link
+            href="/app-dashboard"
+            className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
+              pathname === "/app-dashboard"
+                ? "bg-[#F1F2F9] text-[#040217]"
+                : "text-[#64668B] hover:text-[#040217]"
+            }`}
+          >
+            App
+          </Link>
+        </nav>
+      )}
+
       <div className="flex flex-row justify-end items-center gap-4 h-9">
         <a
           className={`flex flex-row items-center gap-1 cursor-pointer ${
             authenticated ? "text-primary" : "text-white"
           }`}
-          href="https://docs.privy.io/basics/react/installation"
+          href="https://docs.privy.io/recipes/yield-guide"
           target="_blank"
           rel="noreferrer"
         >
-          Docs <ArrowUpRightIcon className="h-4 w-4" strokeWidth={2} />
+          <span className="text-sm font-medium">Docs</span> <ArrowUpRightIcon className="h-4 w-4" strokeWidth={2} />
         </a>
 
         <button className="button-primary rounded-full hidden md:block">

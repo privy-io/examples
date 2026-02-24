@@ -60,18 +60,25 @@ function StatusBadge({ status }: { status: string }) {
   );
 }
 
-export function TransactionHistory({ refreshKey }: { refreshKey: number }) {
+export function TransactionHistory({
+  refreshKey,
+  walletId,
+}: {
+  refreshKey: number;
+  walletId?: string;
+}) {
   const { user } = usePrivy();
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const privyWalletId = user?.linkedAccounts?.find(
+  const derivedWalletId = user?.linkedAccounts?.find(
     (a): a is Extract<typeof a, { type: "wallet" }> =>
       a.type === "wallet" &&
       "walletClientType" in a &&
       a.walletClientType === "privy",
   )?.id;
+  const privyWalletId = walletId || derivedWalletId;
 
   const fetchTransactions = useCallback(async () => {
     if (!privyWalletId) return;
@@ -107,7 +114,7 @@ export function TransactionHistory({ refreshKey }: { refreshKey: number }) {
 
   if (isLoading) {
     return (
-      <div className="rounded-2xl p-6 bg-[#F1F2F9]">
+      <div className="rounded-2xl p-6 bg-white">
         <h3 className="text-lg font-semibold text-[#040217] mb-4">
           Transaction History
         </h3>
@@ -122,7 +129,7 @@ export function TransactionHistory({ refreshKey }: { refreshKey: number }) {
 
   if (error) {
     return (
-      <div className="rounded-2xl p-6 bg-[#F1F2F9]">
+      <div className="rounded-2xl p-6 bg-white">
         <h3 className="text-lg font-semibold text-[#040217] mb-4">
           Transaction History
         </h3>
@@ -133,7 +140,7 @@ export function TransactionHistory({ refreshKey }: { refreshKey: number }) {
 
   if (transactions.length === 0) {
     return (
-      <div className="rounded-2xl p-6 bg-[#F1F2F9]">
+      <div className="rounded-2xl p-6 bg-white">
         <h3 className="text-lg font-semibold text-[#040217] mb-4">
           Transaction History
         </h3>
@@ -145,7 +152,7 @@ export function TransactionHistory({ refreshKey }: { refreshKey: number }) {
   }
 
   return (
-    <div className="rounded-2xl p-6 bg-[#F1F2F9]">
+    <div className="rounded-2xl p-6 bg-white">
       <h3 className="text-lg font-semibold text-[#040217] mb-4">
         Transaction History
       </h3>

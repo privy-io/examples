@@ -13,7 +13,7 @@ export const PRIVY_API_URL = 'https://api.privy.io/v1';
 
 // Environment variables (set these in .env.local)
 export const getVaultId = () => process.env.NEXT_PUBLIC_VAULT_ID || '';
-export const getFeeRecipient = () => process.env.NEXT_PUBLIC_FEE_RECIPIENT || '';
+export const getFeeRecipientWalletId = () => process.env.NEXT_PUBLIC_FEE_RECIPIENT_WALLET_ID || '';
 
 // Format USDC amount for display (from smallest unit to human readable)
 export function formatUSDC(amount: string | bigint): string {

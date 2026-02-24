@@ -15,16 +15,17 @@ interface Position {
   shares_in_vault: string;
 }
 
-export function PositionDisplay() {
+export function PositionDisplay({ walletId }: { walletId?: string } = {}) {
   const { user } = usePrivy();
   const [position, setPosition] = useState<Position | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const privyWalletId = user?.linkedAccounts?.find(
+  const derivedWalletId = user?.linkedAccounts?.find(
     (a): a is Extract<typeof a, { type: 'wallet' }> =>
       a.type === 'wallet' && 'walletClientType' in a && a.walletClientType === 'privy'
   )?.id;
+  const privyWalletId = walletId || derivedWalletId;
   const vaultId = getVaultId();
 
   useEffect(() => {
@@ -61,7 +62,7 @@ export function PositionDisplay() {
 
   if (isLoading) {
     return (
-      <div className="rounded-2xl p-6 bg-[#F1F2F9]">
+      <div className="rounded-2xl p-6 bg-white">
         <h3 className="text-lg font-semibold text-[#040217] mb-4">Your Position</h3>
         <div className="space-y-3">
           <div className="h-6 w-32 bg-white/50 rounded animate-pulse" />
@@ -74,7 +75,7 @@ export function PositionDisplay() {
 
   if (error) {
     return (
-      <div className="rounded-2xl p-6 bg-[#F1F2F9]">
+      <div className="rounded-2xl p-6 bg-white">
         <h3 className="text-lg font-semibold text-[#040217] mb-4">Your Position</h3>
         <p className="text-sm text-[#991B1B]">{error}</p>
       </div>
@@ -83,7 +84,7 @@ export function PositionDisplay() {
 
   if (!position || !vaultId) {
     return (
-      <div className="rounded-2xl p-6 bg-[#F1F2F9]">
+      <div className="rounded-2xl p-6 bg-white">
         <h3 className="text-lg font-semibold text-[#040217] mb-4">Your Position</h3>
         <p className="text-sm text-[#64668B]">
           {!vaultId ? 'Vault not configured' : 'No active position'}
@@ -93,7 +94,7 @@ export function PositionDisplay() {
   }
 
   return (
-    <div className="rounded-2xl p-6 bg-[#F1F2F9]">
+    <div className="rounded-2xl p-6 bg-white">
       <div className="flex items-start justify-between mb-4">
         <h3 className="text-lg font-semibold text-[#040217]">Your Position</h3>
       </div>
