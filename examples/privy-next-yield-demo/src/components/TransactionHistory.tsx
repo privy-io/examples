@@ -17,8 +17,10 @@ interface Transaction {
   updated_at: number;
 }
 
-function formatTimestamp(unixSeconds: number): string {
-  const date = new Date(unixSeconds * 1000);
+function formatTimestamp(timestamp: number): string {
+  // Handle both seconds and milliseconds: if > 1e12, it's already ms
+  const ms = timestamp > 1e12 ? timestamp : timestamp * 1000;
+  const date = new Date(ms);
   const month = String(date.getMonth() + 1).padStart(2, "0");
   const day = String(date.getDate()).padStart(2, "0");
   const year = String(date.getFullYear()).slice(-2);
