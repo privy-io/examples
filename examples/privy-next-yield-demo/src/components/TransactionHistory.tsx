@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useCallback } from "react";
 import { usePrivy } from "@privy-io/react-auth";
-import { formatUSDC, truncateAddress } from "@/lib/constants";
+import { formatUSDC } from "@/lib/constants";
 
 interface Transaction {
   id: string;
@@ -17,45 +17,37 @@ interface Transaction {
   updated_at: number;
 }
 
-function formatTimestamp(unixSeconds: number): string {
-  const date = new Date(unixSeconds * 1000);
-  return date.toLocaleDateString("en-US", {
-    month: "short",
-    day: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
-}
-
-function TypeBadge({ type }: { type: string }) {
-  const isDeposit = type === "deposit";
-  return (
-    <span
-      className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${
-        isDeposit
-          ? "bg-[#DCFCE7] text-[#135638]"
-          : "bg-[#FEE2E2] text-[#991B1B]"
-      }`}
-    >
-      {isDeposit ? "Deposit" : "Withdrawal"}
-    </span>
-  );
+function formatTimestamp(timestamp: number): string {
+  // Handle both seconds and milliseconds: if > 1e12, it's already ms
+  const ms = timestamp > 1e12 ? timestamp : timestamp * 1000;
+  const date = new Date(ms);
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  const year = String(date.getFullYear()).slice(-2);
+  const hours = date.getHours();
+  const minutes = String(date.getMinutes()).padStart(2, "0");
+  const ampm = hours >= 12 ? "PM" : "AM";
+  const displayHours = String(hours % 12 || 12).padStart(2, "0");
+  return `${month}/${day}/${year} ${displayHours}:${minutes} ${ampm}`;
 }
 
 function StatusBadge({ status }: { status: string }) {
-  const styles: Record<string, string> = {
-    pending: "bg-[#FEF3C7] text-[#906218]",
-    confirmed: "bg-[#DCFCE7] text-[#135638]",
-    failed: "bg-[#FEE2E2] text-[#991B1B]",
+  const config: Record<string, { style: string; label: string }> = {
+    pending: { style: "bg-[#FEF3C7] text-[#906218]", label: "Pending" },
+    confirmed: { style: "bg-[#DCFCE7] text-[#135638]", label: "Successful" },
+    failed: { style: "bg-[#FEE2E2] text-[#991B1B]", label: "Failed" },
+  };
+
+  const { style, label } = config[status] ?? {
+    style: "bg-[#F1F2F9] text-[#64668B]",
+    label: status,
   };
 
   return (
     <span
-      className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium capitalize ${
-        styles[status] ?? "bg-[#F1F2F9] text-[#64668B]"
-      }`}
+      className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${style}`}
     >
-      {status}
+      {label}
     </span>
   );
 }
@@ -114,9 +106,9 @@ export function TransactionHistory({
 
   if (isLoading) {
     return (
-      <div className="rounded-2xl p-6 bg-white">
+      <div className="rounded-2xl p-6 bg-white border border-[#E2E3F0]">
         <h3 className="text-lg font-semibold text-[#040217] mb-4">
-          Transaction History
+          Transaction history
         </h3>
         <div className="space-y-3">
           <div className="h-12 w-full bg-white/50 rounded-xl animate-pulse" />
@@ -129,9 +121,9 @@ export function TransactionHistory({
 
   if (error) {
     return (
-      <div className="rounded-2xl p-6 bg-white">
+      <div className="rounded-2xl p-6 bg-white border border-[#E2E3F0]">
         <h3 className="text-lg font-semibold text-[#040217] mb-4">
-          Transaction History
+          Transaction history
         </h3>
         <p className="text-sm text-[#991B1B]">{error}</p>
       </div>
@@ -140,9 +132,9 @@ export function TransactionHistory({
 
   if (transactions.length === 0) {
     return (
-      <div className="rounded-2xl p-6 bg-white">
+      <div className="rounded-2xl p-6 bg-white border border-[#E2E3F0]">
         <h3 className="text-lg font-semibold text-[#040217] mb-4">
-          Transaction History
+          Transaction history
         </h3>
         <p className="text-sm text-[#64668B]">
           No transactions yet. Make a deposit or withdrawal to get started.
@@ -152,37 +144,32 @@ export function TransactionHistory({
   }
 
   return (
-    <div className="rounded-2xl p-6 bg-white">
+    <div className="rounded-2xl p-6 bg-white border border-[#E2E3F0]">
       <h3 className="text-lg font-semibold text-[#040217] mb-4">
-        Transaction History
+        Transaction history
       </h3>
 
-      <div className="space-y-2">
-        {transactions.map((tx) => {
+      <div>
+        {transactions.map((tx, index) => {
           const isDeposit = tx.type === "deposit";
-          const sign = isDeposit ? "+" : "-";
 
           return (
             <div
               key={tx.id}
-              className="bg-white rounded-xl p-4 border border-[#E2E3F0] flex items-center justify-between gap-3"
+              className={`flex items-center justify-between py-3 ${
+                index < transactions.length - 1
+                  ? "border-b border-[#E2E3F0]"
+                  : ""
+              }`}
             >
-              <div className="flex items-center gap-3 min-w-0">
-                <div className="flex flex-col gap-1">
-                  <div className="flex items-center gap-2">
-                    <TypeBadge type={tx.type} />
-                    <StatusBadge status={tx.status} />
-                  </div>
-                </div>
-              </div>
-
-              <span
-                className={`text-sm font-medium whitespace-nowrap ${
-                  isDeposit ? "text-[#135638]" : "text-[#991B1B]"
-                }`}
-              >
-                {sign}${formatUSDC(tx.asset_amount)} USDC
+              <span className="text-sm font-semibold text-[#040217]">
+                {isDeposit ? "Deposited" : "Withdrew"} $
+                {formatUSDC(tx.asset_amount)} USDC
               </span>
+              <span className="text-sm text-[#64668B]">
+                {formatTimestamp(tx.created_at)}
+              </span>
+              <StatusBadge status={tx.status} />
             </div>
           );
         })}

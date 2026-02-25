@@ -62,8 +62,8 @@ export function PositionDisplay({ walletId }: { walletId?: string } = {}) {
 
   if (isLoading) {
     return (
-      <div className="rounded-2xl p-6 bg-white">
-        <h3 className="text-lg font-semibold text-[#040217] mb-4">Your Position</h3>
+      <div className="rounded-2xl p-6 bg-white border border-[#E2E3F0]">
+        <h3 className="text-lg font-semibold text-[#040217] mb-4">Your position</h3>
         <div className="space-y-3">
           <div className="h-6 w-32 bg-white/50 rounded animate-pulse" />
           <div className="h-10 w-40 bg-white/50 rounded animate-pulse" />
@@ -75,8 +75,8 @@ export function PositionDisplay({ walletId }: { walletId?: string } = {}) {
 
   if (error) {
     return (
-      <div className="rounded-2xl p-6 bg-white">
-        <h3 className="text-lg font-semibold text-[#040217] mb-4">Your Position</h3>
+      <div className="rounded-2xl p-6 bg-white border border-[#E2E3F0]">
+        <h3 className="text-lg font-semibold text-[#040217] mb-4">Your position</h3>
         <p className="text-sm text-[#991B1B]">{error}</p>
       </div>
     );
@@ -84,8 +84,8 @@ export function PositionDisplay({ walletId }: { walletId?: string } = {}) {
 
   if (!position || !vaultId) {
     return (
-      <div className="rounded-2xl p-6 bg-white">
-        <h3 className="text-lg font-semibold text-[#040217] mb-4">Your Position</h3>
+      <div className="rounded-2xl p-6 bg-white border border-[#E2E3F0]">
+        <h3 className="text-lg font-semibold text-[#040217] mb-4">Your position</h3>
         <p className="text-sm text-[#64668B]">
           {!vaultId ? 'Vault not configured' : 'No active position'}
         </p>
@@ -94,9 +94,9 @@ export function PositionDisplay({ walletId }: { walletId?: string } = {}) {
   }
 
   return (
-    <div className="rounded-2xl p-6 bg-white">
+    <div className="rounded-2xl p-6 bg-white border border-[#E2E3F0]">
       <div className="flex items-start justify-between mb-4">
-        <h3 className="text-lg font-semibold text-[#040217]">Your Position</h3>
+        <h3 className="text-lg font-semibold text-[#040217]">Your position</h3>
       </div>
 
       <div className="space-y-4">

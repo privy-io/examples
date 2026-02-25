@@ -2,8 +2,6 @@ import { base } from 'viem/chains';
 
 // Network Configuration
 export const CHAIN = base;
-export const CHAIN_ID = base.id; // 8453
-
 // USDC on Base Mainnet
 export const USDC_ADDRESS = '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913' as const;
 export const USDC_DECIMALS = 6;
