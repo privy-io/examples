@@ -13,7 +13,6 @@ export function PrivyProvider({ children }: { children: React.ReactNode }) {
         appearance: {
           theme: 'light',
           accentColor: '#5B4FFF',
-          logo: 'https://privy.io/privy-logo-dark.png',
         },
         loginMethods: ['email', 'wallet', 'google', 'apple'],
         embeddedWallets: {
