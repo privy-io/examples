@@ -78,10 +78,10 @@ export function WalletCard() {
   };
 
   return (
-    <div className="rounded-2xl p-6 bg-white">
+    <div className="rounded-2xl p-6 bg-white border border-[#E2E3F0]">
       <div className="flex items-start justify-between mb-4">
         <div>
-          <h2 className="text-sm font-medium text-[#64668B]">Your Wallet</h2>
+          <h2 className="text-sm font-medium text-[#64668B]">Your wallet</h2>
           <div className="flex items-center gap-2 mt-1">
             <span className="text-sm font-mono text-[#040217]">
               {walletAddress ? truncateAddress(walletAddress) : 'No wallet'}

@@ -20,7 +20,7 @@ export function Header({ authenticated, onLogout }: HeaderProps) {
           : "bg-transparent border-none backdrop-blur-none"
       }`}
     >
-      <div className="flex flex-row items-center gap-4 h-[26px] font-[family-name:var(--font-inter)]">
+      <div className="flex flex-row items-center gap-4 h-[26px]">
         <Image
           src={authenticated ? "./privy-logo-black.svg" : "./privy-logo-white.svg"}
           alt="Privy Logo"
@@ -32,11 +32,7 @@ export function Header({ authenticated, onLogout }: HeaderProps) {
 
         {authenticated && (
           <div
-            className={`text-medium flex h-[22px] items-center justify-center rounded-[11px] border px-[0.375rem] text-[0.75rem] ${
-              authenticated
-                ? "border-primary text-primary"
-                : "border-white text-white"
-            }`}
+            className="font-medium flex h-[22px] items-center justify-center rounded-[11px] border px-[0.375rem] text-[0.75rem] border-primary text-primary"
           >
             Yield Demo
           </div>
@@ -78,7 +74,7 @@ export function Header({ authenticated, onLogout }: HeaderProps) {
         </nav>
       )}
 
-      <div className="flex flex-row justify-end items-center gap-4 h-9 font-[family-name:var(--font-inter)]">
+      <div className="flex flex-row justify-end items-center gap-4 h-9">
         <a
           className={`flex flex-row items-center gap-1 text-sm font-medium cursor-pointer ${
             authenticated ? "text-primary" : "text-white"
