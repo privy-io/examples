@@ -8,7 +8,7 @@ For a step-by-step guide on funding wallets with Apple Pay and Google Pay, check
 
 ## Live Demo
 
-[View Demo]({{DEPLOY_URL}})
+[View Demo](https://privy-next-funding.vercel.app/)
 
 ## Quick Start
 
