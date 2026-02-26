@@ -113,7 +113,7 @@ export default function ActionsStep() {
   if (!agent) {
     return (
       <div className="flex min-h-screen items-center justify-center">
-        <div className="h-8 w-8 animate-spin rounded-full border-4 border-slate-200 border-t-violet-500" />
+        <div className="h-8 w-8 animate-spin rounded-full border-4 border-[#E2E3F0] border-t-[#5B4FFF]" />
       </div>
     );
   }
@@ -121,7 +121,7 @@ export default function ActionsStep() {
   return (
     <div className="min-h-screen">
       {/* Header */}
-      <header className="border-b border-slate-200 bg-white/80 backdrop-blur-sm">
+      <header className="border-b border-[#E2E3F0] bg-white">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
           <button
             onClick={() => router.push('/')}
@@ -134,7 +134,7 @@ export default function ActionsStep() {
               href="https://docs.privy.io"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-sm text-slate-600 hover:text-slate-900"
+              className="text-sm text-[#5B4FFF]"
             >
               Docs
             </a>
@@ -142,7 +142,7 @@ export default function ActionsStep() {
               href="https://docs.privy.io/recipes/x402"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-sm text-slate-600 hover:text-slate-900"
+              className="text-sm text-[#5B4FFF]"
             >
               x402 →
             </a>
@@ -197,13 +197,13 @@ export default function ActionsStep() {
           )}
 
           {/* How it works */}
-          <div className="rounded-2xl border border-slate-200 bg-white p-6">
+          <div className="rounded-2xl border border-[#E2E3F0] bg-white p-6">
             <h2 className="mb-4 text-lg font-semibold text-slate-900">
               How it works
             </h2>
             <div className="space-y-3 text-sm text-slate-600">
               <div className="flex gap-3">
-                <div className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-violet-500 text-xs font-bold text-white">
+                <div className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-[#5B4FFF] text-xs font-bold text-white">
                   1
                 </div>
                 <p>
@@ -221,7 +221,7 @@ export default function ActionsStep() {
                 </p>
               </div>
               <div className="flex gap-3">
-                <div className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-violet-500 text-xs font-bold text-white">
+                <div className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-[#5B4FFF] text-xs font-bold text-white">
                   2
                 </div>
                 <p>
@@ -238,14 +238,14 @@ export default function ActionsStep() {
                 </p>
               </div>
               <div className="flex gap-3">
-                <div className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-violet-500 text-xs font-bold text-white">
+                <div className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-[#5B4FFF] text-xs font-bold text-white">
                   3
                 </div>
                 <p>
                   Payments use the{' '}
                   <a
                     href="https://x402.org"
-                    className="font-medium text-violet-600 hover:underline"
+                    className="font-medium text-[#5B4FFF] hover:underline"
                   >
                     x402 protocol
                   </a>{' '}
@@ -263,7 +263,7 @@ export default function ActionsStep() {
                 sessionStorage.removeItem('agent');
                 router.push('/');
               }}
-              className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-6 py-3 text-sm font-medium text-slate-700 shadow-sm transition-all hover:border-slate-300 hover:shadow-md"
+              className="inline-flex items-center gap-2 rounded-xl border border-[#E2E3F0] bg-white px-6 py-3 text-sm font-medium text-slate-700 transition-all hover:border-gray-300 hover:shadow-md"
             >
               <svg
                 className="h-4 w-4"
@@ -285,19 +285,19 @@ export default function ActionsStep() {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-slate-200 bg-white/50 py-6 mt-12">
+      <footer className="border-t border-[#E2E3F0] bg-white/50 py-6 mt-12">
         <div className="mx-auto max-w-6xl px-6 text-center text-sm text-slate-500">
           Built with{' '}
           <a
             href="https://privy.io"
-            className="font-medium text-violet-600 hover:underline"
+            className="font-medium text-[#5B4FFF] hover:underline"
           >
             Privy
           </a>{' '}
           and{' '}
           <a
             href="https://x402.org"
-            className="font-medium text-violet-600 hover:underline"
+            className="font-medium text-[#5B4FFF] hover:underline"
           >
             x402
           </a>
