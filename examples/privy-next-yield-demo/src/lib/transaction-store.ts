@@ -8,10 +8,12 @@
 export interface Transaction {
   id: string;
   wallet_id: string;
-  vault_id: string;
-  type: string; // "deposit" | "withdraw"
+  vault_id?: string;
+  type: string; // "deposit" | "withdraw" | "claim"
   status: string; // "pending" | "confirmed" | "failed"
   asset_amount: string;
+  token_symbol: string; // e.g. "USDC", "MORPHO"
+  token_decimals: number; // e.g. 6 for USDC, 18 for MORPHO
   share_amount?: string;
   transaction_id?: string;
   approval_transaction_id?: string;

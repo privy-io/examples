@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { PRIVY_API_URL } from '@/lib/constants';
+import { PRIVY_API_URL, USDC_TOKEN } from '@/lib/constants';
 import { upsertTransaction } from '@/lib/transaction-store';
 
 const PRIVY_APP_ID = process.env.NEXT_PUBLIC_PRIVY_APP_ID!;
@@ -39,7 +39,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    upsertTransaction(data);
+    upsertTransaction({ ...data, ...USDC_TOKEN });
 
     return NextResponse.json(data);
   } catch (error) {

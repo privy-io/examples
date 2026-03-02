@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { PrivyClient } from '@privy-io/server-auth';
 import { upsertTransaction } from '@/lib/transaction-store';
+import { USDC_TOKEN } from '@/lib/constants';
 
 const PRIVY_APP_ID = process.env.NEXT_PUBLIC_PRIVY_APP_ID!;
 const PRIVY_APP_SECRET = process.env.PRIVY_APP_SECRET!;
@@ -53,6 +54,7 @@ export async function POST(request: NextRequest) {
         type: String(txData.type ?? ''),
         status: String(txData.status ?? ''),
         asset_amount: String(txData.asset_amount ?? '0'),
+        ...USDC_TOKEN,
         share_amount: txData.share_amount ? String(txData.share_amount) : undefined,
         transaction_id: txData.transaction_id ? String(txData.transaction_id) : undefined,
         approval_transaction_id: txData.approval_transaction_id ? String(txData.approval_transaction_id) : undefined,
