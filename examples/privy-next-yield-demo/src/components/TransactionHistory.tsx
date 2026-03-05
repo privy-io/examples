@@ -2,15 +2,17 @@
 
 import { useEffect, useState, useCallback } from "react";
 import { usePrivy } from "@privy-io/react-auth";
-import { formatUSDC } from "@/lib/constants";
+import { formatUSDC, formatTokenAmount } from "@/lib/constants";
 
 interface Transaction {
   id: string;
   wallet_id: string;
-  vault_id: string;
+  vault_id?: string;
   type: string;
   status: string;
   asset_amount: string;
+  token_symbol: string;
+  token_decimals: number;
   share_amount?: string;
   transaction_id?: string;
   created_at: number;
@@ -137,7 +139,7 @@ export function TransactionHistory({
           Transaction history
         </h3>
         <p className="text-sm text-[#64668B]">
-          No transactions yet. Make a deposit or withdrawal to get started.
+          No transactions yet. Make a deposit, withdrawal, or claim to get started.
         </p>
       </div>
     );
@@ -151,7 +153,13 @@ export function TransactionHistory({
 
       <div>
         {transactions.map((tx, index) => {
-          const isDeposit = tx.type === "deposit";
+          let label: string;
+          if (tx.type === "claim") {
+            label = `Claimed ${formatTokenAmount(tx.asset_amount, tx.token_decimals, 4)} ${tx.token_symbol}`;
+          } else {
+            const verb = tx.type === "deposit" ? "Deposited" : "Withdrew";
+            label = `${verb} $${formatUSDC(tx.asset_amount)} USDC`;
+          }
 
           return (
             <div
@@ -162,14 +170,15 @@ export function TransactionHistory({
                   : ""
               }`}
             >
-              <span className="text-sm font-semibold text-[#040217]">
-                {isDeposit ? "Deposited" : "Withdrew"} $
-                {formatUSDC(tx.asset_amount)} USDC
+              <span className="text-sm font-semibold text-[#040217] w-2/5 truncate">
+                {label}
               </span>
-              <span className="text-sm text-[#64668B]">
+              <span className="text-sm text-[#64668B] w-2/5 text-center">
                 {formatTimestamp(tx.created_at)}
               </span>
-              <StatusBadge status={tx.status} />
+              <span className="w-1/5 text-right">
+                <StatusBadge status={tx.status} />
+              </span>
             </div>
           );
         })}

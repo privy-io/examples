@@ -7,6 +7,7 @@ import { ToastContainer } from "react-toastify";
 import { WalletCard } from "@/components/WalletCard";
 import { DepositForm } from "@/components/DepositForm";
 import { WithdrawForm } from "@/components/WithdrawForm";
+import { ClaimRewardsForm } from "@/components/ClaimRewardsForm";
 import { PositionDisplay } from "@/components/PositionDisplay";
 import { FeeRecipientCard } from "@/components/FeeRecipientCard";
 import { TransactionHistory } from "@/components/TransactionHistory";
@@ -48,6 +49,7 @@ export default function Dashboard() {
             <WalletCard />
             <DepositForm onSuccess={handleTransactionSuccess} />
             <WithdrawForm onSuccess={handleTransactionSuccess} />
+            <ClaimRewardsForm onSuccess={handleTransactionSuccess} />
           </div>
 
           {/* Right Column - Position & Vault Info */}
