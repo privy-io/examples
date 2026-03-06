@@ -5,6 +5,7 @@ import { getVaultId, truncateAddress } from '@/lib/constants';
 
 interface VaultInfo {
   id: string;
+  name: string;
   provider: string;
   vault_address: string;
   asset_address: string;
@@ -81,7 +82,7 @@ export function FeeRecipientCard() {
   return (
     <div className="rounded-2xl p-6 bg-white border border-[#E2E3F0]">
       <div className="flex items-start justify-between mb-4">
-        <h3 className="text-lg font-semibold text-[#040217]">Vault info</h3>
+        <h3 className="text-lg font-semibold text-[#040217]">{vaultInfo.name || 'Vault info'}</h3>
       </div>
 
       <div>
