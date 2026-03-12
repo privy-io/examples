@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { createPublicClient, http, formatUnits } from 'viem';
 import { base } from 'viem/chains';
-import { USDC_ADDRESS, USDC_DECIMALS, truncateAddress, getFeeRecipientWalletId } from '@/lib/constants';
+import { USDC_ADDRESS, USDC_DECIMALS, truncateAddress, getAdminWalletId } from '@/lib/constants';
 
 const publicClient = createPublicClient({
   chain: base,
@@ -26,18 +26,18 @@ export function AppWalletCard() {
   const [isLoading, setIsLoading] = useState(true);
   const [copied, setCopied] = useState(false);
 
-  const feeRecipientWalletId = getFeeRecipientWalletId();
+  const adminWalletId = getAdminWalletId();
 
   // Resolve the on-chain address from the Privy wallet ID
   useEffect(() => {
     async function resolveAddress() {
-      if (!feeRecipientWalletId) {
+      if (!adminWalletId) {
         setIsLoading(false);
         return;
       }
 
       try {
-        const res = await fetch(`/api/wallet-address?wallet_id=${feeRecipientWalletId}`);
+        const res = await fetch(`/api/wallet-address?wallet_id=${adminWalletId}`);
         if (!res.ok) throw new Error('Failed to resolve wallet address');
         const data = await res.json();
         setWalletAddress(data.address);
@@ -48,7 +48,7 @@ export function AppWalletCard() {
     }
 
     resolveAddress();
-  }, [feeRecipientWalletId]);
+  }, [adminWalletId]);
 
   // Fetch USDC balance once address is resolved
   useEffect(() => {

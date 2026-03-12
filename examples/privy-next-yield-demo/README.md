@@ -44,8 +44,8 @@ NEXT_PUBLIC_VAULT_ID=your-vault-id
 # Webhook Secret (for transaction updates)
 PRIVY_WEBHOOK_SECRET=your-webhook-secret
 
-# Optional: Fee Recipient Address (for display purposes)
-NEXT_PUBLIC_FEE_RECIPIENT=0x...
+# Privy Admin Wallet (not relevant if you are using an external wallet)
+NEXT_PUBLIC_ADMIN_WALLET_ID=your-admin-wallet-id
 ```
 
 Get your Privy credentials from [dashboard.privy.io](https://dashboard.privy.io).
@@ -115,7 +115,7 @@ The app uses the **Privy Home** design system with:
 
 ## Learn More
 
-- [Privy Documentation](https://docs.privy.io)
+- [Privy Documentation](https://docs.privy.io/transaction-management/earn/overview)
 - [Privy Yield API](https://docs.privy.io/guide/yield)
 - [Morpho Protocol](https://morpho.org)
 - [Base Network](https://base.org)

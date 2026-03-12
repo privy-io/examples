@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { parseUSDC, getVaultId, getFeeRecipientWalletId } from '@/lib/constants';
+import { parseUSDC, getVaultId, getAdminWalletId } from '@/lib/constants';
 
 type WithdrawStatus = 'idle' | 'loading' | 'success' | 'error';
 
@@ -24,7 +24,7 @@ export function AppWithdrawForm({ onSuccess }: { onSuccess?: () => void }) {
   const [error, setError] = useState<string | null>(null);
   const [txResult, setTxResult] = useState<WithdrawResponse | null>(null);
 
-  const walletId = getFeeRecipientWalletId();
+  const walletId = getAdminWalletId();
   const vaultId = getVaultId();
 
   const handleWithdraw = async (e: React.FormEvent) => {
@@ -102,7 +102,7 @@ export function AppWithdrawForm({ onSuccess }: { onSuccess?: () => void }) {
 
         {!walletId && (
           <p className="text-sm text-[#906218] bg-[#FEF3C7] p-3 rounded-lg">
-            Fee recipient wallet ID not configured. Set NEXT_PUBLIC_FEE_RECIPIENT_WALLET_ID in your environment.
+            Admin wallet ID not configured. Set NEXT_PUBLIC_ADMIN_WALLET_ID in your environment.
           </p>
         )}
 

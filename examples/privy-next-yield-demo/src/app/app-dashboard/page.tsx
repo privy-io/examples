@@ -11,14 +11,14 @@ import { FeeRecipientCard } from "@/components/FeeRecipientCard";
 import { TransactionHistory } from "@/components/TransactionHistory";
 import { FullScreenLoader } from "@/components/ui/fullscreen-loader";
 import { Header } from "@/components/ui/header";
-import { getFeeRecipientWalletId } from "@/lib/constants";
+import { getAdminWalletId } from "@/lib/constants";
 
 export default function AppDashboard() {
   const { ready, authenticated, logout } = usePrivy();
   const router = useRouter();
   const [refreshKey, setRefreshKey] = useState(0);
 
-  const feeRecipientWalletId = getFeeRecipientWalletId();
+  const adminWalletId = getAdminWalletId();
 
   useEffect(() => {
     if (ready && !authenticated) {
@@ -55,11 +55,11 @@ export default function AppDashboard() {
           <div className="lg:col-span-2 space-y-6">
             <PositionDisplay
               key={`position-${refreshKey}`}
-              walletId={feeRecipientWalletId}
+              walletId={adminWalletId}
             />
             <TransactionHistory
               refreshKey={refreshKey}
-              walletId={feeRecipientWalletId}
+              walletId={adminWalletId}
             />
             <FeeRecipientCard />
           </div>
