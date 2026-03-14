@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { Logo } from '@/components/Logo';
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { Logo } from "@/components/Logo";
 
 export default function Home() {
   const router = useRouter();
@@ -14,23 +14,23 @@ export default function Home() {
     setError(null);
 
     try {
-      const response = await fetch('/api/agent/create', {
-        method: 'POST',
+      const response = await fetch("/api/agent/create", {
+        method: "POST",
       });
 
       const data = await response.json();
 
       if (!data.success) {
-        throw new Error(data.error || 'Failed to create agent');
+        throw new Error(data.error || "Failed to create agent");
       }
 
       // Store agent data in sessionStorage for the wizard
-      sessionStorage.setItem('agent', JSON.stringify(data.agent));
+      sessionStorage.setItem("agent", JSON.stringify(data.agent));
 
       // Navigate to the fund step (step 2 of wizard)
       router.push(`/agent/${data.agent.id}/fund`);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Something went wrong');
+      setError(err instanceof Error ? err.message : "Something went wrong");
       setIsCreating(false);
     }
   };
@@ -38,7 +38,7 @@ export default function Home() {
   return (
     <div className="flex min-h-screen flex-col">
       {/* Header */}
-      <header className="border-b border-slate-200 bg-white/80 backdrop-blur-sm">
+      <header className="border-b border-[#E2E3F0] bg-white">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
           <Logo className="text-slate-900" />
           <div className="flex items-center gap-4">
@@ -46,7 +46,7 @@ export default function Home() {
               href="https://docs.privy.io"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-sm text-slate-600 hover:text-slate-900"
+              className="text-sm text-[#5B4FFF]"
             >
               Docs
             </a>
@@ -54,7 +54,7 @@ export default function Home() {
               href="https://docs.privy.io/recipes/x402"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-sm text-slate-600 hover:text-slate-900"
+              className="text-sm text-[#5B4FFF]"
             >
               x402 →
             </a>
@@ -67,7 +67,7 @@ export default function Home() {
         <div className="w-full max-w-2xl text-center">
           {/* Floating Privy icon */}
           <div className="mb-8 flex justify-center">
-            <div className="animate-float rounded-3xl bg-violet-100 p-8">
+            <div className="animate-float rounded-3xl bg-[#E0E7FF] p-8">
               <svg
                 width="80"
                 height="100"
@@ -90,7 +90,7 @@ export default function Home() {
           {/* Title */}
           <h1 className="text-4xl font-bold tracking-tight text-slate-900 sm:text-5xl">
             Agentic wallets
-            <span className="block text-violet-600">protected by Privy</span>
+            <span className="block text-[#5B4FFF]">protected by Privy</span>
           </h1>
 
           {/* Description */}
@@ -102,10 +102,10 @@ export default function Home() {
 
           {/* Features */}
           <div className="mx-auto mt-10 grid max-w-lg grid-cols-3 gap-4 text-center">
-            <div className="rounded-xl bg-white p-4 shadow-sm">
-              <div className="mx-auto mb-2 flex h-10 w-10 items-center justify-center rounded-full bg-violet-100">
+            <div className="rounded-xl bg-white border border-[#E2E3F0] p-4">
+              <div className="mx-auto mb-2 flex h-10 w-10 items-center justify-center rounded-full bg-[#E0E7FF]">
                 <svg
-                  className="h-5 w-5 text-violet-600"
+                  className="h-5 w-5 text-[#5B4FFF]"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -122,10 +122,10 @@ export default function Home() {
                 Secure wallets
               </div>
             </div>
-            <div className="rounded-xl bg-white p-4 shadow-sm">
-              <div className="mx-auto mb-2 flex h-10 w-10 items-center justify-center rounded-full bg-violet-100">
+            <div className="rounded-xl bg-white border border-[#E2E3F0] p-4">
+              <div className="mx-auto mb-2 flex h-10 w-10 items-center justify-center rounded-full bg-[#E0E7FF]">
                 <svg
-                  className="h-5 w-5 text-violet-600"
+                  className="h-5 w-5 text-[#5B4FFF]"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -142,10 +142,10 @@ export default function Home() {
                 Policy controls
               </div>
             </div>
-            <div className="rounded-xl bg-white p-4 shadow-sm">
-              <div className="mx-auto mb-2 flex h-10 w-10 items-center justify-center rounded-full bg-violet-100">
+            <div className="rounded-xl bg-white border border-[#E2E3F0] p-4">
+              <div className="mx-auto mb-2 flex h-10 w-10 items-center justify-center rounded-full bg-[#E0E7FF]">
                 <svg
-                  className="h-5 w-5 text-violet-600"
+                  className="h-5 w-5 text-[#5B4FFF]"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -169,7 +169,7 @@ export default function Home() {
             <button
               onClick={handleCreateAgent}
               disabled={isCreating}
-              className="inline-flex items-center gap-2 rounded-xl bg-offblack px-8 py-4 text-lg font-semibold text-white transition-all hover:bg-slate-800 hover:shadow-lg disabled:cursor-not-allowed disabled:opacity-50"
+              className="button-primary rounded-xl px-8 py-4 text-lg font-semibold gap-2"
             >
               {isCreating ? (
                 <>
@@ -211,32 +211,25 @@ export default function Home() {
               )}
             </button>
 
-            {error && (
-              <p className="mt-4 text-sm text-red-600">{error}</p>
-            )}
+            {error && <p className="mt-4 text-sm text-red-600">{error}</p>}
           </div>
-
-          {/* Demo note */}
-          <p className="mt-8 text-xs text-slate-500">
-            This is a demo using testnet USDC. No real funds are involved.
-          </p>
         </div>
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-slate-200 bg-white/50 py-6">
+      <footer className="border-t border-[#E2E3F0] bg-white/50 py-6">
         <div className="mx-auto max-w-6xl px-6 text-center text-sm text-slate-500">
-          Built with{' '}
+          Built with{" "}
           <a
             href="https://privy.io"
-            className="font-medium text-violet-600 hover:underline"
+            className="font-medium text-[#5B4FFF] hover:underline"
           >
             Privy
-          </a>{' '}
-          and{' '}
+          </a>{" "}
+          and{" "}
           <a
             href="https://x402.org"
-            className="font-medium text-violet-600 hover:underline"
+            className="font-medium text-[#5B4FFF] hover:underline"
           >
             x402
           </a>
