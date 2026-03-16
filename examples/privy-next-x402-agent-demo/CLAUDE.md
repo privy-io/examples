@@ -163,9 +163,12 @@ NEXT_PUBLIC_BASE_URL=http://localhost:3000
 
 ## Styling Conventions
 
-- Uses Privy brand colors: violet (`#8B5CF6`), offblack (`#0f0f10`)
-- Tailwind for layout and spacing
-- Card-based UI with subtle shadows and hover effects
+- Uses Privy brand colors: primary (`#5B4FFF`), hover (`#4A3EE6`), active (`#3F35D9`)
+- Borders: `#E2E3F0`, highlight backgrounds: `#E0E7FF`, code/info backgrounds: `#F1F2F9`
+- Three button classes defined in globals.css: `.button-primary`, `.button-outline`, `.button`
+- Font: Inter via `next/font/google`
+- Tailwind CSS v4 for layout and spacing
+- Card-based UI with rounded-2xl corners and subtle hover effects
 
 ## API Route Patterns
 

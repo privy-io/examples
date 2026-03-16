@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import { useRouter, useParams } from 'next/navigation';
-import { Logo } from '@/components/Logo';
-import { StepIndicator, WIZARD_STEPS } from '@/components/StepIndicator';
+import { useEffect, useState } from "react";
+import { useRouter, useParams } from "next/navigation";
+import { Logo } from "@/components/Logo";
+import { StepIndicator, WIZARD_STEPS } from "@/components/StepIndicator";
 
 interface Agent {
   id: string;
@@ -20,9 +20,9 @@ interface Agent {
 }
 
 const FUNDING_OPTIONS = [
-  { amount: 0.10, label: '$0.10', description: 'Light usage' },
-  { amount: 0.50, label: '$0.50', description: 'Recommended' },
-  { amount: 1, label: '$1', description: 'Heavy usage' },
+  { amount: 0.1, label: "$0.10", description: "Light usage" },
+  { amount: 0.5, label: "$0.50", description: "Recommended" },
+  { amount: 1, label: "$1", description: "Heavy usage" },
 ];
 
 export default function FundStep() {
@@ -34,14 +34,14 @@ export default function FundStep() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const storedAgent = sessionStorage.getItem('agent');
+    const storedAgent = sessionStorage.getItem("agent");
     if (!storedAgent) {
-      router.push('/');
+      router.push("/");
       return;
     }
     const parsedAgent = JSON.parse(storedAgent);
     if (parsedAgent.id !== params.id) {
-      router.push('/');
+      router.push("/");
       return;
     }
     setAgent(parsedAgent);
@@ -54,9 +54,9 @@ export default function FundStep() {
     setError(null);
 
     try {
-      const response = await fetch('/api/agent/fund', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const response = await fetch("/api/agent/fund", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           walletAddress: agent.wallet.address,
           amount: selectedAmount,
@@ -66,7 +66,7 @@ export default function FundStep() {
       const data = await response.json();
 
       if (!data.success) {
-        throw new Error(data.error || 'Failed to fund wallet');
+        throw new Error(data.error || "Failed to fund wallet");
       }
 
       // Update agent balance (convert USD to cents)
@@ -74,12 +74,12 @@ export default function FundStep() {
         ...agent,
         balance: agent.balance + selectedAmount * 100,
       };
-      sessionStorage.setItem('agent', JSON.stringify(updatedAgent));
+      sessionStorage.setItem("agent", JSON.stringify(updatedAgent));
 
       // Navigate to policy step
       router.push(`/agent/${agent.id}/policy`);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to fund wallet');
+      setError(err instanceof Error ? err.message : "Failed to fund wallet");
       setIsLoading(false);
     }
   };
@@ -87,7 +87,7 @@ export default function FundStep() {
   if (!agent) {
     return (
       <div className="flex min-h-screen items-center justify-center">
-        <div className="h-8 w-8 animate-spin rounded-full border-4 border-slate-200 border-t-violet-500" />
+        <div className="h-8 w-8 animate-spin rounded-full border-4 border-[#E2E3F0] border-t-[#5B4FFF]" />
       </div>
     );
   }
@@ -95,7 +95,7 @@ export default function FundStep() {
   return (
     <div className="min-h-screen">
       {/* Header */}
-      <header className="border-b border-slate-200 bg-white/80 backdrop-blur-sm">
+      <header className="border-b border-[#E2E3F0] bg-white">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
           <Logo className="text-slate-900" />
           <div className="flex items-center gap-4">
@@ -103,7 +103,7 @@ export default function FundStep() {
               href="https://docs.privy.io"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-sm text-slate-600 hover:text-slate-900"
+              className="text-sm text-[#5B4FFF]"
             >
               Docs
             </a>
@@ -111,7 +111,7 @@ export default function FundStep() {
               href="https://docs.privy.io/recipes/x402"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-sm text-slate-600 hover:text-slate-900"
+              className="text-sm text-[#5B4FFF]"
             >
               x402 →
             </a>
@@ -124,7 +124,7 @@ export default function FundStep() {
         <StepIndicator currentStep={2} steps={WIZARD_STEPS} />
 
         <div className="text-center">
-          <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-violet-500">
+          <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-[#5B4FFF]">
             <svg
               className="h-8 w-8 text-white"
               fill="none"
@@ -147,9 +147,9 @@ export default function FundStep() {
         </div>
 
         {/* Wallet info */}
-        <div className="mt-8 rounded-2xl border border-slate-200 bg-white p-6">
+        <div className="mt-8 rounded-2xl border border-[#E2E3F0] bg-white p-6">
           <div className="flex items-center gap-4">
-            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-slate-800">
+            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#5B4FFF]">
               <svg
                 className="h-6 w-6 text-white"
                 fill="none"
@@ -167,7 +167,8 @@ export default function FundStep() {
             <div>
               <div className="font-semibold text-slate-900">Agent Wallet</div>
               <div className="font-mono text-sm text-slate-500">
-                {agent.wallet.address.slice(0, 6)}...{agent.wallet.address.slice(-4)}
+                {agent.wallet.address.slice(0, 6)}...
+                {agent.wallet.address.slice(-4)}
               </div>
             </div>
           </div>
@@ -185,18 +186,22 @@ export default function FundStep() {
                 onClick={() => setSelectedAmount(option.amount)}
                 className={`relative rounded-2xl border-2 p-6 text-center transition-all ${
                   selectedAmount === option.amount
-                    ? 'border-violet-500 bg-violet-50 shadow-lg'
-                    : 'border-slate-200 bg-white hover:border-slate-300 hover:shadow-md'
+                    ? "border-[#5B4FFF] bg-[#E0E7FF] shadow-lg"
+                    : "border-[#E2E3F0] bg-white hover:border-gray-300 hover:shadow-md"
                 }`}
               >
-                {option.description === 'Recommended' && (
-                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-violet-500 px-3 py-1 text-xs font-semibold text-white">
+                {option.description === "Recommended" && (
+                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-[#5B4FFF] px-3 py-1 text-xs font-semibold text-white">
                     Popular
                   </div>
                 )}
-                <div className="text-3xl font-bold text-slate-900">{option.label}</div>
+                <div className="text-3xl font-bold text-slate-900">
+                  {option.label}
+                </div>
                 <div className="mt-1 text-sm text-slate-500">USDC</div>
-                <div className="mt-2 text-xs text-slate-400">{option.description}</div>
+                <div className="mt-2 text-xs text-slate-400">
+                  {option.description}
+                </div>
               </button>
             ))}
           </div>
@@ -211,15 +216,15 @@ export default function FundStep() {
         {/* Actions */}
         <div className="mt-8 flex gap-4">
           <button
-            onClick={() => router.push('/')}
-            className="flex-1 rounded-xl border border-slate-200 px-6 py-4 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50"
+            onClick={() => router.push("/")}
+            className="flex-1 rounded-xl border border-[#E2E3F0] px-6 py-4 text-sm font-medium text-slate-700 transition-colors hover:bg-gray-50"
           >
             Back
           </button>
           <button
             onClick={handleFund}
             disabled={!selectedAmount || isLoading}
-            className="flex-1 rounded-xl bg-offblack px-6 py-4 text-sm font-medium text-white transition-all hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-50"
+            className="flex-1 rounded-xl bg-[#5B4FFF] px-6 py-4 text-sm font-medium text-white transition-all hover:bg-[#4A3EE6] disabled:cursor-not-allowed disabled:opacity-50"
           >
             {isLoading ? (
               <span className="flex items-center justify-center gap-2">
@@ -249,11 +254,6 @@ export default function FundStep() {
             )}
           </button>
         </div>
-
-        {/* Info note */}
-        <p className="mt-6 text-center text-xs text-slate-500">
-          Funds are transferred from a demo treasury. No real USDC is involved.
-        </p>
       </main>
     </div>
   );
