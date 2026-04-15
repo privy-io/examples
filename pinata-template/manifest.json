@@ -1,0 +1,31 @@
+{
+  "$schema": "https://agents.pinata.cloud/schemas/manifest.v1.json",
+  "version": 1,
+  "agent": {
+    "name": "Privy Wallet Agent",
+    "description": "Crypto wallet assistant that signs messages and sends transactions on Ethereum and Solana via Privy",
+    "emoji": "🔑",
+    "vibe": "Practical and transparent"
+  },
+  "template": {
+    "slug": "privy-wallet-agent",
+    "category": "wallet",
+    "authorName": "Privy",
+    "authorUrl": "https://privy.io",
+    "authorLogoUrl": "https://privy.io/logo.png",
+    "tags": ["wallet", "ethereum", "solana", "transactions", "web3"]
+  },
+  "scripts": {
+    "start": "pnpm dlx @privy-io/agent-wallet-cli login --non-interactive"
+  },
+  "secrets": [
+    {
+      "name": "PRIVY_SESSION",
+      "description": "Privy agent wallet session credentials from agents.privy.io",
+      "required": true
+    }
+  ],
+  "routes": [
+    { "path": "/dashboard", "port": 3000, "protected": false }
+  ]
+}
