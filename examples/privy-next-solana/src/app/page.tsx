@@ -26,14 +26,14 @@ function Home() {
     <div
       className={`${
         authenticated
-          ? "bg-[#E0E7FF66] md:max-h-[100vh] md:overflow-hidden"
+          ? "bg-[#E0E7FF66] md:max-h-screen md:overflow-hidden"
           : "bg-transparent h-screen overflow-hidden"
       }`}
     >
       <Header authenticated={authenticated} />
       {authenticated ? (
-        <section className="w-full flex flex-col md:flex-row h-screen pt-[60px]">
-          <div className="flex-grow overflow-y-auto h-full p-4 pl-8">
+        <section className="w-full flex flex-col md:flex-row md:h-screen pt-[60px]">
+          <div className="grow md:overflow-y-auto md:h-full p-4 pl-8 pb-4">
             <button className="button" onClick={logout}>
               <ArrowLeftIcon className="h-4 w-4" strokeWidth={2} /> Logout
             </button>
@@ -48,7 +48,9 @@ function Home() {
               <MFA />
             </div>
           </div>
-          <UserObject />
+          <div className="md:shrink-0 md:overflow-y-auto md:h-full">
+            <UserObject />
+          </div>
         </section>
       ) : (
         <section className="w-full flex flex-row justify-center items-center h-screen relative">
@@ -61,7 +63,7 @@ function Home() {
           />
           <div className="z-10 flex flex-col items-center justify-center w-full h-full">
             <div className="flex h-10 items-center justify-center rounded-[20px] border border-white px-6 text-lg text-white font-abc-favorit">
-              Solana Demo
+                  Solana Demo
             </div>
             <div className="text-center mt-4 text-white text-7xl font-medium font-abc-favorit leading-[81.60px]">
               Starter repo
