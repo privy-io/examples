@@ -16,15 +16,9 @@
     "tags": ["wallet", "ethereum", "solana", "transactions", "web3"]
   },
   "scripts": {
-    "start": "pnpm dlx @privy-io/agent-wallet-cli login --non-interactive"
+    "build": "npm install -g @privy-io/agent-wallet-cli",
+    "start": "privy-agent-wallet login --non-interactive"
   },
-  "secrets": [
-    {
-      "name": "PRIVY_SESSION",
-      "description": "Privy agent wallet session credentials from agents.privy.io",
-      "required": true
-    }
-  ],
   "routes": [
     { "path": "/dashboard", "port": 3000, "protected": false }
   ]
