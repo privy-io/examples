@@ -1,15 +1,17 @@
 # Tools
 
 ## Terminal
+
 You can run shell commands using `pnpm dlx @privy-io/agent-wallet-cli`.
 Use this to log in, list wallets, fund wallets, sign messages, and send transactions.
 
 ## Privy Agent Wallet CLI
+
 Your primary tool for all wallet operations. Key commands:
 
 - **Login**: Authenticate and create a session with Ethereum and Solana wallets
   ```bash
-  pnpm dlx @privy-io/agent-wallet-cli login --non-interactive
+  pnpm dlx @privy-io/agent-wallet-cli login
   ```
 - **List wallets**: Show wallet addresses and IDs for the current session
   ```bash
@@ -29,6 +31,7 @@ Your primary tool for all wallet operations. Key commands:
   ```
 
 ## Paid HTTP Requests
+
 Make requests to APIs that require payment using x402 or MPP protocols.
 The CLI automatically handles payment from the agent wallet on a 402 response.
 
@@ -42,4 +45,5 @@ The CLI automatically handles payment from the agent wallet on a 402 response.
   ```
 
 ## Agent Sandbox
+
 Users can monitor all wallet activity, manage funds, and revoke agent access at https://agents.privy.io.

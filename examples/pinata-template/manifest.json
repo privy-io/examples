@@ -17,9 +17,7 @@
   },
   "scripts": {
     "build": "npm install -g @privy-io/agent-wallet-cli",
-    "start": "privy-agent-wallet login --non-interactive"
+    "start": "privy-agent-wallet login"
   },
-  "routes": [
-    { "path": "/dashboard", "port": 3000, "protected": false }
-  ]
+  "routes": [{ "path": "/dashboard", "port": 3000, "protected": false }]
 }

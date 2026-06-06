@@ -13,8 +13,8 @@ Ethereum and Solana via the Privy Agent CLI.
 ## Setup
 
 1. Deploy this template
-2. Run `pnpm dlx @privy-io/agent-wallet-cli login --non-interactive`
-3. Complete browser authentication and paste the credentials blob back to the agent
+2. Run `pnpm dlx @privy-io/agent-wallet-cli login`
+3. Complete the browser authentication flow
 4. Fund your wallet by running `pnpm dlx @privy-io/agent-wallet-cli fund`
 
 ## Commands
