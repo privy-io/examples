@@ -318,7 +318,7 @@ export class MFA {
 
     return createSection({
       name: 'MFA Enrollment',
-      description: `Enroll in MFA to enhance security. Privy supports TOTP, SMS, and Passkey MFA methods. Once enrolled, you can use MFA to perform sensitive wallet actions. ${mfaStatus}`,
+      description: `Enroll in MFA to enhance security. Privy supports TOTP, SMS, and Passkey MFA methods. Once enrolled, you can use MFA to perform sensitive wallet operations (signing, transactions). ${mfaStatus}`,
       filepath: 'src/sections/mfa.js',
       actions
     });
