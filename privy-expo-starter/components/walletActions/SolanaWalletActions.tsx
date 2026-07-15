@@ -96,7 +96,7 @@ export default function SolanaWalletActions() {
   };
   return (
     <View>
-      <Text>Solana Wallet Actions</Text>
+      <Text>Solana Signing & Transactions</Text>
       <Button title="Sign Message" onPress={signMessage} />
       <Button title="Sign Transaction" onPress={signTransaction} />
       <Button

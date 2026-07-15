@@ -56,7 +56,7 @@ export default function EVMWalletActions() {
   };
   return (
     <View>
-      <Text>EVM Wallet Actions</Text>
+      <Text>EVM Signing & Transactions</Text>
       <Button title="Sign Message" onPress={signMessage} />
       <Button title="Sign Transaction" onPress={signTransaction} />
       <Button

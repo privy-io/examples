@@ -395,9 +395,9 @@ const WalletActions = () => {
 
   return (
     <Section
-      name="Wallet actions"
+      name="Signing & transactions"
       description={
-        "Sign messages, typed data, raw hashes, and transactions, send transactions for both EVM and Solana wallets. Seamless experience with Privy embedded wallets."
+        "Low-level signing and transaction operations for EVM and Solana wallets. For high-level wallet actions (transfers, swaps, DeFi), see the Privy wallet actions API docs."
       }
       filepath="src/components/sections/wallet-actions"
       actions={availableActions}

@@ -53,7 +53,7 @@ const getPhantomProvider = () => {
 };
 
 /**
- * Wallet Actions Section
+ * Signing & Transactions Section
  */
 export class WalletActions {
   constructor(privyClient, user) {
@@ -110,8 +110,8 @@ export class WalletActions {
     
     // Now create section with actions based on selected wallet
     const section = createSection({
-      name: 'Wallet actions',
-      description: 'Sign messages, typed data, and transactions for both EVM and Solana wallets. MFA verification is automatically triggered when the token expires (~15 mins).',
+      name: 'Signing & transactions',
+      description: 'Low-level signing and transaction operations for EVM and Solana wallets. For high-level wallet actions (transfers, swaps, DeFi), see the Privy wallet actions API docs.',
       filepath: 'src/sections/wallet-actions.js',
       actions: this.getActions()
     });

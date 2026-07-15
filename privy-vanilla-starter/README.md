@@ -399,7 +399,7 @@ The MFA verification flow:
 - **TOTP**: Use authenticator apps (Google Authenticator, Authy, etc.)
 - **Passkey**: Use device biometrics (must link passkey first)
 
-**MFA for Wallet Actions:**
+**MFA for Signing & Transactions:**
 Once MFA is enrolled, sensitive wallet operations (signing, transactions) automatically trigger MFA verification when the MFA token expires (~15 minutes by default). The same `mfaRequired` event listener pattern is used to handle verification seamlessly in the background.
 
 ### 7. Create Embedded Wallets

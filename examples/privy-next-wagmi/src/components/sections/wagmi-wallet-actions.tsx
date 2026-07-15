@@ -175,7 +175,7 @@ const WalletActions = () => {
 
   return (
     <Section
-      name="Wagmi wallet actions"
+      name="Wagmi signing & transactions"
       description={
         "Using Wagmi, we can sign messages, typed data, and send transactions creating a seamless experience across Privy embedded wallets and externally connected wallets."
       }
