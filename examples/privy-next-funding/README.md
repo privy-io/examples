@@ -87,17 +87,40 @@ const { createWallet } = useCreateWallet();
 createWallet({ createAdditional: true });
 ```
 
-### 3. Fund Your Wallet
+### 3. Add Funds
 
-Fund your wallet using a card, exchange, or external wallet. Privy has bridging integration out of the box powered by Relay.
+Add funds using fiat onramps or an external crypto wallet. Privy has bridging integration out of the box powered by Relay.
 
 [`lib/privy/FundingButton.tsx`](./lib/privy/FundingButton.tsx)
 
 ```tsx
-import { useFundWallet, useWallets } from "@privy-io/react-auth";
+import {
+  useDepositAddress,
+  useFiatOnramp,
+  useWallets,
+} from "@privy-io/react-auth";
+
 const { wallets } = useWallets();
-const { fundWallet } = useFundWallet();
-fundWallet(wallets[0].address, { asset: "USDC", amount: "15" });
+const { fund } = useFiatOnramp();
+const { createDepositAddress } = useDepositAddress();
+
+const destination = {
+  address: wallets[0].address,
+  chain: "eip155:8453" as const,
+  asset: "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+};
+
+fund({
+  source: {},
+  destination,
+  defaultAmount: "15",
+});
+
+createDepositAddress({
+  destinationChain: destination.chain,
+  destinationCurrency: destination.asset,
+  destinationAddress: destination.address,
+});
 ```
 
 ## Relevant Links
