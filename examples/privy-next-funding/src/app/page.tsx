@@ -7,9 +7,9 @@ import { ToastContainer } from "react-toastify";
 import { FullScreenLoader } from "@/components/ui/fullscreen-loader";
 import { Header } from "@/components/ui/header";
 import CreateAWallet from "@/components/sections/create-a-wallet";
+import FundWallet from "@/components/sections/fund-wallet";
 import UserObject from "@/components/sections/user-object";
 import { ArrowLeftIcon } from "@heroicons/react/16/solid";
-import FundWallet from "@/components/sections/fund-wallet";
 // import LinkAccounts from "@/components/sections/link-accounts";
 // import UnlinkAccounts from "@/components/sections/unlink-accounts";
 // import WalletActions from "@/components/sections/wallet-actions";
@@ -30,7 +30,7 @@ function Home() {
         <section className="w-full flex flex-col md:flex-row md:h-[calc(100vh-60px)]">
           <div className="flex-grow overflow-y-auto h-full p-4 pl-8">
             <button className="button" onClick={logout}>
-              <ArrowLeftIcon className="h-4 w-4" strokeWidth={2} /> Logout
+              <ArrowLeftIcon className="h-4 w-4" strokeWidth={2} /> Log out
             </button>
 
             <div>
@@ -72,7 +72,7 @@ function Home() {
                 setTimeout(() => {
                   (
                     document.querySelector(
-                      'input[type="email"]'
+                      'input[type="email"]',
                     ) as HTMLInputElement
                   )?.focus();
                 }, 150);
