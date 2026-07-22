@@ -1,183 +1,213 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
-  useFundWallet as useFundWalletEvm,
-  useWallets as useWalletsEvm,
-  FundWalletConfig,
+  useAddFunds,
+  useDepositAddress as useDepositAddressModal,
+  useFiatOnramp,
+  useWallets as useEthereumWallets,
 } from "@privy-io/react-auth";
-import { useFundWallet as useFundWalletSolana, useWallets as useWalletsSolana, type SolanaFundingConfig } from "@privy-io/react-auth/solana";
-import Section from "../reusables/section";
-import { showErrorToast } from "../ui/custom-toast";
+import { useWallets as useSolanaWallets } from "@privy-io/react-auth/solana";
 
-type WalletInfo = {
-  address: string;
-  type: "ethereum" | "solana";
-  name: string;
+import Section from "../reusables/section";
+
+type FlowKey = "add-funds" | "deposit-address" | "fiat-onramp";
+
+type FlowState = {
+  inProgress: FlowKey | null;
+  error: string | null;
+  message: string | null;
 };
 
+type WalletChainType = "ethereum" | "solana";
+
+type FundingWallet = {
+  address: string;
+  chainType: WalletChainType;
+};
+
+type FundingDestination = {
+  address: string;
+  chain: `${string}:${string}`;
+  asset: string;
+};
+
+const BASE_CHAIN = "eip155:8453" as const;
+const BASE_USDC_ADDRESS = "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913";
+const SOLANA_CHAIN = "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp" as const;
+const SOLANA_USDC_ADDRESS = "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v";
+
+const DEFAULT_USDC_DESTINATIONS = {
+  ethereum: {
+    chain: BASE_CHAIN,
+    asset: BASE_USDC_ADDRESS,
+  },
+  solana: {
+    chain: SOLANA_CHAIN,
+    asset: SOLANA_USDC_ADDRESS,
+  },
+} satisfies Record<WalletChainType, Omit<FundingDestination, "address">>;
+
+const getWalletId = (wallet: FundingWallet) =>
+  `${wallet.chainType}:${wallet.address}`;
+
+const FLOW_LABELS: Record<FlowKey, string> = {
+  "add-funds": "Unified funding",
+  "deposit-address": "Deposit address",
+  "fiat-onramp": "Fiat onramp",
+};
+
+const getErrorMessage = (error: unknown) =>
+  error instanceof Error
+    ? error.message
+    : "Action could not be completed. Check the dashboard configuration and try again";
+
 const FundWallet = () => {
-  const { wallets: walletsEvm } = useWalletsEvm();
-  const { wallets: walletsSolana } = useWalletsSolana();
-  const { fundWallet: fundWalletEvm } = useFundWalletEvm();
-  const { fundWallet: fundWalletSolana } = useFundWalletSolana();
+  const { wallets: ethereumWallets } = useEthereumWallets();
+  const { wallets: solanaWallets } = useSolanaWallets();
+  const { addFunds } = useAddFunds();
+  const { createDepositAddress } = useDepositAddressModal();
+  const { fund: fundWithFiat } = useFiatOnramp();
 
-  const allWallets = useMemo((): WalletInfo[] => {
-    const evmWallets: WalletInfo[] = walletsEvm.map((wallet) => ({
-      address: wallet.address,
-      type: "ethereum" as const,
-      name: wallet.address,
-    }));
+  const wallets = useMemo<FundingWallet[]>(
+    () => [
+      ...ethereumWallets.map((wallet) => ({
+        address: wallet.address,
+        chainType: "ethereum" as const,
+      })),
+      ...solanaWallets.map((wallet) => ({
+        address: wallet.address,
+        chainType: "solana" as const,
+      })),
+    ],
+    [ethereumWallets, solanaWallets],
+  );
 
-    const solanaWallets: WalletInfo[] = walletsSolana.map((wallet) => ({
-      address: wallet.address,
-      type: "solana" as const,
-      name: wallet.address,
-    }));
+  const [selectedWalletId, setSelectedWalletId] = useState("");
+  const [state, setState] = useState<FlowState>({
+    inProgress: null,
+    error: null,
+    message: null,
+  });
 
-    return [...evmWallets, ...solanaWallets];
-  }, [walletsEvm, walletsSolana]);
-
-  const [selectedWallet, setSelectedWallet] = useState<WalletInfo | null>(null);
+  const selectedWallet = useMemo(
+    () => wallets.find((wallet) => getWalletId(wallet) === selectedWalletId),
+    [selectedWalletId, wallets],
+  );
 
   useEffect(() => {
-    if (allWallets.length > 0 && !selectedWallet) {
-      setSelectedWallet(allWallets[0]);
+    if (!selectedWalletId && wallets[0]) {
+      setSelectedWalletId(getWalletId(wallets[0]));
+      return;
     }
-  }, [allWallets, selectedWallet]);
 
-  const isEvmWallet = selectedWallet?.type === "ethereum";
-  const isSolanaWallet = selectedWallet?.type === "solana";
-  const fundWalletEvmHandler = (config?: FundWalletConfig) => {
-    if (!isEvmWallet || !selectedWallet) {
-      showErrorToast("Please select an Ethereum wallet");
-      return;
+    if (
+      selectedWalletId &&
+      wallets.every((wallet) => getWalletId(wallet) !== selectedWalletId)
+    ) {
+      setSelectedWalletId(wallets[0] ? getWalletId(wallets[0]) : "");
     }
+  }, [selectedWalletId, wallets]);
+
+  const runFlow = async (
+    flow: FlowKey,
+    action: (wallet: NonNullable<typeof selectedWallet>) => Promise<void>,
+  ) => {
+    setState({ inProgress: flow, error: null, message: null });
+
     try {
-      fundWalletEvm({
-        address: selectedWallet.address,
-        options: {
-          amount: "1",
-          ...(config || { asset: "native-currency" }),
-        },
+      if (!selectedWallet) {
+        throw new Error("Create or select a wallet before funding");
+      }
+
+      const wallet = selectedWallet;
+      await action(wallet);
+      setState({
+        inProgress: null,
+        error: null,
+        message: `${FLOW_LABELS[flow]} flow completed`,
       });
     } catch (error) {
-      console.log(error);
-      showErrorToast("Failed to fund wallet. Please try again.");
-    }
-  };
-  const fundWalletSolanaHandler = (config?: SolanaFundingConfig) => {
-    if (!isSolanaWallet || !selectedWallet) {
-      showErrorToast("Please select a Solana wallet");
-      return;
-    }
-    try {
-      fundWalletSolana({
-        address: selectedWallet.address,
-        options: {
-          amount: "1",
-          ...(config || { asset: "native-currency" }),
-        },
+      setState({
+        inProgress: null,
+        error: getErrorMessage(error),
+        message: null,
       });
-    } catch (error) {
-      console.log(error);
-      showErrorToast("Failed to fund wallet. Please try again.");
     }
   };
+
+  const getFundingDestination = (
+    wallet: FundingWallet,
+  ): FundingDestination => ({
+    address: wallet.address,
+    ...DEFAULT_USDC_DESTINATIONS[wallet.chainType],
+  });
+
+  const isBusy = Boolean(state.inProgress);
 
   const availableActions = [
     {
-      name: "Fund ETH",
-      function: fundWalletEvmHandler,
-      disabled: !isEvmWallet,
-    },
-    {
-      name: "Fund USDC (EVM)",
+      name:
+        state.inProgress === "add-funds"
+          ? "Opening unified funding"
+          : "Open unified funding",
       function: () => {
-        fundWalletEvmHandler({ asset: "USDC", amount: "1" });
+        void runFlow("add-funds", async (wallet) => {
+          await addFunds({
+            destination: getFundingDestination(wallet),
+            fiat: {
+              source: { assets: ["usd"], defaultAsset: "usd" },
+              defaultAmount: "25",
+              environment: "production",
+            },
+            crypto: {},
+          });
+        });
       },
-      disabled: !isEvmWallet,
+      disabled: isBusy || !selectedWallet,
     },
     {
-      name: "Fund SOL",
-      function: fundWalletSolanaHandler,
-      disabled: !isSolanaWallet,
-    },
-    {
-      name: "Fund USDC (Solana)",
+      name:
+        state.inProgress === "deposit-address"
+          ? "Opening deposit address"
+          : "Open deposit address",
       function: () => {
-        fundWalletSolanaHandler({ asset: "USDC", amount: "1" });
+        void runFlow("deposit-address", async (wallet) => {
+          const destination = getFundingDestination(wallet);
+
+          await createDepositAddress({
+            destinationChain: destination.chain,
+            destinationCurrency: destination.asset,
+            destinationAddress: destination.address,
+          });
+        });
       },
-      disabled: !isSolanaWallet,
+      disabled: isBusy || !selectedWallet,
     },
     {
-      name: "Fund 15 USDC via card",
+      name:
+        state.inProgress === "fiat-onramp"
+          ? "Opening fiat onramp"
+          : "Open fiat onramp",
       function: () => {
-        if (isEvmWallet) {
-          fundWalletEvmHandler({
-            asset: "USDC",
-            amount: "15",
-            defaultFundingMethod: "card",
+        void runFlow("fiat-onramp", async (wallet) => {
+          await fundWithFiat({
+            source: { assets: ["usd"], defaultAsset: "usd" },
+            destination: getFundingDestination(wallet),
+            defaultAmount: "25",
+            environment: "production",
           });
-        } else if (isSolanaWallet) {
-          fundWalletSolanaHandler({
-            asset: "USDC",
-            amount: "15",
-            defaultFundingMethod: "card",
-          });
-        } else {
-          showErrorToast("Please select a wallet");
-        }
+        });
       },
-    },
-    {
-      name: "Fund 15 USDC via wallet",
-      function: () => {
-        if (isEvmWallet) {
-          fundWalletEvmHandler({
-            asset: "USDC",
-            amount: "15",
-            defaultFundingMethod: "wallet",
-          });
-        } else if (isSolanaWallet) {
-          fundWalletSolanaHandler({
-            asset: "USDC",
-            amount: "15",
-            defaultFundingMethod: "wallet",
-          });
-        } else {
-          showErrorToast("Please select a wallet");
-        }
-      },
-    },
-    {
-      name: "Fund 15 USDC via exchange",
-      function: () => {
-        if (isEvmWallet) {
-          fundWalletEvmHandler({
-            asset: "USDC",
-            amount: "15",
-            defaultFundingMethod: "exchange",
-          });
-        } else if (isSolanaWallet) {
-          fundWalletSolanaHandler({
-            asset: "USDC",
-            amount: "15",
-            defaultFundingMethod: "exchange",
-          });
-        } else {
-          showErrorToast("Please select a wallet");
-        }
-      },
+      disabled: isBusy || !selectedWallet,
     },
   ];
+
   return (
     <Section
       name="Fund wallet"
-      description={
-        "Fund wallet using a card, exchange, or external wallet. Privy has bridging integration out of the box powered by Relay reservoir."
-      }
-      filepath="src/components/sections/fund-wallet"
+      description="Fund a selected Ethereum or Solana wallet with Privy's modern funding flows."
+      filepath="src/components/sections/fund-wallet.tsx"
       actions={availableActions}
     >
       <div className="mb-4">
@@ -190,24 +220,18 @@ const FundWallet = () => {
         <div className="relative">
           <select
             id="fund-wallet-select"
-            value={selectedWallet?.address || ""}
-            onChange={(e) => {
-              const wallet = allWallets.find(
-                (w) => w.address === e.target.value,
-              );
-              setSelectedWallet(wallet || null);
-            }}
+            value={selectedWalletId}
+            onChange={(event) => setSelectedWalletId(event.target.value)}
             className="w-full pl-3 pr-8 py-2 border border-[#E2E3F0] rounded-md bg-white text-black focus:outline-none focus:ring-1 focus:ring-black appearance-none"
           >
-            {allWallets.length === 0 ? (
+            {wallets.length === 0 ? (
               <option value="">No wallets available</option>
             ) : (
               <>
                 <option value="">Select a wallet</option>
-                {allWallets.map((wallet) => (
-                  <option key={wallet.address} value={wallet.address}>
-                    {wallet.address} [
-                    {wallet.type === "ethereum" ? "ethereum" : "solana"}]
+                {wallets.map((wallet) => (
+                  <option key={getWalletId(wallet)} value={getWalletId(wallet)}>
+                    {wallet.address} [{wallet.chainType}]
                   </option>
                 ))}
               </>
@@ -229,6 +253,20 @@ const FundWallet = () => {
             </svg>
           </div>
         </div>
+        {state.inProgress ? (
+          <p className="mt-2 text-sm font-light text-[#4B4B5A]">
+            {FLOW_LABELS[state.inProgress]} is in progress. Complete or close
+            the Privy modal to continue.
+          </p>
+        ) : null}
+        {state.error ? (
+          <p className="mt-2 text-sm font-light text-red-700">{state.error}</p>
+        ) : null}
+        {state.message ? (
+          <p className="mt-2 text-sm font-light text-green-700">
+            {state.message}
+          </p>
+        ) : null}
       </div>
     </Section>
   );

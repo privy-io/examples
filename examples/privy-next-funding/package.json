@@ -10,11 +10,12 @@
   },
   "dependencies": {
     "@heroicons/react": "^2.2.0",
-    "@privy-io/react-auth": "^3.12.0",
+    "@privy-io/react-auth": "^3.35.1",
     "@solana-program/memo": "^0.8.0",
     "@solana-program/system": "0.8.0",
     "@solana-program/token": "0.6.0",
     "@solana/kit": "3.0.3",
+    "@stripe/crypto": "^1.1.2",
     "bs58": "^6.0.0",
     "next": "15.5.7",
     "react": "19.1.0",
