@@ -1,6 +1,6 @@
 # Funding onramps with Privy
 
-This Next.js example shows a single-page funding demo with Privy React SDK modals. It covers login, automatic embedded-wallet creation, manual wallet creation, unified Add funds, crypto deposit addresses, and direct fiat onramp funding for Ethereum and Solana wallets.
+This Next.js example shows a single-page funding demo with Privy React SDK modals. It covers login, automatic embedded-wallet creation, manual wallet creation, unified Add funds, crypto deposit addresses, direct fiat onramp funding, and sandbox Bridge bank deposits for Ethereum and Solana wallets.
 
 ## Live demo
 
@@ -11,7 +11,7 @@ This Next.js example shows a single-page funding demo with Privy React SDK modal
 - [`src/app/page.tsx`](./src/app/page.tsx): Login state, page layout, active sections, and `UserObject`
 - [`src/providers/providers.tsx`](./src/providers/providers.tsx): Privy provider configuration that creates Ethereum and Solana embedded wallets on login for users without wallets
 - [`src/components/sections/create-a-wallet.tsx`](./src/components/sections/create-a-wallet.tsx): Manual embedded-wallet creation examples
-- [`src/components/sections/fund-wallet.tsx`](./src/components/sections/fund-wallet.tsx): Modern funding hooks for Base USDC and Solana USDC funding, deposit addresses, and direct fiat onramp funding
+- [`src/components/sections/fund-wallet.tsx`](./src/components/sections/fund-wallet.tsx): Modern funding hooks for Base USDC and Solana USDC funding, deposit addresses, direct fiat onramp funding, and sandbox Bridge bank deposits
 - [`src/components/sections/user-object.tsx`](./src/components/sections/user-object.tsx): Authenticated user object for learning and debugging
 
 ## Quick start
@@ -58,6 +58,7 @@ In the [Privy dashboard](https://dashboard.privy.io), configure the app used by 
 - Enable the funding methods you want surfaced in the unified `useAddFunds` modal.
 - Configure deposit-address support for the USDC routes you want to test. The example hardcodes Base USDC for Ethereum wallets and Solana USDC for Solana wallets.
 - Configure a production fiat onramp provider for the direct `useFiatOnramp` action and the same destination routes.
+- Configure Bridge sandbox bank deposits on the Account Funding page for the `useFundWalletWithBankDeposit` action. The example requests sandbox virtual account deposit instructions for USDC on Base for Ethereum wallets and USDC on Solana for Solana wallets.
 
 ### 5. Start the development server
 
@@ -75,7 +76,8 @@ Open [http://localhost:3000](http://localhost:3000) in a browser.
 4. Open unified funding. The example calls `useAddFunds().addFunds()` with a Base USDC or Solana USDC destination based on the selected wallet and lets the SDK modal present configured fiat and crypto options.
 5. Open deposit address. The example calls `useDepositAddress().createDepositAddress()` with the selected wallet address and matching USDC destination.
 6. Open fiat onramp. The example calls `useFiatOnramp().fund()` for a production fiat-to-USDC flow to the selected wallet's network.
-7. Use the `UserObject` panel to inspect the authenticated user and wallet state while learning.
+7. Open bank deposit. The example calls `useFundWalletWithBankDeposit().fund()` with `provider: "bridge-sandbox"` and shows Bridge KYC plus virtual account deposit instructions.
+8. Use the `UserObject` panel to inspect the authenticated user and wallet state while learning.
 
 Each action requires a selected wallet and displays in-progress or error state in the page.
 
@@ -85,6 +87,13 @@ Each action requires a selected wallet and displays in-progress or error state i
 - [Automatic wallet creation](https://docs.privy.io/basics/react/advanced/automatic-wallet-creation)
 - [Add funds](https://docs.privy.io/wallets/funding/add-funds)
 - [Crypto deposit addresses](https://docs.privy.io/wallets/funding/crypto-deposit-addresses)
+- [Bank deposits](https://docs.privy.io/wallets/funding/bank-deposits)
+
+## Sandbox bank deposit note
+
+The bank deposit action uses `provider: "bridge-sandbox"`. Bridge sandbox is for testing only: it returns sandbox deposit instructions and does not move real fiat or crypto. Configure a Bridge sandbox API key and bank transfer funding in the Privy dashboard before testing this action.
+
+The first sandbox bank deposit run creates a Bridge sandbox customer for the logged-in email user, opens Bridge KYC, then requests sandbox virtual account instructions.
 
 ## Production fiat onramp warning
 

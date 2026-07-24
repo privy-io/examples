@@ -5,13 +5,14 @@ import {
   useAddFunds,
   useDepositAddress as useDepositAddressModal,
   useFiatOnramp,
+  useFundWalletWithBankDeposit,
   useWallets as useEthereumWallets,
 } from "@privy-io/react-auth";
 import { useWallets as useSolanaWallets } from "@privy-io/react-auth/solana";
 
 import Section from "../reusables/section";
 
-type FlowKey = "add-funds" | "deposit-address" | "fiat-onramp";
+type FlowKey = "add-funds" | "deposit-address" | "fiat-onramp" | "bank-deposit";
 
 type FlowState = {
   inProgress: FlowKey | null;
@@ -32,10 +33,15 @@ type FundingDestination = {
   asset: string;
 };
 
+type BankDepositDestination = FundingDestination & {
+  asset: "usdc";
+};
+
 const BASE_CHAIN = "eip155:8453" as const;
 const BASE_USDC_ADDRESS = "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913";
 const SOLANA_CHAIN = "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp" as const;
 const SOLANA_USDC_ADDRESS = "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v";
+const SOLANA_BANK_DEPOSIT_CHAIN = "solana:mainnet" as const;
 
 const DEFAULT_USDC_DESTINATIONS = {
   ethereum: {
@@ -48,6 +54,17 @@ const DEFAULT_USDC_DESTINATIONS = {
   },
 } satisfies Record<WalletChainType, Omit<FundingDestination, "address">>;
 
+const BANK_DEPOSIT_DESTINATIONS = {
+  ethereum: {
+    chain: BASE_CHAIN,
+    asset: "usdc",
+  },
+  solana: {
+    chain: SOLANA_BANK_DEPOSIT_CHAIN,
+    asset: "usdc",
+  },
+} satisfies Record<WalletChainType, Omit<BankDepositDestination, "address">>;
+
 const getWalletId = (wallet: FundingWallet) =>
   `${wallet.chainType}:${wallet.address}`;
 
@@ -55,6 +72,7 @@ const FLOW_LABELS: Record<FlowKey, string> = {
   "add-funds": "Unified funding",
   "deposit-address": "Deposit address",
   "fiat-onramp": "Fiat onramp",
+  "bank-deposit": "Bank deposit",
 };
 
 const getErrorMessage = (error: unknown) =>
@@ -68,6 +86,7 @@ const FundWallet = () => {
   const { addFunds } = useAddFunds();
   const { createDepositAddress } = useDepositAddressModal();
   const { fund: fundWithFiat } = useFiatOnramp();
+  const { fund: fundWithBankDeposit } = useFundWalletWithBankDeposit();
 
   const wallets = useMemo<FundingWallet[]>(
     () => [
@@ -143,6 +162,13 @@ const FundWallet = () => {
     ...DEFAULT_USDC_DESTINATIONS[wallet.chainType],
   });
 
+  const getBankDepositDestination = (
+    wallet: FundingWallet,
+  ): BankDepositDestination => ({
+    address: wallet.address,
+    ...BANK_DEPOSIT_DESTINATIONS[wallet.chainType],
+  });
+
   const isBusy = Boolean(state.inProgress);
 
   const availableActions = [
@@ -201,12 +227,28 @@ const FundWallet = () => {
       },
       disabled: isBusy || !selectedWallet,
     },
+    {
+      name:
+        state.inProgress === "bank-deposit"
+          ? "Opening bank deposit"
+          : "Open bank deposit",
+      function: () => {
+        void runFlow("bank-deposit", async (wallet) => {
+          await fundWithBankDeposit({
+            source: { assets: ["usd", "eur", "gbp"], defaultAsset: "usd" },
+            destination: getBankDepositDestination(wallet),
+            provider: "bridge-sandbox",
+          });
+        });
+      },
+      disabled: isBusy || !selectedWallet,
+    },
   ];
 
   return (
     <Section
       name="Fund wallet"
-      description="Fund a selected Ethereum or Solana wallet with Privy's modern funding flows."
+      description="Explore funding flows for a selected Ethereum or Solana wallet, including sandbox bank deposit instructions."
       filepath="src/components/sections/fund-wallet.tsx"
       actions={availableActions}
     >
