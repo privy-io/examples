@@ -97,14 +97,14 @@ export default function PolicyStep() {
     }
   };
 
-  const currentLimit = useCustom 
+  const currentLimit = useCustom
     ? Math.round(parseFloat(customLimit) * 100) || 0
     : selectedLimit;
 
   if (!agent) {
     return (
       <div className="flex min-h-screen items-center justify-center">
-        <div className="h-8 w-8 animate-spin rounded-full border-4 border-slate-200 border-t-violet-500" />
+        <div className="h-8 w-8 animate-spin rounded-full border-4 border-[#E2E3F0] border-t-[#5B4FFF]" />
       </div>
     );
   }
@@ -112,7 +112,7 @@ export default function PolicyStep() {
   return (
     <div className="min-h-screen">
       {/* Header */}
-      <header className="border-b border-slate-200 bg-white/80 backdrop-blur-sm">
+      <header className="border-b border-[#E2E3F0] bg-white">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
           <Logo className="text-slate-900" />
           <div className="flex items-center gap-4">
@@ -120,7 +120,7 @@ export default function PolicyStep() {
               href="https://docs.privy.io"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-sm text-slate-600 hover:text-slate-900"
+              className="text-sm text-[#5B4FFF]"
             >
               Docs
             </a>
@@ -128,7 +128,7 @@ export default function PolicyStep() {
               href="https://docs.privy.io/recipes/x402"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-sm text-slate-600 hover:text-slate-900"
+              className="text-sm text-[#5B4FFF]"
             >
               x402 →
             </a>
@@ -141,7 +141,7 @@ export default function PolicyStep() {
         <StepIndicator currentStep={3} steps={WIZARD_STEPS} />
 
         <div className="text-center">
-          <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-violet-500">
+          <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-[#5B4FFF]">
             <svg
               className="h-8 w-8 text-white"
               fill="none"
@@ -201,7 +201,7 @@ export default function PolicyStep() {
           <label className="mb-4 block text-sm font-medium text-slate-700">
             Maximum spending per transaction
           </label>
-          
+
           <div className="grid grid-cols-2 gap-4">
             {SPENDING_LIMITS.map((limit) => (
               <button
@@ -212,12 +212,12 @@ export default function PolicyStep() {
                 }}
                 className={`relative rounded-2xl border-2 p-5 text-left transition-all ${
                   !useCustom && selectedLimit === limit.cents
-                    ? 'border-violet-500 bg-violet-50 shadow-lg'
-                    : 'border-slate-200 bg-white hover:border-slate-300 hover:shadow-md'
+                    ? 'border-[#5B4FFF] bg-[#E0E7FF] shadow-lg'
+                    : 'border-[#E2E3F0] bg-white hover:border-gray-300 hover:shadow-md'
                 }`}
               >
                 {limit.description === 'Recommended' && (
-                  <div className="absolute -top-3 right-4 rounded-full bg-violet-500 px-3 py-1 text-xs font-semibold text-white">
+                  <div className="absolute -top-3 right-4 rounded-full bg-[#5B4FFF] px-3 py-1 text-xs font-semibold text-white">
                     Default
                   </div>
                 )}
@@ -233,8 +233,8 @@ export default function PolicyStep() {
               onClick={() => setUseCustom(!useCustom)}
               className={`w-full rounded-2xl border-2 p-5 text-left transition-all ${
                 useCustom
-                  ? 'border-violet-500 bg-violet-50 shadow-lg'
-                  : 'border-slate-200 bg-white hover:border-slate-300'
+                  ? 'border-[#5B4FFF] bg-[#E0E7FF] shadow-lg'
+                  : 'border-[#E2E3F0] bg-white hover:border-gray-300'
               }`}
             >
               <div className="flex items-center justify-between">
@@ -259,7 +259,7 @@ export default function PolicyStep() {
             </button>
 
             {useCustom && (
-              <div className="mt-4 rounded-xl border border-slate-200 bg-white p-4">
+              <div className="mt-4 rounded-xl border border-[#E2E3F0] bg-white p-4">
                 <label className="block text-sm font-medium text-slate-700">
                   Enter amount in USD
                 </label>
@@ -274,7 +274,7 @@ export default function PolicyStep() {
                     placeholder="0.00"
                     min="0.01"
                     step="0.01"
-                    className="w-full rounded-xl border border-slate-200 py-3 pl-8 pr-4 text-lg focus:border-violet-500 focus:outline-none focus:ring-2 focus:ring-violet-500/20"
+                    className="w-full rounded-xl border border-[#E2E3F0] py-3 pl-8 pr-4 text-lg focus:border-[#5B4FFF] focus:outline-none focus:ring-2 focus:ring-[#5B4FFF]/20"
                   />
                 </div>
               </div>
@@ -283,7 +283,7 @@ export default function PolicyStep() {
         </div>
 
         {/* Policy preview */}
-        <div className="mt-8 rounded-2xl border border-slate-200 bg-slate-50 p-6">
+        <div className="mt-8 rounded-2xl border border-[#E2E3F0] bg-[#F1F2F9] p-6">
           <h3 className="font-semibold text-slate-900">Policy summary</h3>
           <div className="mt-4 space-y-3">
             <div className="flex items-center gap-3 text-sm">
@@ -360,14 +360,14 @@ export default function PolicyStep() {
           <button
             onClick={() => router.push(`/agent/${agent.id}/fund`)}
             disabled={isUpdating}
-            className="flex-1 rounded-xl border border-slate-200 px-6 py-4 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
+            className="flex-1 rounded-xl border border-[#E2E3F0] px-6 py-4 text-sm font-medium text-slate-700 transition-colors hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
           >
             Back
           </button>
           <button
             onClick={handleContinue}
             disabled={currentLimit <= 0 || isUpdating}
-            className="flex-1 rounded-xl bg-offblack px-6 py-4 text-sm font-medium text-white transition-all hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-50"
+            className="flex-1 rounded-xl bg-[#5B4FFF] px-6 py-4 text-sm font-medium text-white transition-all hover:bg-[#4A3EE6] disabled:cursor-not-allowed disabled:opacity-50"
           >
             {isUpdating ? (
               <span className="flex items-center justify-center gap-2">
@@ -390,7 +390,7 @@ export default function PolicyStep() {
         <p className="mt-6 text-center text-xs text-slate-500">
           By continuing, you accept the spending policy for your agent.
           {agent.policy.privyPolicyId && (
-            <span className="block mt-1 text-violet-500">
+            <span className="block mt-1 text-[#5B4FFF]">
               Policy enforced by Privy secure enclave
             </span>
           )}

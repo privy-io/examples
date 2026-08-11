@@ -25,7 +25,7 @@ const ACTION_CONFIG: Record<
   weather: {
     title: 'Fetch weather',
     description: 'Get current weather data for your location',
-    bgClass: 'bg-slate-700',
+    bgClass: 'bg-[#5B4FFF]',
     icon: (
       <svg
         className="h-6 w-6"
@@ -45,7 +45,7 @@ const ACTION_CONFIG: Record<
   sweater: {
     title: 'Buy a sweater',
     description: 'Purchase a cozy wool sweater',
-    bgClass: 'bg-slate-500',
+    bgClass: 'bg-[#4A3EE6]',
     icon: (
       <svg
         className="h-6 w-6"
@@ -91,7 +91,7 @@ export function ActionCard({
       className={`rounded-2xl border p-6 transition-all ${
         exceedsLimit
           ? 'border-red-200 bg-red-50'
-          : 'border-slate-200 bg-white hover:border-slate-300 hover:shadow-md'
+          : 'border-[#E2E3F0] bg-white hover:border-gray-300 hover:shadow-md'
       }`}
     >
       <div className="flex items-start justify-between">
@@ -134,7 +134,7 @@ export function ActionCard({
         className={`mt-4 w-full rounded-xl px-4 py-3 text-sm font-medium transition-all ${
           exceedsLimit
             ? 'bg-red-500 text-white hover:bg-red-600'
-            : 'bg-offblack text-white hover:bg-slate-800'
+            : 'bg-[#5B4FFF] text-white hover:bg-[#4A3EE6]'
         } disabled:cursor-not-allowed disabled:opacity-50`}
       >
         {isLoading ? (
