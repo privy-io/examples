@@ -9,7 +9,7 @@ import { Modal } from "./modal";
 import { showSuccessToast, showErrorToast } from "../ui/custom-toast";
 import { findEmbeddedWallet } from "./find-embedded-wallet";
 import { simulateSpend } from "./simulate-spend";
-import { listCards } from "./cards-api";
+import { isOpen, listCards } from "./cards-api";
 
 // Loaded when the modal first opens rather than at first paint. Statically importing these puts
 // them and their transitive deps (~400kB) in the initial page bundle, which every visitor pays for
@@ -44,8 +44,21 @@ const CARD_CHAINS: Record<CardEnvironment, { id: string; label: string }> = {
   production: { id: "eip155:8453", label: "Base" },
 };
 
-/** Named in `CardSummaryView`'s footer legal disclosure as the Platform Provider. */
-const DEVELOPER_NAME = "Privy Cards Demo";
+/**
+ * Where a production card's USDC allowance goes: the mainnet USDC contract and the Bridge spender
+ * that pulls from it at spend time. `SignUpForCardView` requires this on `environment="production"`
+ * and builds it in for sandbox testnets, because Bridge does not publish its mainnet spender to the
+ * SDK. Both come from the Bridge production integration behind the app's card configuration.
+ *
+ * Read from env rather than hardcoded: the values are per-integration, and approving the wrong
+ * spender leaves a `ready` card that cannot spend. Production signup stays gated until both are set.
+ */
+const PRODUCTION_SPEND_APPROVAL = (() => {
+  const stablecoinAddress = process.env.NEXT_PUBLIC_CARD_USDC_ADDRESS;
+  const spenderAddress = process.env.NEXT_PUBLIC_CARD_SPENDER_ADDRESS;
+  if (!stablecoinAddress || !spenderAddress) return null;
+  return { stablecoinAddress, spenderAddress };
+})();
 
 /** Amount, in cents, of the simulated purchase used to put a row on the transaction list. */
 const TEST_SPEND_AMOUNT = 50;
@@ -64,6 +77,14 @@ const Cards = () => {
   const [openView, setOpenView] = useState<OpenView>(null);
   const [isSpending, setIsSpending] = useState(false);
   const [isLoadingCard, setIsLoadingCard] = useState(false);
+  // Why the card lookup failed, if it did. Kept apart from "no card yet": a failed lookup says
+  // nothing about whether a card exists, and reporting it as "no card" sends you off to sign up for
+  // one you already have.
+  const [cardLookupError, setCardLookupError] = useState<string | null>(null);
+  // How many cards the lookup found in total, open or not. Distinguishes "you have never had a card
+  // here" from "every card you have here is cancelled" — the same empty summary otherwise, and the
+  // second one is the confusing case, since the card does exist.
+  const [totalCards, setTotalCards] = useState(0);
 
   const wallet = findEmbeddedWallet(user?.linkedAccounts ?? []);
   const chain = CARD_CHAINS[environment];
@@ -80,16 +101,28 @@ const Cards = () => {
 
     let active = true;
     setIsLoadingCard(true);
+    setCardLookupError(null);
 
     void (async () => {
       try {
         const token = await getAccessToken();
         if (!token) throw new Error("No access token");
         const cards = await listCards({ environment, accessToken: token });
-        // One card per account, so the first is the card.
-        if (active) setCardId(cards[0]?.id ?? null);
-      } catch {
-        if (active) setCardId(null);
+        if (!active) return;
+        // Newest first, and cancelled cards stay in the list, so the newest open one is the live
+        // card. A replacement lands ahead of the card it closed.
+        setCardId(cards.find(isOpen)?.id ?? null);
+        setTotalCards(cards.length);
+      } catch (error) {
+        if (!active) return;
+        setCardId(null);
+        setTotalCards(0);
+        // Reported rather than swallowed. Silently treating a failed lookup as "no card yet" is how
+        // an existing card looks like a missing one.
+        setCardLookupError(
+          error instanceof Error ? error.message : "Card lookup failed",
+        );
+        console.error("Cards: card lookup failed", error);
       } finally {
         if (active) setIsLoadingCard(false);
       }
@@ -105,6 +138,14 @@ const Cards = () => {
     setCardId(readyCardId);
     showSuccessToast("Card is ready.");
     setOpenView("summary");
+  };
+
+  // A replacement closes the card the panel was opened on, so `CardSummaryView` does not adopt the
+  // new card — it shows a "card cancelled" banner and hands the new id here. Point the demo at the
+  // replacement and remount the panel on it; the `key` on the view is what forces the refetch.
+  const onReplaced = (newCardId: string) => {
+    setCardId(newCardId);
+    showSuccessToast("Card replaced. Showing the new card.");
   };
 
   // Stable so the modal's Escape listener and scroll lock are not torn down and re-applied on
@@ -154,17 +195,16 @@ const Cards = () => {
       description="Sign up for a card, then review its balance, transactions, and details."
       filepath="src/components/sections/cards"
       actions={[
-        // Hidden once a card exists. There is one card per account, so signing up again would only
-        // walk the disclosure steps and hand back the same card.
-        ...(cardId
-          ? []
-          : [
-              {
-                name: "Sign up for a card",
-                function: () => setOpenView("signup"),
-                disabled: !wallet,
-              },
-            ]),
+        // Always shown, card or no card. The flow is the point of the demo, so it stays reachable
+        // for a second look at the disclosure and KYC steps; a user who already has a card walks
+        // them again and the SDK hands back the card that exists rather than issuing another.
+        {
+          name: "Sign up for a card",
+          function: () => setOpenView("signup"),
+          // Production needs a spend-approval target; without one there is nothing to sign up into
+          // but a card that cannot spend.
+          disabled: !wallet || (!isSandbox && !PRODUCTION_SPEND_APPROVAL),
+        },
         {
           name: "View card summary",
           function: () => setOpenView("summary"),
@@ -213,12 +253,38 @@ const Cards = () => {
               className={`rounded-full px-2 py-0.5 text-[12px] ${
                 cardId
                   ? "bg-[#E8F5E9] text-[#1B5E20]"
-                  : "bg-[#E2E3F0] text-[#040217]"
+                  : cardLookupError
+                    ? "bg-[#FDECEA] text-[#7F1D1D]"
+                    : totalCards > 0
+                      ? "bg-[#FFF4E5] text-[#663C00]"
+                      : "bg-[#E2E3F0] text-[#040217]"
               }`}
             >
-              {isLoadingCard ? "Checking…" : cardId ? "Card created" : "No card yet"}
+              {isLoadingCard
+                ? "Checking…"
+                : cardId
+                  ? "Card created"
+                  : cardLookupError
+                    ? "Lookup failed"
+                    : totalCards > 0
+                      ? "Card cancelled"
+                      : "No card yet"}
             </span>
           </div>
+
+          {cardLookupError && (
+            <p className="mt-2 rounded-md bg-[#FDECEA] p-2 text-[13px] font-light break-words text-[#7F1D1D]">
+              {cardLookupError}
+            </p>
+          )}
+
+          {!cardLookupError && !cardId && totalCards > 0 && (
+            <p className="mt-2 text-[13px] font-light">
+              {totalCards === 1 ? "The card" : `All ${totalCards} cards`} on this
+              wallet {totalCards === 1 ? "has" : "have"} been cancelled, so there
+              is nothing to summarize. Sign up again for a new one.
+            </p>
+          )}
           <p className="font-light break-all">{wallet.address}</p>
 
           {isSandbox ? (
@@ -260,32 +326,57 @@ const Cards = () => {
 
       {!isSandbox && (
         <p className="mt-3 rounded-md bg-[#FFF4E5] p-3 text-[13px] font-light text-[#663C00]">
-          Production uses real money, and a card created here cannot spend yet:
-          the SDK publishes no mainnet Bridge spender, so signup skips the USDC
-          approval and still reports the card as ready. Simulated purchases are
-          sandbox-only &mdash; Stripe&apos;s test helpers do not exist for live
-          keys.
+          Production uses real money.{" "}
+          {PRODUCTION_SPEND_APPROVAL
+            ? "Signup grants a real USDC allowance to the Bridge spender configured in this deployment's env, so a card issued here can spend."
+            : "Signup is disabled until NEXT_PUBLIC_CARD_USDC_ADDRESS and NEXT_PUBLIC_CARD_SPENDER_ADDRESS are set — the SDK requires the mainnet spend-approval target, since Bridge does not publish it."}{" "}
+          Simulated purchases are sandbox-only &mdash; Stripe&apos;s test helpers
+          do not exist for live keys.
         </p>
       )}
 
       {openView === "signup" && wallet && (
         <Modal onClose={closeModal} label="Sign up for a card">
-          <SignUpForCardView
-            environment={environment}
-            walletId={wallet.id}
-            chainId={chain.id}
-            onCardReady={onCardReady}
-            onClose={closeModal}
-          />
+          {/* `SignUpForCardViewProps` is discriminated on `environment` — production requires a
+              `spendApproval` target, sandbox rejects one — so the environment cannot be threaded
+              through a single element. The shared props are spread into both. */}
+          {isSandbox ? (
+            <SignUpForCardView
+              environment="sandbox"
+              walletId={wallet.id}
+              chainId={chain.id}
+              onCardReady={onCardReady}
+              onClose={closeModal}
+            />
+          ) : PRODUCTION_SPEND_APPROVAL ? (
+            <SignUpForCardView
+              environment="production"
+              spendApproval={PRODUCTION_SPEND_APPROVAL}
+              walletId={wallet.id}
+              chainId={chain.id}
+              onCardReady={onCardReady}
+              onClose={closeModal}
+            />
+          ) : (
+            <p className="p-4 text-[14px] font-light">
+              Set <code>NEXT_PUBLIC_CARD_USDC_ADDRESS</code> and{" "}
+              <code>NEXT_PUBLIC_CARD_SPENDER_ADDRESS</code> to sign up on
+              production. Without the spend-approval target the card could not
+              spend, so signup is disabled rather than approving a guess.
+            </p>
+          )}
         </Modal>
       )}
 
       {openView === "summary" && cardId && (
         <Modal onClose={closeModal} label="Card summary">
+          {/* Keyed on the card id so a replacement remounts the view on the new card rather than
+              leaving the closed one's data in place. */}
           <CardSummaryView
+            key={cardId}
             cardId={cardId}
-            developerName={DEVELOPER_NAME}
             environment={environment}
+            onReplaced={onReplaced}
             onClose={closeModal}
           />
         </Modal>

@@ -4,24 +4,32 @@ This Next.js example shows how to issue and manage cards for your users with the
 
 It is scaffolded from [`privy-next-starter`](../../privy-next-starter), trimmed down to just the card flow — the wallet, funding, linking, signer, and MFA sections are intentionally removed (opted out under `sectionOverrides` in [`.sync-manifest.json`](../../.sync-manifest.json), so base syncs don't re-add them).
 
-> **⚠️ A card cannot spend in production yet.** `SignUpForCardView` grants the card's USDC spend allowance to a Bridge spender address, and the SDK only publishes those addresses for sandbox testnets. In production it skips the approval and still reports the card as ready, so the card exists with no allowance behind it. Both environments are available in the demo's toggle — see [Environments](#environments).
+> **⚠️ Production signup needs a spend-approval target.** `SignUpForCardView` grants the card's USDC spend allowance to a Bridge spender. The SDK ships built-in targets for sandbox testnets, but not for mainnets — on `environment="production"` it requires a `spendApproval` prop naming the USDC contract and Bridge spender to approve. This demo reads both from env vars and keeps production signup disabled until they are set. See [Environments](#environments).
 
 ## Flow
 
 1. Sign in with Privy. The provider creates an embedded Ethereum wallet for users without one.
-2. Press **Sign up for a card**. `SignUpForCardView` walks the e-sign disclosure, the bank agreements, Bridge terms, and KYC, then creates the card and prompts for the on-chain USDC spend approval.
+2. Press **Sign up for a card**. `SignUpForCardView` walks the e-sign disclosure, the bank agreements (which name your app, the issuing bank, and Bridge as the card-program manager), the provider terms, and KYC, then creates the card and prompts for the on-chain USDC spend approval.
 3. On success it fires `onCardReady` with the card id, and the demo hands straight off to the summary.
-4. `CardSummaryView` shows the balance, card face, transactions, card details and reveal, and statement downloads.
+4. `CardSummaryView` shows the balance, card face, transactions, card details and reveal, statement downloads, and the freeze/cancel/replace actions.
 5. Optionally press **Simulate a $0.50 purchase** to put a real row on the transaction list. See [Simulating a purchase](#simulating-a-purchase).
 
-A pill next to the funding wallet address shows whether a card exists yet. The demo finds an existing card by listing the user's cards for the selected environment, so a reload goes straight to the summary. A returning user who runs signup again still starts at "Get started", but the SDK reuses the existing card rather than creating a second one (one card per account).
+A pill next to the funding wallet address shows whether a card exists yet. The demo finds an existing card by listing the user's cards for the selected environment, so a reload goes straight to the summary.
+
+**Sign up for a card** stays available even once a card exists, so the onboarding flow is always there to walk through. A returning user starts at "Get started" again and re-walks the disclosure and KYC steps, but the SDK hands back the card they already have rather than issuing a second one. To get a genuinely new card, use **Replace** in the card details.
+
+### Replacements
+
+**Replace** in the card details closes the current card and issues a new one in a single call, carrying the reason the user picked. `CardSummaryView` does not adopt the replacement — the open panel is scoped to the card that just closed, so it shows a "card cancelled" banner and reports the new card id through `onReplaced`. This demo points its card id at the replacement and keys the view on it, so the panel remounts on the new card.
+
+Because a replacement leaves the old card behind as `canceled`, a user accumulates cards. The list endpoint returns them newest first and includes cancelled ones, so the demo picks the newest card whose `status` isn't `canceled` (see [`cards-api.ts`](./src/components/sections/cards-api.ts)).
 
 ## Source map
 
 - [`src/app/page.tsx`](./src/app/page.tsx): Login state, page layout, and the `Cards` section
 - [`src/providers/providers.tsx`](./src/providers/providers.tsx): Privy provider configuration; EVM-only, creates an embedded Ethereum wallet on login
-- [`src/components/sections/cards.tsx`](./src/components/sections/cards.tsx): Hosts both card views, owns the environment toggle and card id, and holds the chain map and developer name
-- [`src/components/sections/cards-api.ts`](./src/components/sections/cards-api.ts): Lists the user's cards for an environment, since the SDK exports no card-list hook
+- [`src/components/sections/cards.tsx`](./src/components/sections/cards.tsx): Hosts both card views, owns the environment toggle and card id, and holds the chain map and the production spend-approval target
+- [`src/components/sections/cards-api.ts`](./src/components/sections/cards-api.ts): Lists the user's cards for an environment and picks the newest open one, since the SDK exports no card-list hook
 - [`src/components/sections/find-embedded-wallet.ts`](./src/components/sections/find-embedded-wallet.ts): Picks the embedded EVM wallet whose Privy wallet id the card views need
 - [`src/components/sections/modal.tsx`](./src/components/sections/modal.tsx): Centered 440px modal the card views render inside
 - [`src/components/sections/simulate-spend.ts`](./src/components/sections/simulate-spend.ts): Resolves the Privy card id to its Stripe card id, then calls the test-spend route
@@ -67,6 +75,7 @@ In the [Privy dashboard](https://dashboard.privy.io), configure the app used by 
 - Enable embedded wallets.
 - Enable cards for the app.
 - Save the app's Stripe publishable key in the cards config. `CardSummaryView` fetches it itself from `GET /api/v1/apps/:app_id/cards/config` — there is no key prop. If it is missing, **Show details** stays silently inert.
+- Set the app's **legal name** on the card design. `CardSummaryView`'s footer disclosure names your legal entity as the Platform Provider and reads it from the app config — there is no `developerName` prop. It falls back to the app's display name when no legal name is set, so an app that skips this ships the display name in regulatory copy.
 - Make sure the Bridge **sandbox** account behind the app's card configuration has the `cards` endorsement. Sandbox and production are separate Bridge accounts with separate capabilities, so enabling cards in production does not cover sandbox. Without it, signup fails with `'cards' endorsement not allowed — Cards is not enabled on the developer account`, which no amount of retrying or KYC will clear.
 
 ### 5. Fund the wallet
@@ -90,15 +99,25 @@ Production needs its own credentials, separate from sandbox: a Bridge production
 |  | Sandbox | Production |
 | --- | --- | --- |
 | Funding chain | Base Sepolia (`eip155:84532`) | Base (`eip155:8453`), real USDC |
-| Card signup | ✅ | ✅ |
+| Spend approval target | built in | `spendApproval` prop, from env |
+| Card signup | ✅ | ✅ once the target is set |
 | Card summary | ✅ | ✅ |
 | Simulated purchase | ✅ | ❌ not possible |
 
-**A production card cannot spend yet.** `SignUpForCardView` grants the card's USDC allowance to a Bridge spender, and the SDK publishes those addresses for sandbox testnets only. In production it skips the approval and still reports the card `ready`, so the card exists but has no allowance behind it. Production signup is still enabled so you can exercise the real onboarding path — live Bridge customer, real KYC, real Stripe card — and the demo says so on screen. Spend starts working once mainnet spenders ship, with no change needed here.
+**Production needs the spend-approval target.** `SignUpForCardView`'s props are discriminated on `environment`: sandbox resolves the USDC contract and Bridge spender from the SDK's built-in testnet targets and rejects a supplied one, while production **requires** a `spendApproval` — Bridge does not publish its mainnet targets to the SDK, and approving the wrong spender would leave a `ready` card that cannot spend. Passing neither, or passing one on sandbox, is a type error rather than a silently unusable card.
+
+This demo reads the production target from two public env vars and gates signup on them:
+
+```env
+NEXT_PUBLIC_CARD_USDC_ADDRESS=0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913
+NEXT_PUBLIC_CARD_SPENDER_ADDRESS=0x…
+```
+
+The USDC address is Base mainnet's; the spender is the issuer address from the Bridge **production** integration behind your app's card configuration. With either missing, the production **Sign up for a card** button is disabled and the modal says which vars to set. Sandbox is unaffected and needs no configuration.
+
+`SignUpForCardView` also accepts a Solana target (`{stablecoinAddress, programId, merchantId}`) for a `solana:*` `chainId`; this demo is EVM-only, so it always supplies the EVM shape.
 
 **Why simulated purchases are sandbox-only.** Stripe's Issuing test helpers do not exist for live keys — there is no API to fabricate a live authorization, so live spend must be a real purchase at a real merchant. The button is hidden in production, and the route refuses non-test keys.
-
-Production mode needs its own credentials, separate from sandbox: a Bridge **production** integration with the `cards` endorsement on that live account, and a **live** Stripe key in the app's production card configuration. Sandbox credentials do not carry over.
 
 ## Simulating a purchase
 
@@ -120,15 +139,15 @@ Notes:
 
 ## SDK version
 
-`CardSummaryView` and `SignUpForCardView` are not in a stable `@privy-io/react-auth` release yet, so this example pins the beta that contains both.
+`CardSummaryView` and `SignUpForCardView` are not in a stable `@privy-io/react-auth` release yet, so this example pins the beta that contains both. Their props are still moving, so the pin is exact rather than a caret range — a newer beta can be a breaking change.
 
 To check what you actually have installed:
 
 ```bash
-rg 'SignUpForCardView|CardSummaryView' node_modules/@privy-io/react-auth/dist/dts/ui.d.ts
+rg 'SignUpForCardView|CardSummaryView|spendApproval|onReplaced|developerName' node_modules/@privy-io/react-auth/dist/dts/ui.d.ts
 ```
 
-Both names must appear. If you swap in a locally built tarball to test unreleased SDK changes, note that a local build and a published release can share a version string with different contents, so a later `pnpm install` can silently replace it with no resolution error — run the check above again after any install. Don't commit a `file:` dependency; it is machine-local.
+Both component names must appear, `spendApproval` and `onReplaced` must appear, and `developerName` must not — that combination is the beta this example is written against. An older beta fails `tsc` on all three. If you swap in a locally built tarball to test unreleased SDK changes, note that a local build and a published release can share a version string with different contents, so a later `pnpm install` can silently replace it with no resolution error — run the check above again after any install. Don't commit a `file:` dependency; it is machine-local.
 
 ## Relevant links
 
