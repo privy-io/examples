@@ -5,6 +5,7 @@
       "name": "privy-next-starter",
       "path": "privy-next-starter",
       "targets": [
+        "examples/privy-next-cards",
         "examples/privy-next-cross-app-connect",
         "examples/privy-next-cross-app-provider",
         "examples/privy-next-farcaster",
@@ -89,6 +90,20 @@
       "examples/privy-next-solana": {
         "exclude": ["src/components/sections/wallet-actions.tsx"],
         "reason": "Uses solana-specific wallet actions"
+      },
+      "examples/privy-next-cards": {
+        "exclude": [
+          "src/components/sections/wallet-actions.tsx",
+          "src/components/sections/create-a-wallet.tsx",
+          "src/components/sections/fund-wallet.tsx",
+          "src/components/sections/link-accounts.tsx",
+          "src/components/sections/unlink-accounts.tsx",
+          "src/components/sections/signers.tsx",
+          "src/components/sections/wallet-management.tsx",
+          "src/components/sections/mfa.tsx",
+          "src/components/sections/user-object.tsx"
+        ],
+        "reason": "Cards demo shows only the card signup and summary flow"
       }
     }
   }
