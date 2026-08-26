@@ -24,15 +24,11 @@ export function Header({ authenticated }: HeaderProps) {
           priority
         />
 
+        {/* Only rendered when authenticated, so the colors are unconditional — the unauthenticated
+            branch this used to carry could never be reached. */}
         {authenticated && (
-          <div
-            className={`text-medium flex h-[22px] items-center justify-center rounded-[11px] border px-[0.375rem] text-[0.75rem] ${
-              authenticated
-                ? "border-primary text-primary"
-                : "border-white text-white"
-            }`}
-          >
-            Next.js Demo
+          <div className="border-primary text-primary flex h-[22px] items-center justify-center rounded-[11px] border px-[0.375rem] text-[0.75rem] font-medium">
+            Privy cards demo
           </div>
         )}
       </div>
