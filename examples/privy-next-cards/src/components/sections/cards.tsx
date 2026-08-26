@@ -7,6 +7,7 @@ import dynamic from "next/dynamic";
 import Section from "../reusables/section";
 import { Modal } from "./modal";
 import { showSuccessToast, showErrorToast } from "../ui/custom-toast";
+import { Badge, type BadgeVariant } from "../ui/badge";
 import { findEmbeddedWallet } from "./find-embedded-wallet";
 import { simulateSpend } from "./simulate-spend";
 import { isOpen, listCards } from "./cards-api";
@@ -89,6 +90,19 @@ const Cards = () => {
   const wallet = findEmbeddedWallet(user?.linkedAccounts ?? []);
   const chain = CARD_CHAINS[environment];
   const isSandbox = environment === "sandbox";
+
+  // Label and tone derived together, so the pill cannot end up reading "Checking…" in the green of
+  // a card that is already there — which is what two parallel ternaries over the same four states
+  // drifted into.
+  const cardStatus: { label: string; variant: BadgeVariant } = isLoadingCard
+    ? { label: "Checking…", variant: "default" }
+    : cardId
+      ? { label: "Card created", variant: "success" }
+      : cardLookupError
+        ? { label: "Lookup failed", variant: "destructive" }
+        : totalCards > 0
+          ? { label: "Card cancelled", variant: "warning" }
+          : { label: "No card yet", variant: "default" };
 
   // Look up whether this user already has a card in the selected environment. This is what makes
   // the production side usable at all — signup is disabled there, so the card has to come from
@@ -225,18 +239,21 @@ const Cards = () => {
           : []),
       ]}
     >
-      <div className="mb-4 flex items-center gap-2 text-[14px]">
+      <div className="mb-4 flex items-center gap-3 text-[14px]">
         <span className="font-medium">Environment</span>
-        <div className="inline-flex overflow-hidden rounded-full border border-[#E2E3F0]">
+        {/* Segmented control: a light track with the selected option raised out of it on a white
+            pill, so the active environment reads at a glance without a saturated fill. */}
+        <div className="inline-flex gap-1 rounded-2xl bg-[#E7E7F3] p-1.5">
           {(["sandbox", "production"] as const).map((option) => (
             <button
               key={option}
               type="button"
               onClick={() => switchEnvironment(option)}
-              className={`px-3 py-1 text-[13px] capitalize ${
+              aria-pressed={environment === option}
+              className={`cursor-pointer rounded-xl px-5 py-2 text-[15px] font-medium capitalize transition-colors duration-150 ${
                 environment === option
-                  ? "bg-[#5B4FFF] text-white"
-                  : "bg-white text-[#040217] hover:bg-gray-50"
+                  ? "bg-white text-[#040217] shadow-sm"
+                  : "bg-transparent text-[#6B6B8C] hover:text-[#040217]"
               }`}
             >
               {option}
@@ -246,30 +263,10 @@ const Cards = () => {
       </div>
 
       {wallet ? (
-        <div className="rounded-md border border-[#E2E3F0] p-4 text-[14px]">
+        <div className="w-full max-w-[480px] rounded-xl border border-[#E2E3F0] bg-white p-4 text-[14px]">
           <div className="flex items-center gap-2">
             <p className="font-medium">Funding wallet</p>
-            <span
-              className={`rounded-full px-2 py-0.5 text-[12px] ${
-                cardId
-                  ? "bg-[#E8F5E9] text-[#1B5E20]"
-                  : cardLookupError
-                    ? "bg-[#FDECEA] text-[#7F1D1D]"
-                    : totalCards > 0
-                      ? "bg-[#FFF4E5] text-[#663C00]"
-                      : "bg-[#E2E3F0] text-[#040217]"
-              }`}
-            >
-              {isLoadingCard
-                ? "Checking…"
-                : cardId
-                  ? "Card created"
-                  : cardLookupError
-                    ? "Lookup failed"
-                    : totalCards > 0
-                      ? "Card cancelled"
-                      : "No card yet"}
-            </span>
+            <Badge variant={cardStatus.variant}>{cardStatus.label}</Badge>
           </div>
 
           {cardLookupError && (
@@ -325,7 +322,7 @@ const Cards = () => {
       )}
 
       {!isSandbox && (
-        <p className="mt-3 rounded-md bg-[#FFF4E5] p-3 text-[13px] font-light text-[#663C00]">
+        <p className="mt-3 w-full max-w-[480px] rounded-xl bg-[#FFF4E5] p-3 text-[13px] font-light text-[#663C00]">
           Production uses real money.{" "}
           {PRODUCTION_SPEND_APPROVAL
             ? "Signup grants a real USDC allowance to the Bridge spender configured in this deployment's env, so a card issued here can spend."

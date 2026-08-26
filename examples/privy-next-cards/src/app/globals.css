@@ -47,9 +47,9 @@ body {
 
   .button {
     @apply flex flex-row items-center
-           px-3 py-2 gap-3 cursor-pointer
+           px-6 py-3.5 gap-3 cursor-pointer
            bg-white border border-[#E2E3F0] rounded-xl
-           text-[#040217] font-normal text-base leading-6
+           text-[#040217] font-medium text-[17px] leading-6
            hover:bg-gray-50 hover:border-gray-300
            focus:bg-gray-50 focus:border-gray-300
            active:bg-gray-100
@@ -57,6 +57,26 @@ body {
            transition-all duration-200 ease-in-out
            disabled:opacity-50 disabled:cursor-not-allowed
            box-border;
+  }
+
+  /* Status pills. `Badge` composes `.badge` with a variant, so the variants only carry color and
+     the shared geometry lives in one place. Variant rules follow `.badge` so their colors win. */
+  .badge {
+    @apply inline-flex items-center rounded-full
+           px-2 py-0.5 text-[12px] font-medium
+           bg-[#E2E3F0] text-[#040217];
+  }
+  .badge-success {
+    @apply bg-[#E8F5E9] text-[#1B5E20];
+  }
+  .badge-warning {
+    @apply bg-[#FFF4E5] text-[#663C00];
+  }
+  .badge-destructive {
+    @apply bg-[#FDECEA] text-[#7F1D1D];
+  }
+  .badge-outline {
+    @apply bg-transparent border border-[#E2E3F0] text-[#040217];
   }
 
   .text-primary {
