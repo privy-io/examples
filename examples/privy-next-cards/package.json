@@ -10,11 +10,12 @@
   },
   "dependencies": {
     "@heroicons/react": "^2.2.0",
-    "@privy-io/react-auth": "3.39.0-beta-20260826194301",
+    "@privy-io/react-auth": "3.39.0-beta-20260827192706",
     "next": "15.5.7",
     "react": "19.1.0",
     "react-dom": "19.1.0",
-    "react-toastify": "^11.0.5"
+    "react-toastify": "^11.0.5",
+    "viem": "^2.55.19"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
