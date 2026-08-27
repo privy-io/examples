@@ -4,7 +4,9 @@ This Next.js example shows how to issue and manage cards for your users with the
 
 It is scaffolded from [`privy-next-starter`](../../privy-next-starter), trimmed down to just the card flow — the wallet, funding, linking, signer, and MFA sections are intentionally removed (opted out under `sectionOverrides` in [`.sync-manifest.json`](../../.sync-manifest.json), so base syncs don't re-add them).
 
-> **⚠️ Production signup needs a spend-approval target.** `SignUpForCardView` grants the card's USDC spend allowance to a Bridge spender. The SDK ships built-in targets for sandbox testnets, but not for mainnets — on `environment="production"` it requires a `spendApproval` prop naming the USDC contract and Bridge spender to approve. This demo reads both from env vars and keeps production signup disabled until they are set. See [Environments](#environments).
+The card funds from **Tempo** — Tempo Testnet (Moderato) in sandbox, Tempo mainnet in production.
+
+> **⚠️ Production signup needs a spend-approval target.** `SignUpForCardView` grants the card's stablecoin spend allowance to a Bridge spender. The SDK ships built-in targets for sandbox testnets, but not for mainnets — on `environment="production"` it requires a `spendApproval` prop naming the USDC contract and Bridge spender to approve. This demo reads both from env vars and keeps production signup disabled until they are set. See [Environments](#environments).
 
 ## Flow
 
@@ -27,8 +29,10 @@ Because a replacement leaves the old card behind as `canceled`, a user accumulat
 ## Source map
 
 - [`src/app/page.tsx`](./src/app/page.tsx): Login state, page layout, and the `Cards` section
-- [`src/providers/providers.tsx`](./src/providers/providers.tsx): Privy provider configuration; EVM-only, creates an embedded Ethereum wallet on login
-- [`src/components/sections/cards.tsx`](./src/components/sections/cards.tsx): Hosts both card views, owns the environment toggle and card id, and holds the chain map and the production spend-approval target
+- [`src/chains.ts`](./src/chains.ts): The two Tempo chains, the sandbox fee token, and the per-environment chain map
+- [`src/providers/providers.tsx`](./src/providers/providers.tsx): Privy provider configuration; EVM-only, declares both Tempo chains, creates an embedded Ethereum wallet on login
+- [`src/components/sections/cards.tsx`](./src/components/sections/cards.tsx): Hosts both card views, owns the environment toggle and card id, and holds the production spend-approval target
+- [`src/components/sections/tempo-faucet.ts`](./src/components/sections/tempo-faucet.ts) and [`src/app/api/faucet/route.ts`](./src/app/api/faucet/route.ts): Testnet faucet top-up via the `tempo_fundAddress` RPC method
 - [`src/components/sections/cards-api.ts`](./src/components/sections/cards-api.ts): Lists the user's cards for an environment and picks the newest open one, since the SDK exports no card-list hook
 - [`src/components/sections/find-embedded-wallet.ts`](./src/components/sections/find-embedded-wallet.ts): Picks the embedded EVM wallet whose Privy wallet id the card views need
 - [`src/components/sections/modal.tsx`](./src/components/sections/modal.tsx): Centered 440px modal the card views render inside
@@ -80,7 +84,7 @@ In the [Privy dashboard](https://dashboard.privy.io), configure the app used by 
 
 ### 5. Fund the wallet
 
-The card spends USDC on Base Sepolia from the user's embedded wallet, and the approval transaction needs gas. The demo shows the wallet address and links to both faucets once you log in. Without Base Sepolia ETH the flow dead-ends on the approval step with generic error copy.
+The card spends pathUSD on Tempo Testnet (Moderato) from the user's embedded wallet. Log in and press **Fund wallet from faucet** — Moderato's faucet is the `tempo_fundAddress` JSON-RPC method on the chain's own endpoint, so there is no separate faucet service or API key. See [Funding on Tempo](#funding-on-tempo).
 
 ### 6. Start the development server
 
@@ -98,10 +102,12 @@ Production needs its own credentials, separate from sandbox: a Bridge production
 
 |  | Sandbox | Production |
 | --- | --- | --- |
-| Funding chain | Base Sepolia (`eip155:84532`) | Base (`eip155:8453`), real USDC |
+| Funding chain | Tempo Testnet (Moderato) (`eip155:42431`) | Tempo (`eip155:4217`), real USDC |
+| Funding token | pathUSD, from the faucet | set by `NEXT_PUBLIC_CARD_USDC_ADDRESS`, real money |
 | Spend approval target | built in | `spendApproval` prop, from env |
 | Card signup | ✅ | ✅ once the target is set |
 | Card summary | ✅ | ✅ |
+| Faucet top-up | ✅ | ❌ testnet only |
 | Simulated purchase | ✅ | ❌ not possible |
 
 **Production needs the spend-approval target.** `SignUpForCardView`'s props are discriminated on `environment`: sandbox resolves the USDC contract and Bridge spender from the SDK's built-in testnet targets and rejects a supplied one, while production **requires** a `spendApproval` — Bridge does not publish its mainnet targets to the SDK, and approving the wrong spender would leave a `ready` card that cannot spend. Passing neither, or passing one on sandbox, is a type error rather than a silently unusable card.
@@ -109,15 +115,27 @@ Production needs its own credentials, separate from sandbox: a Bridge production
 This demo reads the production target from two public env vars and gates signup on them:
 
 ```env
-NEXT_PUBLIC_CARD_USDC_ADDRESS=0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913
+NEXT_PUBLIC_CARD_USDC_ADDRESS=0x…
 NEXT_PUBLIC_CARD_SPENDER_ADDRESS=0x…
 ```
 
-The USDC address is Base mainnet's; the spender is the issuer address from the Bridge **production** integration behind your app's card configuration. With either missing, the production **Sign up for a card** button is disabled and the modal says which vars to set. Sandbox is unaffected and needs no configuration.
+The USDC address is Tempo mainnet's; the spender is the issuer address from the Bridge **production** integration behind your app's card configuration. With either missing, the production **Sign up for a card** button is disabled and the modal says which vars to set. Sandbox is unaffected and needs no configuration.
 
 `SignUpForCardView` also accepts a Solana target (`{stablecoinAddress, programId, merchantId}`) for a `solana:*` `chainId`; this demo is EVM-only, so it always supplies the EVM shape.
 
 **Why simulated purchases are sandbox-only.** Stripe's Issuing test helpers do not exist for live keys — there is no API to fabricate a live authorization, so live spend must be a real purchase at a real merchant. The button is hidden in production, and the route refuses non-test keys.
+
+## Funding on Tempo
+
+Tempo's fee model differs from an ETH-gas chain in a way that shows up throughout this demo:
+
+- **No native gas token.** Fees are paid in a TIP-20 stablecoin, with automatic conversion between supported tokens. There is no separate "get some ETH for gas" step — one stablecoin balance covers everything. [`src/chains.ts`](./src/chains.ts) pins the sandbox chain's `feeToken` to pathUSD, the same token the card spends, so a single faucet top-up serves both.
+- **The approval is sponsored.** `SignUpForCardView` sends the spend-approval transaction with `sponsor: true` and only falls back to a pre-funded send if sponsorship is unavailable. On the sponsored path the wallet needs no fee balance at all to complete signup — the balance matters for spending.
+- **The faucet is an RPC method.** Moderato exposes `tempo_fundAddress` on its own endpoint (`https://rpc.moderato.tempo.xyz`), which hands out 1M each of pathUSD, AlphaUSD, BetaUSD, and ThetaUSD. **Fund wallet from faucet** calls it through [a route handler](./src/app/api/faucet/route.ts), since the RPC endpoint sends no CORS headers for browsers. There is also a [browser faucet](https://tempo.xyz/developers/docs/quickstart/faucet) if you would rather fund an address by hand.
+
+The sandbox spend-approval target the SDK builds in for `eip155:42431` uses pathUSD (`0x20C0…0000`) as its `stablecoinAddress`, which is why that is the token the demo names and the fee token it pins.
+
+Both Tempo chains are declared in [`providers.tsx`](./src/providers/providers.tsx) under `supportedChains`. This is not cosmetic: the approval step calls `wallet_switchEthereumChain` to the card's chain before reading the allowance, and an undeclared chain fails that switch with an error that says nothing about chain configuration.
 
 ## Simulating a purchase
 
@@ -133,7 +151,7 @@ Notes:
 
 - This is a **server-only** variable, read by [`src/app/api/test-spend/route.ts`](./src/app/api/test-spend/route.ts). Never expose a Stripe secret key to the browser via `NEXT_PUBLIC_`. The route refuses to run with anything that isn't an `sk_test_`/`rk_test_` key and caps the amount at $100.
 - The button is a demo affordance, not something to deploy. Anyone who can reach the route can create authorizations on the configured account's cards.
-- **It does not move the balance.** `CardSummaryView` shows the funding wallet's on-chain balance, so a simulated purchase changes the transaction list only. Real settlement pulls USDC through the Bridge spender.
+- **It does not move the balance.** `CardSummaryView` shows the funding wallet's on-chain balance, so a simulated purchase changes the transaction list only. Real settlement pulls the stablecoin through the Bridge spender.
 - Reopen the modal to see the new row — closing it unmounts the view, so opening again refetches.
 - Stripe may **decline** the authorization, since stablecoin-backed cards check funding. A declined authorization still appears in the list, and the toast reports the reason.
 

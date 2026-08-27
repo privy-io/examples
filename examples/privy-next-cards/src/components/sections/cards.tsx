@@ -10,7 +10,9 @@ import { showSuccessToast, showErrorToast } from "../ui/custom-toast";
 import { Badge, type BadgeVariant } from "../ui/badge";
 import { findEmbeddedWallet } from "./find-embedded-wallet";
 import { simulateSpend } from "./simulate-spend";
+import { fundWallet } from "./tempo-faucet";
 import { isOpen, listCards } from "./cards-api";
+import { CARD_CHAINS, type CardEnvironment } from "@/chains";
 
 // Loaded when the modal first opens rather than at first paint. Statically importing these puts
 // them and their transitive deps (~400kB) in the initial page bundle, which every visitor pays for
@@ -32,24 +34,12 @@ const CardSummaryView = dynamic(
   { ssr: false },
 );
 
-type CardEnvironment = "sandbox" | "production";
-
 /**
- * The chain each environment funds cards from, and how to label it.
- *
- * Production is Base mainnet, so its USDC is real money. Any sandbox testnet with a published
- * Bridge spender works in sandbox; Base Sepolia is the default here.
- */
-const CARD_CHAINS: Record<CardEnvironment, { id: string; label: string }> = {
-  sandbox: { id: "eip155:84532", label: "Base Sepolia" },
-  production: { id: "eip155:8453", label: "Base" },
-};
-
-/**
- * Where a production card's USDC allowance goes: the mainnet USDC contract and the Bridge spender
- * that pulls from it at spend time. `SignUpForCardView` requires this on `environment="production"`
- * and builds it in for sandbox testnets, because Bridge does not publish its mainnet spender to the
- * SDK. Both come from the Bridge production integration behind the app's card configuration.
+ * Where a production card's stablecoin allowance goes: the mainnet USDC contract and the Bridge
+ * spender that pulls from it at spend time. `SignUpForCardView` requires this on
+ * `environment="production"` and builds it in for sandbox testnets, because Bridge does not publish
+ * its mainnet spender to the SDK. Both come from the Bridge production integration behind the app's
+ * card configuration.
  *
  * Read from env rather than hardcoded: the values are per-integration, and approving the wrong
  * spender leaves a `ready` card that cannot spend. Production signup stays gated until both are set.
@@ -77,6 +67,7 @@ const Cards = () => {
   const [cardId, setCardId] = useState<string | null>(null);
   const [openView, setOpenView] = useState<OpenView>(null);
   const [isSpending, setIsSpending] = useState(false);
+  const [isFunding, setIsFunding] = useState(false);
   const [isLoadingCard, setIsLoadingCard] = useState(false);
   // Why the card lookup failed, if it did. Kept apart from "no card yet": a failed lookup says
   // nothing about whether a card exists, and reporting it as "no card" sends you off to sign up for
@@ -172,6 +163,24 @@ const Cards = () => {
     setEnvironment(next);
   };
 
+  const onFundWallet = async () => {
+    if (!wallet) return;
+
+    setIsFunding(true);
+    try {
+      await fundWallet(wallet.address);
+      showSuccessToast(
+        `Faucet sent test stablecoins to the wallet. ${chain.token} balances may take a moment to show up.`,
+      );
+    } catch (error) {
+      showErrorToast(
+        error instanceof Error ? error.message : "Faucet request failed",
+      );
+    } finally {
+      setIsFunding(false);
+    }
+  };
+
   const onSimulateSpend = async () => {
     if (!cardId) return;
 
@@ -224,10 +233,16 @@ const Cards = () => {
           function: () => setOpenView("summary"),
           disabled: !wallet || !cardId,
         },
-        // Stripe's Issuing test helpers only exist in test mode, so there is no way to fabricate a
-        // production authorization. Live spend has to be a real purchase.
+        // Both sandbox-only. Moderato's faucet is an RPC method on the chain itself, and Stripe's
+        // Issuing test helpers only exist in test mode — there is no way to fabricate a production
+        // authorization, so live spend has to be a real purchase.
         ...(isSandbox
           ? [
+              {
+                name: isFunding ? "Funding…" : "Fund wallet from faucet",
+                function: onFundWallet,
+                disabled: !wallet || isFunding,
+              },
               {
                 name: isSpending
                   ? "Simulating…"
@@ -286,31 +301,17 @@ const Cards = () => {
 
           {isSandbox ? (
             <p className="mt-2 font-light">
-              The card spends USDC on {chain.label} from this wallet.{" "}
-              {cardId ? "Keep it topped up with" : "Before signing up, give it"}{" "}
-              <a
-                className="text-primary underline"
-                href="https://docs.base.org/base-chain/tools/network-faucets"
-                target="_blank"
-                rel="noreferrer"
-              >
-                Base Sepolia ETH
-              </a>{" "}
-              for gas and{" "}
-              <a
-                className="text-primary underline"
-                href="https://faucet.circle.com/"
-                target="_blank"
-                rel="noreferrer"
-              >
-                testnet USDC
-              </a>{" "}
-              to spend.
+              The card spends {chain.token} on {chain.label} from this wallet.
+              Tempo has no native gas token — fees are paid in the same
+              stablecoin — so one faucet top-up covers both the approval and the
+              card.
             </p>
           ) : (
             <p className="mt-2 font-light">
-              The card spends real USDC on {chain.label} from this wallet, and
-              the approval transaction needs real ETH for gas.
+              The card spends the real stablecoin configured for this deployment
+              on {chain.label} from this wallet. Fees are paid in stablecoin
+              rather than a native gas token, so no separate gas balance is
+              needed.
             </p>
           )}
         </div>
