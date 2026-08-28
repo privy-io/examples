@@ -1,6 +1,6 @@
 # Cards with Privy
 
-This Next.js example shows how to issue and manage cards for your users with the Privy React SDK, using the `SignUpForCardView` and `CardSummaryView` components from `@privy-io/react-auth/ui`.
+This Next.js example shows how to issue and manage cards for your users with the Privy React SDK, using `useSignUpForCard`, `SignUpForCardView`, and `CardSummaryView` from `@privy-io/react-auth/ui`.
 
 It is scaffolded from [`privy-next-starter`](../../privy-next-starter), trimmed down to just the card flow — the wallet, funding, linking, signer, and MFA sections are intentionally removed (opted out under `sectionOverrides` in [`.sync-manifest.json`](../../.sync-manifest.json), so base syncs don't re-add them).
 
@@ -11,8 +11,8 @@ The card funds from **Tempo** — Tempo Testnet (Moderato) in sandbox, Tempo mai
 ## Flow
 
 1. Sign in with Privy. The provider creates an embedded Ethereum wallet for users without one.
-2. Press **Sign up for a card**. `SignUpForCardView` walks the e-sign disclosure, the bank agreements (which name your app, the issuing bank, and Bridge as the card-program manager), the provider terms, and KYC, then creates the card and prompts for the on-chain USDC spend approval.
-3. On success it fires `onCardReady` with the card id, and the demo hands straight off to the summary.
+2. Press **Sign up for a card**. The demo calls `useSignUpForCard().signUp(...)`, and `SignUpForCardView` walks the e-sign disclosure, the bank agreements (which name your app, the issuing bank, and Bridge as the card-program manager), the provider terms, and KYC, then creates the card and prompts for the on-chain USDC spend approval.
+3. On success the `signUp` promise returns the card id, and the demo hands straight off to the summary.
 4. `CardSummaryView` shows the balance, card face, transactions, card details and reveal, statement downloads, and the freeze/cancel/replace actions.
 5. Optionally press **Simulate a $0.50 purchase** to put a real row on the transaction list. See [Simulating a purchase](#simulating-a-purchase).
 
@@ -31,7 +31,7 @@ Because a replacement leaves the old card behind as `canceled`, a user accumulat
 - [`src/app/page.tsx`](./src/app/page.tsx): Login state, page layout, and the `Cards` section
 - [`src/chains.ts`](./src/chains.ts): The two Tempo chains, the sandbox fee token, and the per-environment chain map
 - [`src/providers/providers.tsx`](./src/providers/providers.tsx): Privy provider configuration; EVM-only, declares both Tempo chains, creates an embedded Ethereum wallet on login
-- [`src/components/sections/cards.tsx`](./src/components/sections/cards.tsx): Hosts both card views, owns the environment toggle and card id, and holds the production spend-approval target
+- [`src/components/sections/cards.tsx`](./src/components/sections/cards.tsx): Launches signup with `useSignUpForCard`, hosts both card views, owns the environment toggle and card id, and holds the production spend-approval target
 - [`src/components/sections/tempo-faucet.ts`](./src/components/sections/tempo-faucet.ts) and [`src/app/api/faucet/route.ts`](./src/app/api/faucet/route.ts): Testnet faucet top-up via the `tempo_fundAddress` RPC method
 - [`src/components/sections/cards-api.ts`](./src/components/sections/cards-api.ts): Lists the user's cards for an environment and picks the newest open one, since the SDK exports no card-list hook
 - [`src/components/sections/find-embedded-wallet.ts`](./src/components/sections/find-embedded-wallet.ts): Picks the embedded EVM wallet whose Privy wallet id the card views need
@@ -157,15 +157,15 @@ Notes:
 
 ## SDK version
 
-`CardSummaryView` and `SignUpForCardView` are not in a stable `@privy-io/react-auth` release yet, so this example pins the beta that contains both. Their props are still moving, so the pin is exact rather than a caret range — a newer beta can be a breaking change.
+`CardSummaryView`, `SignUpForCardView`, and `useSignUpForCard` are not in a stable `@privy-io/react-auth` release yet, so this example pins the beta that contains all three. Their APIs are still moving, so the pin is exact rather than a caret range — a newer beta can be a breaking change.
 
 To check what you actually have installed:
 
 ```bash
-rg 'SignUpForCardView|CardSummaryView|spendApproval|onReplaced|developerName' node_modules/@privy-io/react-auth/dist/dts/ui.d.ts
+rg 'SignUpForCardView|useSignUpForCard|SignUpForCardOptions|CardSummaryView|spendApproval|onReplaced|developerName' node_modules/@privy-io/react-auth/dist/dts/ui.d.ts
 ```
 
-Both component names must appear, `spendApproval` and `onReplaced` must appear, and `developerName` must not — that combination is the beta this example is written against. An older beta fails `tsc` on all three. If you swap in a locally built tarball to test unreleased SDK changes, note that a local build and a published release can share a version string with different contents, so a later `pnpm install` can silently replace it with no resolution error — run the check above again after any install. Don't commit a `file:` dependency; it is machine-local.
+Both component names and the signup hook/types must appear, `SignUpForCardView` must take no props, `spendApproval` and `onReplaced` must appear, and `developerName` must not — that combination is the beta this example is written against. An older beta fails `tsc` on the imperative signup API. If you swap in a locally built tarball to test unreleased SDK changes, note that a local build and a published release can share a version string with different contents, so a later `pnpm install` can silently replace it with no resolution error — run the check above again after any install. Don't commit a `file:` dependency; it is machine-local.
 
 ## Relevant links
 

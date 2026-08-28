@@ -6,7 +6,8 @@ import { useEffect } from "react";
  * Centered modal that hosts the card views.
  *
  * The width matches what the card components are designed against, so they render at their
- * intended size rather than stretching. Closes on backdrop click and on Escape.
+ * intended size rather than stretching. Dismissible views close on backdrop click and Escape;
+ * controlled flows can keep both disabled until their own controls settle them.
  *
  * Mount it conditionally — being mounted *is* being open. The card views fetch on mount, so
  * rendering one inside a hidden modal would fire requests for a dialog nobody opened.
@@ -15,14 +16,16 @@ export const Modal = ({
   onClose,
   label,
   children,
+  dismissible = true,
 }: {
   onClose: () => void;
   label: string;
   children: React.ReactNode;
+  dismissible?: boolean;
 }) => {
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") onClose();
+      if (dismissible && event.key === "Escape") onClose();
     };
 
     document.addEventListener("keydown", onKeyDown);
@@ -34,13 +37,13 @@ export const Modal = ({
       document.removeEventListener("keydown", onKeyDown);
       document.body.style.overflow = "";
     };
-  }, [onClose]);
+  }, [dismissible, onClose]);
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div
         className="absolute inset-0 bg-black/50"
-        onClick={onClose}
+        onClick={dismissible ? onClose : undefined}
         aria-hidden="true"
       />
       <div

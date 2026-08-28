@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { usePrivy } from "@privy-io/react-auth";
+import { useSignUpForCard } from "@privy-io/react-auth/ui";
 import dynamic from "next/dynamic";
 
 import Section from "../reusables/section";
@@ -62,6 +63,7 @@ type OpenView = "signup" | "summary" | null;
 
 const Cards = () => {
   const { user, getAccessToken } = usePrivy();
+  const { signUp } = useSignUpForCard();
   const userId = user?.id;
   const [environment, setEnvironment] = useState<CardEnvironment>("sandbox");
   const [cardId, setCardId] = useState<string | null>(null);
@@ -139,12 +141,6 @@ const Cards = () => {
     };
   }, [userId, environment, getAccessToken]);
 
-  const onCardReady = (readyCardId: string) => {
-    setCardId(readyCardId);
-    showSuccessToast("Card is ready.");
-    setOpenView("summary");
-  };
-
   // A replacement closes the card the panel was opened on, so `CardSummaryView` does not adopt the
   // new card — it shows a "card cancelled" banner and hands the new id here. Point the demo at the
   // replacement and remount the panel on it; the `key` on the view is what forces the refetch.
@@ -161,6 +157,44 @@ const Cards = () => {
     // Close first: the open view is bound to the environment it was opened for.
     setOpenView(null);
     setEnvironment(next);
+  };
+
+  const openCardSignUp = async () => {
+    if (!wallet || (!isSandbox && !PRODUCTION_SPEND_APPROVAL)) return;
+
+    setOpenView("signup");
+    try {
+      let result;
+      if (isSandbox) {
+        result = await signUp({
+          environment: "sandbox",
+          walletId: wallet.id,
+          chainId: chain.id,
+        });
+      } else {
+        if (!PRODUCTION_SPEND_APPROVAL) return;
+        result = await signUp({
+          environment: "production",
+          spendApproval: PRODUCTION_SPEND_APPROVAL,
+          walletId: wallet.id,
+          chainId: chain.id,
+        });
+      }
+      setCardId(result.id);
+      showSuccessToast("Card is ready.");
+      setOpenView("summary");
+    } catch (error) {
+      if (
+        !(error instanceof Error) ||
+        error.message !== "User cancelled card sign-up"
+      ) {
+        showErrorToast(
+          error instanceof Error ? error.message : "Card sign-up failed",
+        );
+      }
+    } finally {
+      setOpenView((view) => (view === "signup" ? null : view));
+    }
   };
 
   const onFundWallet = async () => {
@@ -223,7 +257,7 @@ const Cards = () => {
         // them again and the SDK hands back the card that exists rather than issuing another.
         {
           name: "Sign up for a card",
-          function: () => setOpenView("signup"),
+          function: openCardSignUp,
           // Production needs a spend-approval target; without one there is nothing to sign up into
           // but a card that cannot spend.
           disabled: !wallet || (!isSandbox && !PRODUCTION_SPEND_APPROVAL),
@@ -333,36 +367,15 @@ const Cards = () => {
         </p>
       )}
 
-      {openView === "signup" && wallet && (
-        <Modal onClose={closeModal} label="Sign up for a card">
-          {/* `SignUpForCardViewProps` is discriminated on `environment` — production requires a
-              `spendApproval` target, sandbox rejects one — so the environment cannot be threaded
-              through a single element. The shared props are spread into both. */}
-          {isSandbox ? (
-            <SignUpForCardView
-              environment="sandbox"
-              walletId={wallet.id}
-              chainId={chain.id}
-              onCardReady={onCardReady}
-              onClose={closeModal}
-            />
-          ) : PRODUCTION_SPEND_APPROVAL ? (
-            <SignUpForCardView
-              environment="production"
-              spendApproval={PRODUCTION_SPEND_APPROVAL}
-              walletId={wallet.id}
-              chainId={chain.id}
-              onCardReady={onCardReady}
-              onClose={closeModal}
-            />
-          ) : (
-            <p className="p-4 text-[14px] font-light">
-              Set <code>NEXT_PUBLIC_CARD_USDC_ADDRESS</code> and{" "}
-              <code>NEXT_PUBLIC_CARD_SPENDER_ADDRESS</code> to sign up on
-              production. Without the spend-approval target the card could not
-              spend, so signup is disabled rather than approving a guess.
-            </p>
-          )}
+      {openView === "signup" && (
+        <Modal
+          onClose={closeModal}
+          label="Sign up for a card"
+          dismissible={false}
+        >
+          {/* The hook owns the active flow and settles its promise from this view's controls.
+              Backdrop and Escape dismissal stay disabled so the view always gets to settle it. */}
+          <SignUpForCardView />
         </Modal>
       )}
 
