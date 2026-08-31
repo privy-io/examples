@@ -1,6 +1,6 @@
 # Cards with Privy
 
-This Next.js example shows how to issue and manage cards for your users with the Privy React SDK, using `useSignUpForCard`, `SignUpForCardView`, and `CardSummaryView` from `@privy-io/react-auth/ui`.
+This Next.js example shows how to issue and manage cards for your users with the Privy React SDK, using `useSignUpForCard`, `SignUpForCardView`, and `CardSummaryView` from `@privy-io/react-auth/cards`.
 
 It is scaffolded from [`privy-next-starter`](../../privy-next-starter), trimmed down to just the card flow — the wallet, funding, linking, signer, and MFA sections are intentionally removed (opted out under `sectionOverrides` in [`.sync-manifest.json`](../../.sync-manifest.json), so base syncs don't re-add them).
 
@@ -53,7 +53,7 @@ mkdir -p privy-next-cards && curl -L https://github.com/privy-io/privy-examples/
 pnpm install
 ```
 
-The card views ship in a prerelease, so `@privy-io/react-auth` is pinned to an exact beta rather than a caret range. Move it to the stable release once one contains both components.
+The card APIs are available from the card-specific `@privy-io/react-auth/cards` entrypoint.
 
 ### 3. Configure environment
 
@@ -157,15 +157,7 @@ Notes:
 
 ## SDK version
 
-`CardSummaryView`, `SignUpForCardView`, and `useSignUpForCard` are not in a stable `@privy-io/react-auth` release yet, so this example pins the beta that contains all three. Their APIs are still moving, so the pin is exact rather than a caret range — a newer beta can be a breaking change.
-
-To check what you actually have installed:
-
-```bash
-rg 'SignUpForCardView|useSignUpForCard|SignUpForCardOptions|CardSummaryView|spendApproval|onReplaced|developerName' node_modules/@privy-io/react-auth/dist/dts/ui.d.ts
-```
-
-Both component names and the signup hook/types must appear, `SignUpForCardView` must take no props, `spendApproval` and `onReplaced` must appear, and `developerName` must not — that combination is the beta this example is written against. An older beta fails `tsc` on the imperative signup API. If you swap in a locally built tarball to test unreleased SDK changes, note that a local build and a published release can share a version string with different contents, so a later `pnpm install` can silently replace it with no resolution error — run the check above again after any install. Don't commit a `file:` dependency; it is machine-local.
+`CardSummaryView`, `SignUpForCardView`, and `useSignUpForCard` are exported from `@privy-io/react-auth/cards`. These interfaces may include breaking changes between SDK releases, so review the release notes when upgrading and update the integration as needed.
 
 ## Relevant links
 
