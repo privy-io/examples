@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { usePrivy } from "@privy-io/react-auth";
-import { useSignUpForCard } from "@privy-io/react-auth/ui";
+import { useSignUpForCard } from "@privy-io/react-auth/cards";
 import dynamic from "next/dynamic";
 
 import Section from "../reusables/section";
@@ -21,7 +21,7 @@ import { CARD_CHAINS, type CardEnvironment } from "@/chains";
 // so there is nothing to server-render.
 const SignUpForCardView = dynamic(
   () =>
-    import("@privy-io/react-auth/ui").then((m) => ({
+    import("@privy-io/react-auth/cards").then((m) => ({
       default: m.SignUpForCardView,
     })),
   { ssr: false },
@@ -29,7 +29,7 @@ const SignUpForCardView = dynamic(
 
 const CardSummaryView = dynamic(
   () =>
-    import("@privy-io/react-auth/ui").then((m) => ({
+    import("@privy-io/react-auth/cards").then((m) => ({
       default: m.CardSummaryView,
     })),
   { ssr: false },
