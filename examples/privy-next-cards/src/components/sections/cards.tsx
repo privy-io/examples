@@ -170,6 +170,7 @@ const Cards = () => {
           environment: "sandbox",
           walletId: wallet.id,
           chainId: chain.id,
+          asset: "path_usd",
         });
       } else {
         if (!PRODUCTION_SPEND_APPROVAL) return;
@@ -178,6 +179,7 @@ const Cards = () => {
           spendApproval: PRODUCTION_SPEND_APPROVAL,
           walletId: wallet.id,
           chainId: chain.id,
+          asset: "usdc",
         });
       }
       setCardId(result.id);
