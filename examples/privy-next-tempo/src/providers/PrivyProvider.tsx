@@ -2,7 +2,6 @@
 
 import { PrivyProvider as BasePrivyProvider } from "@privy-io/react-auth";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
 import { tempo as configureTempo } from "tempo.ts/chains";
 
 const tempo = configureTempo({
@@ -31,12 +30,4 @@ export function PrivyProvider({ children }: { children: React.ReactNode }) {
       <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
     </BasePrivyProvider>
   );
-}
-
-function ViemProvider({ children }: { children: React.ReactNode }) {
-  const [client, setClient] = useState();
-
-  useEffect(() => {}, []);
-
-  return <>{children}</>;
 }
