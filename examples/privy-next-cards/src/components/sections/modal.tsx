@@ -50,9 +50,11 @@ export const Modal = ({
         role="dialog"
         aria-modal="true"
         aria-label={label}
-        className="relative max-h-[90vh] w-[440px] max-w-full overflow-y-auto rounded-2xl bg-white px-4 pb-4 shadow-xl"
+        className="relative flex max-h-[calc(100dvh-2rem)] w-[440px] max-w-full flex-col overflow-hidden rounded-2xl bg-white shadow-xl"
       >
-        {children}
+        <div className="min-h-0 overflow-y-auto overscroll-contain px-4 pb-4">
+          {children}
+        </div>
       </div>
     </div>
   );
