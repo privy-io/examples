@@ -1,0 +1,61 @@
+@import 'tailwindcss';
+
+/*
+  Design tokens. Utilities read as bg-background-elevated, text-text-muted,
+  border-border, and so on, so components describe intent rather than a raw
+  palette color. Light theme only, to match Privy's dashboard and docs.
+*/
+@theme {
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: JetBrains Mono, Fira Code, monospace;
+
+  --color-background: #ffffff;
+  --color-background-hover: #f7f7fb;
+  --color-background-elevated: #f1f2f7;
+  --color-background-elevated-hover: #e8e9f1;
+  --color-background-interactive: #5b4dff;
+  --color-background-interactive-hover: #4b3ee6;
+  --color-background-inverse: #14151f;
+  --color-background-inverse-hover: #2a2c3a;
+  --color-background-info: #eef0ff;
+  --color-background-success: #e9f8f0;
+  --color-background-warning: #fdf6dc;
+  --color-background-error: #fdeeef;
+
+  --color-text: #14151f;
+  --color-text-muted: #5c6075;
+  --color-text-subtle: #8b8fa3;
+  --color-text-inverse: #ffffff;
+  --color-text-interactive: #5b4dff;
+  --color-text-interactive-hover: #4b3ee6;
+  --color-text-success: #137a55;
+  --color-text-warning: #8a5d00;
+  --color-text-error: #c12a3a;
+
+  --color-border: #e3e4ec;
+  --color-border-hover: #cdd0dd;
+  --color-border-focus: #5b4dff;
+  --color-border-success: #bde8d2;
+  --color-border-warning: #f1dd9c;
+  --color-border-error: #f5c2c7;
+  --color-border-info: #d3d7ff;
+
+  --radius-card: 1rem;
+}
+
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-border);
+  }
+
+  body {
+    background: var(--color-background);
+    color: var(--color-text);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
