@@ -29,6 +29,7 @@ Focused examples showcasing specific Privy features and integrations.
 | [`privy-next-farcaster`](./examples/privy-next-farcaster)                       | Farcaster social integration          |
 | [`privy-next-farcaster-mini-app`](./examples/privy-next-farcaster-mini-app)     | Farcaster Mini App integration        |
 | [`privy-next-fiat-onramp`](./examples/privy-next-fiat-onramp)                   | Fiat currency on-ramp                 |
+| [`privy-next-fiat-orchestration`](./examples/privy-next-fiat-orchestration)     | KYC, fiat deposits, and bank payouts  |
 | [`privy-next-funding`](./examples/privy-next-funding)                           | Privy funding hooks showcase          |
 | [`privy-next-permissionless`](./examples/privy-next-permissionless)             | Permissionless.js integration         |
 | [`privy-next-session-keys`](./examples/privy-next-session-keys)                 | Account abstraction with session keys |
