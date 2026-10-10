@@ -170,7 +170,7 @@ const WalletActions = () => {
 
       const solTransferInstruction = getTransferSolInstruction({
         amount: 1000000,
-        destination: address("Enter_Destination_Address_Here"),
+        destination: address(selectedWallet.address),
         source: createNoopSigner(address(selectedWallet.address)),
       });
 
