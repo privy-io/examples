@@ -99,8 +99,7 @@ export type FiatPaymentRail = "sepa" | "ach_push" | "wire";
 
 /**
  * The fiat side of a deposit, identical across all three lifecycle events.
- * `amount` and `currency` are nested here, not on `data` — reading them one
- * level up is what silently blanked the deposit feed.
+ * `amount` and `currency` are nested here, not on `data`.
  */
 export interface DepositSource {
   sender_name?: string;
@@ -325,10 +324,7 @@ export type WalletActionStatus =
   | "failed"
   | "rejected";
 
-/**
- * A payout wallet action. Crypto is sent on-chain to a liquidation address that
- * offramps to the destination bank account — both are internal to Privy.
- */
+/** A payout wallet action. */
 export interface PayoutResponse {
   id: string;
   status: WalletActionStatus;

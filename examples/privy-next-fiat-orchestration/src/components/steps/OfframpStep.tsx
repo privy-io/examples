@@ -33,10 +33,8 @@ interface BankAccount {
   currency?: string;
 }
 
-// Which chains each asset can be paid out from: Bridge must support the chain
-// for liquidation addresses, and Privy must have the token's contract address on
-// it. USDC.e and USDT0 are the Tempo-native names for USDC and USDT — the caller
-// passes the Privy asset id and Privy translates it to Bridge's currency.
+// Which chains each asset can be paid out from. USDC.e and USDT0 are the
+// Tempo-native names for USDC and USDT.
 const CHAINS_BY_ASSET = {
   usdc: ["base", "ethereum", "arbitrum", "polygon", "optimism"],
   usdt: ["base", "ethereum", "arbitrum", "polygon", "optimism"],

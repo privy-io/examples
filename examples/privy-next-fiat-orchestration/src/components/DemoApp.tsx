@@ -40,8 +40,8 @@ export function DemoApp() {
     (event): event is KycWebhookEvent => event.type === "user.kyc.updated",
   );
 
-  // Wallets created at login have an owner but no entity, and the V2 fiat
-  // endpoints resolve KYC by entity. Assign it once so the fiat flows work.
+  // Wallets created at login have an owner but no entity, and fiat calls need
+  // one. Assign it once so the fiat flows work.
   // This becomes unnecessary once wallet creation assigns the entity itself.
   useEffect(() => {
     if (!authenticated || !walletId) return;

@@ -3,10 +3,8 @@ import { withAuth } from "@/lib/server-auth";
 import { privyApiCall, PRIVY_ID_PATTERN } from "@/lib/privy-client";
 
 /**
- * Payout is a single Privy call. Privy resolves the Bridge customer from the
- * wallet's entity, finds or creates a liquidation address for the destination
- * fiat account, and initiates the on-chain transfer to it — so the client never
- * sees a deposit address.
+ * Payout is a single Privy call that sends crypto from the wallet to the
+ * linked bank account and returns a wallet action to poll.
  *
  * It does spend from the wallet, so a user-owned wallet requires the user's
  * authorization signature (built by /api/payout/prepare). Without one Privy

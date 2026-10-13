@@ -101,6 +101,18 @@ from `.env.example` in the project settings. `PRIVY_APP_SECRET` and
 `PRIVY_WEBHOOK_SIGNING_SECRET` must **not** carry the `NEXT_PUBLIC_` prefix, or
 they would be inlined into the public client bundle. See the SSE caveat above.
 
+### Hosting caveats
+
+This is a single-user demo, not a multi-tenant app. Before hosting it:
+
+- **Use a Privy app with no other users.** `GET /api/wallet/[walletId]` and
+  `GET /api/webhooks/stream?wallet_id=` read any wallet ID with the app secret
+  and don't check that it belongs to the caller, so any logged-in user could
+  read another wallet or its deposit events.
+- **Only set `SHOWCASE_USER_ID` if that user's data can be public.**
+  `GET /api/showcase` is unauthenticated and CDN-cached, and it returns that
+  user's deposit instructions, including account and routing numbers.
+
 ## Flow
 
 1. **Login** — Email or Google via Privy
@@ -117,5 +129,4 @@ they would be inlined into the public client bundle. See the SSE caveat above.
    without it. SWIFT also needs `account.country` (a 3-letter ISO code such
    as `DEU`).
 7. **Offramp** — One `payout/fiat` call sends crypto to the linked bank
-   account; Privy handles the liquidation address and returns a wallet action
-   to poll
+   account and returns a wallet action to poll

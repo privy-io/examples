@@ -51,9 +51,7 @@ interface BaseDepositEvent {
 
 /**
  * The fiat side of a deposit, identical across all three events. `amount` and
- * `currency` live here rather than on `data` — a past version of the schema had
- * them one level up, and reading the old paths is what silently blanked this
- * feed.
+ * `currency` live here rather than on `data`.
  */
 export interface DepositSource {
   sender_name?: string;
@@ -187,7 +185,7 @@ interface WebhookEventStore {
 
 // Next.js bundles route handlers separately. Store the registry on globalThis so
 // the webhook receiver and SSE route share it within the same server process.
-const storeKey = Symbol.for("fiat-orchestration-demo.webhook-event-store");
+const storeKey = Symbol.for("privy-fiat-orchestration.webhook-event-store");
 const globalWithStore = globalThis as typeof globalThis & {
   [storeKey]?: WebhookEventStore;
 };

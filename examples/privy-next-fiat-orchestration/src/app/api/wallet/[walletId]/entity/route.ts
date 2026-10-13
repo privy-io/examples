@@ -5,9 +5,8 @@ import { privyApiCall, PRIVY_ID_PATTERN } from "@/lib/privy-client";
 /**
  * Assign the authenticated user as the wallet's entity. Set-once and immutable.
  *
- * Neither login-time wallet creation nor POST /v1/users assigns an entity, but
- * the V2 fiat endpoints resolve KYC by entity rather than owner — so a
- * login-created wallet is rejected until this runs.
+ * Neither login-time wallet creation nor POST /v1/users assigns an entity, and
+ * fiat calls for a login-created wallet are rejected until this runs.
  */
 export const POST = withAuthParams<{ walletId: string }>(
   async (_req, userId, { params }) => {

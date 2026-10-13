@@ -11,13 +11,7 @@ function randomDigits(count: number): number[] {
   return Array.from({ length: count }, () => Math.floor(Math.random() * 10));
 }
 
-/**
- * A 9-digit ABA routing number whose check digit is correct.
- *
- * Bridge sandbox does not appear to verify the checksum today — the previous
- * hardcoded `121212121` fails it — but generating a valid one costs nothing and
- * avoids depending on that staying true.
- */
+/** A 9-digit ABA routing number whose check digit is correct. */
 export function randomRoutingNumber(): string {
   const [d1, d2, d3, d4, d5, d6, d7, d8] = randomDigits(8);
 
@@ -45,8 +39,8 @@ export function randomSortCode(): string {
 }
 
 /**
- * A German IBAN with valid mod-97 check digits, which Bridge verifies. The
- * bank code is Deutsche Bank Frankfurt's, matching the seeded BIC DEUTDEFF.
+ * A German IBAN with valid mod-97 check digits. The bank code is Deutsche Bank
+ * Frankfurt's, matching the seeded BIC DEUTDEFF.
  */
 export function randomIban(): string {
   const bban = `50070010${randomDigits(10).join("")}`;

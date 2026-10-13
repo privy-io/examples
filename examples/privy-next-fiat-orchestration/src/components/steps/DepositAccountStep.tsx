@@ -27,8 +27,7 @@ interface Props {
 }
 
 // The full sets the API accepts. Destination asset and chain are free-form
-// strings in the request schema, validated at Privy's boundary against Bridge's
-// virtual-account currencies and payment rails.
+// strings in the request schema, validated by Privy.
 const CURRENCY_OPTIONS = ["usd", "eur", "gbp", "brl", "mxn", "cop"] as const;
 const ASSET_OPTIONS = ["usdc", "usdt", "eurc", "pyusd", "usdb"] as const;
 const CHAIN_OPTIONS = [
