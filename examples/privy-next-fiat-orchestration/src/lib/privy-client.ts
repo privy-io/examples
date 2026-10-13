@@ -15,7 +15,6 @@ export const PRIVY_ID_PATTERN = /^[A-Za-z0-9_-]+$/;
 export const privyClient = new PrivyClient({
   appId: process.env.PRIVY_APP_ID!,
   appSecret: process.env.PRIVY_APP_SECRET!,
-  // Match the configured environment (staging/production).
   apiUrl: PRIVY_API_BASE,
   // Required to verify incoming webhook signatures (Privy delivers via Svix).
   webhookSigningSecret: process.env.PRIVY_WEBHOOK_SIGNING_SECRET,

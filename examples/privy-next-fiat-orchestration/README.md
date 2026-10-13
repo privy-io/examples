@@ -71,7 +71,7 @@ src/
     ├── api.ts                  client fetch helper
     ├── use-kyc-stream.ts       client SSE consumer
     ├── privy-client.ts         server: calls Privy, captures inspector metadata
-    ├── privy-env.ts            server: production/staging host resolution
+    ├── privy-env.ts            server: Privy API and auth hosts
     ├── server-auth.ts          server: verifies the caller's Privy access token
     └── kyc-events.ts           server: in-memory webhook store + SSE fan-out
 ```

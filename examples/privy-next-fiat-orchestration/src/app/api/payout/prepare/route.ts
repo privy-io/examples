@@ -14,7 +14,7 @@ import { PRIVY_ID_PATTERN } from "@/lib/privy-client";
  * /api/payout to execute.
  *
  * The signature covers the URL, so it must be built from the same base the
- * server will call — staging and production differ.
+ * server will call.
  */
 export const POST = withAuth(async (req) => {
   const { wallet_id: walletId, source, destination } = await req.json();

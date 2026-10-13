@@ -11,10 +11,8 @@ if (typeof window !== "undefined") {
 import { PrivyProvider } from "@privy-io/react-auth";
 
 /**
- * `authBase` is passed down from the server layout rather than read from the
- * environment here: PRIVY_ENV is server-only, and a staging app ID does not
- * resolve against the production auth host, so the client SDK has to point at
- * the same environment as the server.
+ * `authBase` is passed down from the server layout so the client SDK and the
+ * server share one auth host, defined in `privy-env.ts`.
  */
 export function Providers({
   authBase,

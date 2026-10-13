@@ -20,8 +20,6 @@ export default function RootLayout({
   return (
     <html lang="en" className={inter.variable}>
       <body className="font-sans">
-        {/* Server component, so PRIVY_ENV resolves here and the client SDK
-            inherits the same environment from a single variable. */}
         <Providers authBase={PRIVY_AUTH_BASE}>{children}</Providers>
       </body>
     </html>
