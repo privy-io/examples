@@ -109,7 +109,13 @@ they would be inlined into the public client bundle. See the SSE caveat above.
 4. **Onramp** — Fiat → USDC on Base (returns deposit instructions)
 5. **Deposit Account** — Provision a persistent fiat deposit account for the
    wallet; deposits arrive over the webhook stream
-6. **Add Bank Account** — Link an external fiat account for offramps
+6. **Add Bank Account** — Link an external fiat account for offramps. Each
+   account type is pinned to one currency (SWIFT is USD only). IBAN, GB and
+   SWIFT accounts also need an `account_owner` next to `account_owner_name`,
+   either `{"type": "individual", "first_name": "John", "last_name": "Doe"}` or
+   `{"type": "business", "business_name": "Acme Inc"}`. Privy returns a 400
+   without it. SWIFT also needs `account.country` (a 3-letter ISO code such
+   as `DEU`).
 7. **Offramp** — One `payout/fiat` call sends crypto to the linked bank
    account; Privy handles the liquidation address and returns a wallet action
    to poll

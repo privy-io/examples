@@ -44,9 +44,16 @@ export function randomSortCode(): string {
   return randomDigits(6).join("");
 }
 
-/** An IBAN-shaped value: country code, check digits, then a random body. */
+/**
+ * A German IBAN with valid mod-97 check digits, which Bridge verifies. The
+ * bank code is Deutsche Bank Frankfurt's, matching the seeded BIC DEUTDEFF.
+ */
 export function randomIban(): string {
-  return `DE${randomDigits(2).join("")}${randomDigits(18).join("")}`;
+  const bban = `50070010${randomDigits(10).join("")}`;
+  // Check digits: move "DE00" to the end, map D=13 and E=14, take mod 97.
+  const remainder = BigInt(`${bban}131400`) % BigInt(97);
+  const check = String(BigInt(98) - remainder).padStart(2, "0");
+  return `DE${check}${bban}`;
 }
 
 /** A Pix EVP key, which is a UUID. */

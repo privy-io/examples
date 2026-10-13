@@ -52,6 +52,12 @@ const ACCOUNT_TYPE_FIELDS: Record<AccountType, readonly string[]> = {
   ],
 };
 
+// Bridge needs the owner's type and name for these, and Privy returns a 400
+// without `account_owner`. US and Pix still take `account_owner_name` alone.
+const OWNER_REQUIRED_TYPES: readonly AccountType[] = ["iban", "gb", "swift"];
+
+type OwnerType = "individual" | "business";
+
 const ACCOUNT_TYPE_LABELS: Record<AccountType, string> = {
   us: "US (ACH/wire)",
   gb: "UK (Faster Payments)",
@@ -62,6 +68,10 @@ const ACCOUNT_TYPE_LABELS: Record<AccountType, string> = {
 
 const FIELD_LABELS: Record<string, string> = {
   account_owner_name: "Account owner name",
+  owner_type: "Owner type",
+  first_name: "First name",
+  last_name: "Last name",
+  business_name: "Business name",
   bank_name: "Bank name",
   currency: "Currency",
   account_number: "Account number",
@@ -83,6 +93,8 @@ const FIELD_LABELS: Record<string, string> = {
 };
 
 const OPTION_LABELS: Record<string, string> = {
+  individual: "Individual",
+  business: "Business",
   checking: "Checking",
   savings: "Savings",
   client: "Client",
@@ -126,25 +138,23 @@ function errorMessage(meta: ApiMeta, fallback: string): string {
 }
 
 /**
- * Bridge pins most account types to one settlement currency, and Privy rejects a
- * mismatched pair with `currency must be "x" when account.type is "y"`. SWIFT is
- * the exception: it settles cross-border in whichever currency the beneficiary
- * bank accepts, so it is the only type with a real choice.
+ * Bridge pins every account type to one settlement currency, and Privy rejects a
+ * mismatched pair with `currency must be "x" when account.type is "y"`. SWIFT
+ * used to accept any currency the beneficiary bank did, but Bridge now accepts
+ * only USD for it.
  */
-const CURRENCY_BY_TYPE: Record<AccountType, string | null> = {
+const CURRENCY_BY_TYPE: Record<AccountType, string> = {
   us: "usd",
   gb: "gbp",
   pix: "brl",
   iban: "eur",
-  swift: null,
+  swift: "usd",
 };
-
-const SWIFT_DEFAULT_CURRENCY = "usd";
 
 // The API validates these against fixed sets, so offer them as selects rather
 // than free text — a typo in a text box is a 400 the developer has to debug.
 const FIELD_OPTIONS: Record<string, readonly string[]> = {
-  currency: ["usd", "eur", "gbp", "brl", "mxn"],
+  owner_type: ["individual", "business"],
   checking_or_savings: ["checking", "savings"],
   category: ["client", "parent_company", "subsidiary", "supplier"],
   purpose_of_funds: ["intra_group_transfer", "invoice_for_goods_and_services"],
@@ -221,7 +231,7 @@ function buildAccount(type: AccountType, f: Record<string, string>) {
         type,
         account_number: f.account_number,
         bic: f.bic,
-        ...(f.country && { country: f.country }),
+        country: f.country,
         category: f.category,
         // The schema takes an array with at least one entry.
         purpose_of_funds: [f.purpose_of_funds],
@@ -249,6 +259,13 @@ export function BankAccountStep({
     currency: "usd",
   });
 
+  const [owner, setOwner] = useState({
+    owner_type: "individual" as OwnerType,
+    first_name: "John",
+    last_name: "Doe",
+    business_name: "Acme Inc",
+  });
+
   const [accountFields, setAccountFields] = useState<Record<string, string>>(
     {},
   );
@@ -273,7 +290,7 @@ export function BankAccountStep({
     setAccountFields(seedFor(type));
     setForm((prev) => ({
       ...prev,
-      currency: CURRENCY_BY_TYPE[type] ?? SWIFT_DEFAULT_CURRENCY,
+      currency: CURRENCY_BY_TYPE[type],
     }));
   };
 
@@ -352,6 +369,16 @@ export function BankAccountStep({
           provider: "bridge",
           environment,
           account_owner_name: form.account_owner_name,
+          ...(OWNER_REQUIRED_TYPES.includes(accountType) && {
+            account_owner:
+              owner.owner_type === "individual"
+                ? {
+                    type: "individual",
+                    first_name: owner.first_name,
+                    last_name: owner.last_name,
+                  }
+                : { type: "business", business_name: owner.business_name },
+          }),
           bank_name: form.bank_name,
           currency: form.currency,
           account: buildAccount(accountType, accountFields),
@@ -393,9 +420,7 @@ export function BankAccountStep({
           >
             {FIELD_OPTIONS[key].map((option) => (
               <option key={option} value={option}>
-                {key === "currency"
-                  ? option.toUpperCase()
-                  : labelFor(option, OPTION_LABELS)}
+                {labelFor(option, OPTION_LABELS)}
               </option>
             ))}
           </Select>
@@ -510,9 +535,9 @@ export function BankAccountStep({
 
           <div className="grid grid-cols-2 gap-3">
             {Object.entries(form).map(([key, value]) => {
-              // Currency is pinned by account type for every type but SWIFT, so
-              // show it as a readout rather than a choice that would 400.
-              if (key === "currency" && CURRENCY_BY_TYPE[accountType]) {
+              // Currency is pinned by account type, so show it as a readout
+              // rather than a choice that would 400.
+              if (key === "currency") {
                 return (
                   <div key={key}>
                     <Label>Currency</Label>
@@ -527,6 +552,24 @@ export function BankAccountStep({
               );
             })}
           </div>
+
+          {OWNER_REQUIRED_TYPES.includes(accountType) && (
+            <div>
+              <div className="mb-2 text-sm font-medium text-text">
+                Account owner
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                {(owner.owner_type === "individual"
+                  ? (["owner_type", "first_name", "last_name"] as const)
+                  : (["owner_type", "business_name"] as const)
+                ).map((key) =>
+                  field(key, owner[key], (next) =>
+                    setOwner((prev) => ({ ...prev, [key]: next })),
+                  ),
+                )}
+              </div>
+            </div>
+          )}
 
           <div>
             <div className="mb-2 flex items-center gap-1.5 text-sm font-medium text-text">
@@ -545,6 +588,11 @@ export function BankAccountStep({
                 Enter either a Pix key or a BR code, not both.
               </p>
             )}
+            {accountType === "swift" && (
+              <p className="mt-2 text-xs text-text-muted">
+                Country is required: a 3-letter ISO code, such as DEU.
+              </p>
+            )}
           </div>
 
           <div>
@@ -561,7 +609,11 @@ export function BankAccountStep({
           </div>
 
           <div className="flex items-center gap-3">
-            <Button onClick={createAccount} loading={loading}>
+            <Button
+              onClick={createAccount}
+              loading={loading}
+              disabled={accountType === "swift" && !accountFields.country}
+            >
               {loading ? "Adding account…" : "Add bank account"}
             </Button>
             <Button variant="ghost" onClick={() => setShowForm(false)}>
