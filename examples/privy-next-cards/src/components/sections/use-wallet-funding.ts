@@ -10,7 +10,7 @@ export const useWalletFunding = ({
   token,
 }: {
   address?: string;
-  token: string | null;
+  token: string;
 }) => {
   const [isFunding, setIsFunding] = useState(false);
 

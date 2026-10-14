@@ -2,16 +2,22 @@
 
 import { useEffect, useState } from "react";
 
-import type { CardEnvironment } from "@/chains";
+import type { CardEnvironment, CardFundingAsset } from "@/chains";
 import { isOpen, listCards } from "./cards-api";
 
 export const useActiveCard = ({
   userId,
+  walletId,
   environment,
+  asset,
+  chainId,
   getAccessToken,
 }: {
   userId?: string;
+  walletId?: string;
   environment: CardEnvironment;
+  asset: CardFundingAsset;
+  chainId: string;
   getAccessToken: () => Promise<string | null>;
 }) => {
   const [cardId, setCardId] = useState<string | null>(null);
@@ -20,7 +26,7 @@ export const useActiveCard = ({
   const [totalCards, setTotalCards] = useState(0);
 
   useEffect(() => {
-    if (!userId) {
+    if (!userId || !walletId) {
       setCardId(null);
       setTotalCards(0);
       return;
@@ -38,8 +44,15 @@ export const useActiveCard = ({
         const cards = await listCards({ environment, accessToken: token });
         if (!active) return;
 
-        setCardId(cards.find(isOpen)?.id ?? null);
-        setTotalCards(cards.length);
+        const mine = cards.filter(
+          (card) =>
+            card.wallet_id === walletId &&
+            card.chain_id === chainId &&
+            (card.asset === asset ||
+              (asset === "pathusd" && card.asset === "path_usd")),
+        );
+        setCardId(mine.find(isOpen)?.id ?? null);
+        setTotalCards(mine.length);
       } catch (error) {
         if (!active) return;
         setCardId(null);
@@ -54,7 +67,7 @@ export const useActiveCard = ({
     return () => {
       active = false;
     };
-  }, [userId, environment, getAccessToken]);
+  }, [userId, walletId, environment, asset, chainId, getAccessToken]);
 
   return { cardId, setCardId, error, isLoading, totalCards };
 };

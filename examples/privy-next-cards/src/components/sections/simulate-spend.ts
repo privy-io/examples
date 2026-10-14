@@ -10,7 +10,7 @@ import { listCards } from "./cards-api";
  *
  * The amount only affects the transaction list. The balance shown by `CardSummaryView` is the
  * funding wallet's on-chain balance, so a simulated purchase does not move it — real settlement
- * pulls USDC through the Bridge spender.
+ * pulls the selected stablecoin through the Bridge spender.
  */
 export const simulateSpend = async ({
   cardId,
