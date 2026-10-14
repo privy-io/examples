@@ -1,52 +1,69 @@
 import { tempo, tempoModerato } from "viem/chains";
 
 /**
- * pathUSD, the TIP-20 test stablecoin the faucet hands out on Moderato. This is also the
- * `stablecoinAddress` in the SDK's built-in sandbox spend-approval target for `eip155:42431`, so the
- * card's allowance and the wallet's balance are denominated in the same token.
+ * pathUSD. Root TIP-20 on Tempo and Tempo Moderato, and the sandbox spend-approval
+ * target when the card asset is `pathusd`.
  */
 export const PATH_USD = "0x20C0000000000000000000000000000000000000" as const;
 
 /**
- * Tempo has no native gas token — fees are paid in a TIP-20 stablecoin. Pinning `feeToken` to the
- * same token the card spends means one faucet top-up covers both the approval transaction and the
- * card, instead of the two-token dance an ETH-gas chain needs.
- *
- * Privy sponsors the card's approval transaction (`sponsor: true`), so in practice the fee token only
- * matters on the pre-funded fallback path when sponsorship is unavailable.
+ * OpenUSD. Same TIP-20 address on Tempo and Tempo Moderato. Sandbox signup with
+ * asset `ousd` approves this token. Production signup passes it as
+ * `spendApproval.stablecoinAddress`.
+ */
+export const OUSD = "0x20c0000000000000000000006a37DA5C996874BE" as const;
+
+/**
+ * Tempo has no native gas token. Fees are paid in a TIP-20 stablecoin. The sandbox
+ * chain pins pathUSD as the fee token. The Moderato faucet funds pathUSD and OUSD,
+ * and Privy sponsors the card approval, so the fee token does not have to match the
+ * card asset.
  */
 export const TEMPO_TESTNET = tempoModerato.extend({ feeToken: PATH_USD });
 
-/**
- * Tempo mainnet. No `feeToken` here: the production stablecoin comes from the Bridge integration via
- * `NEXT_PUBLIC_CARD_USDC_ADDRESS`, so hardcoding a fee token would be a guess about a real balance.
- */
+/** Tempo mainnet. The card spends pathUSD or OUSD. The Bridge spender comes from env. */
 export const TEMPO_MAINNET = tempo;
 
 export type CardEnvironment = "sandbox" | "production";
 
 /**
- * The chain each environment funds cards from, and how to label it.
+ * The chain each environment funds cards from.
  *
- * Sandbox is Tempo Testnet (Moderato), the one Tempo chain the SDK ships a built-in spend-approval
- * target for. Production is Tempo mainnet, so its stablecoin is real money and its approval target
- * has to be supplied — see `PRODUCTION_SPEND_APPROVAL` in `cards.tsx`.
+ * Sandbox is Tempo Moderato. The SDK ships a built-in spend-approval target for it, and
+ * swaps that target to OUSD when the card asset is `ousd`. Production is Tempo mainnet.
+ * Its spender has to be supplied. See `productionSpendApproval`.
  */
 export const CARD_CHAINS: Record<
   CardEnvironment,
-  { id: string; label: string; token: string | null }
+  { id: string; label: string }
 > = {
   sandbox: {
     id: `eip155:${TEMPO_TESTNET.id}`,
     label: TEMPO_TESTNET.name,
-    token: "pathUSD",
   },
-  // No token name for production: which stablecoin a live card settles in comes from the Bridge
-  // integration via `NEXT_PUBLIC_CARD_USDC_ADDRESS`, so naming one here would be a guess about
-  // someone else's configuration. Tempo mainnet's only initialized TIP-20 today is pathUSD.
   production: {
     id: `eip155:${TEMPO_MAINNET.id}`,
     label: TEMPO_MAINNET.name,
-    token: null,
   },
+};
+
+/** Asset string `signUp` sends. `ousd` selects the SDK's Moderato OUSD spend target. */
+export type CardFundingAsset = "pathusd" | "ousd";
+
+export const CARD_FUNDING_ASSETS: Record<
+  CardFundingAsset,
+  { label: string; address: string }
+> = {
+  pathusd: { label: "PathUSD", address: PATH_USD },
+  ousd: { label: "OUSD", address: OUSD },
+};
+
+/** Production has no built-in spend target. The stablecoin follows the funding-asset toggle. */
+export const productionSpendApproval = (asset: CardFundingAsset) => {
+  const spenderAddress = process.env.NEXT_PUBLIC_CARD_SPENDER_ADDRESS;
+  if (!spenderAddress) return null;
+  return {
+    stablecoinAddress: CARD_FUNDING_ASSETS[asset].address,
+    spenderAddress,
+  };
 };

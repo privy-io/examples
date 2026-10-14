@@ -16,7 +16,7 @@ export const FundingWalletStatus = ({
   isLoading: boolean;
   isSandbox: boolean;
   chainLabel: string;
-  token: string | null;
+  token: string;
   totalCards: number;
 }) => {
   if (!address) {
@@ -64,14 +64,14 @@ export const FundingWalletStatus = ({
         {isSandbox ? (
           <>
             The card spends {token} on {chainLabel} from this wallet. Tempo has
-            no native gas token — fees are paid in the same stablecoin — so one
-            faucet top-up covers both the approval and the card.
+            no native gas token. Fees are paid in stablecoin. One faucet top-up
+            funds pathUSD and OUSD.
           </>
         ) : (
           <>
-            The card spends the real stablecoin configured for this deployment
-            on {chainLabel} from this wallet. Fees are paid in stablecoin rather
-            than a native gas token, so no separate gas balance is needed.
+            The card spends real {token} on {chainLabel} from this wallet. Fees
+            are paid in stablecoin rather than a native gas token, so no
+            separate gas balance is needed.
           </>
         )}
       </p>
