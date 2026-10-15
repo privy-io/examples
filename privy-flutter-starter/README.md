@@ -96,5 +96,5 @@ final result = await wallet.provider.request(request);
 
 - [Privy Dashboard](https://dashboard.privy.io)
 - [Privy Documentation](https://docs.privy.io)
-- [Flutter SDK](https://www.npmjs.com/package/privy_flutter)
+- [Flutter SDK](https://pub.dev/packages/privy_flutter)
 - [Flutter Documentation](https://flutter.dev/docs)
