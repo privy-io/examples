@@ -11,7 +11,7 @@
   "dependencies": {
     "@heroicons/react": "^2.2.0",
     "@privy-io/react-auth": "^3.48.0",
-    "next": "15.5.7",
+    "next": "15.5.28",
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "react-toastify": "^11.0.5",
@@ -24,7 +24,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
-    "eslint-config-next": "15.5.7",
+    "eslint-config-next": "15.5.28",
     "tailwindcss": "^4",
     "typescript": "^5"
   },

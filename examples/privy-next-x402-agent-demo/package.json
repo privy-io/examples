@@ -15,7 +15,7 @@
     "@x402/evm": "^2.3.0",
     "@x402/fetch": "^2.3.0",
     "@x402/svm": "^2.3.0",
-    "next": "16.1.6",
+    "next": "16.4.1",
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "stripe": "^20.3.1",
@@ -27,7 +27,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
-    "eslint-config-next": "16.1.6",
+    "eslint-config-next": "16.4.1",
     "tailwindcss": "^4",
     "tsx": "^4.21.0",
     "typescript": "^5"
