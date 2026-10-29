@@ -11,10 +11,14 @@ export type Card = {
   provider_id: string;
   /** `active`, `inactive` (frozen), or `canceled`. A replaced card is left `canceled`. */
   status: string;
+  wallet_id: string;
+  chain_id: string;
+  asset: string;
 };
 
 /** A card that is still usable. Cancelled cards stay in the list, so they have to be filtered out. */
-export const isOpen = (card: Card) => card.status !== "canceled";
+export const isOpen = (card: Card) =>
+  card.status !== "canceled" && card.status !== "replaced";
 
 /**
  * The authenticated user's cards in one environment, newest first.

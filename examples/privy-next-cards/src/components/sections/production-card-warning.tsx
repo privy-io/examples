@@ -4,10 +4,10 @@ export const ProductionCardWarning = ({
   isConfigured: boolean;
 }) => (
   <p className="mt-3 w-full max-w-[480px] rounded-xl bg-[#FFF4E5] p-3 text-[13px] font-light text-[#663C00]">
-    Production uses real money.{" "}
+    Production uses real money. New cards use OUSD on Tempo.{" "}
     {isConfigured
-      ? "Signup grants a real USDC allowance to the Bridge spender configured in this deployment's env, so a card issued here can spend."
-      : "Signup is disabled until NEXT_PUBLIC_CARD_USDC_ADDRESS and NEXT_PUBLIC_CARD_SPENDER_ADDRESS are set — the SDK requires the mainnet spend-approval target, since Bridge does not publish it."}{" "}
+      ? "Signup uses an existing card's funding settings when available. Tempo OUSD and Base USDC require their own production approval targets."
+      : "New cards need NEXT_PUBLIC_CARD_USDC_ADDRESS (Tempo OUSD) and NEXT_PUBLIC_CARD_SPENDER_ADDRESS. Existing Base USDC cards need NEXT_PUBLIC_BASE_CARD_SPENDER_ADDRESS instead."}{" "}
     Simulated purchases are sandbox-only &mdash; Stripe&apos;s test helpers do
     not exist for live keys.
   </p>
