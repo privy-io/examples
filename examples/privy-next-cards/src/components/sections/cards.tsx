@@ -14,6 +14,7 @@ import { CardSignUpModal } from "./card-sign-up-modal";
 import { CardSummaryContainer } from "./card-summary-container";
 import { findEmbeddedWallet } from "./find-embedded-wallet";
 import { FundingWalletStatus } from "./funding-wallet-status";
+import { getCardSignUpOptions } from "./get-card-sign-up-options";
 import { ProductionCardWarning } from "./production-card-warning";
 import { useActiveCard } from "./use-active-card";
 import { useSimulatedCardSpend } from "./use-simulated-card-spend";
@@ -29,6 +30,7 @@ const PRODUCTION_SPEND_APPROVAL = (() => {
 const Cards = () => {
   const { user, getAccessToken } = usePrivy();
   const { signUp } = useSignUpForCard();
+  const [isSigningUp, setIsSigningUp] = useState(false);
   const [environment, setEnvironment] =
     useState<CardEnvironment>("sandbox");
   const [containerMode, setContainerMode] =
@@ -57,6 +59,7 @@ const Cards = () => {
   const closeView = useCallback(() => setOpenView(null), []);
 
   const switchEnvironment = (next: CardEnvironment) => {
+    if (isSigningUp) return;
     setOpenView(null);
     setEnvironment(next);
   };
@@ -67,24 +70,19 @@ const Cards = () => {
   };
 
   const openCardSignUp = async () => {
-    if (!wallet || (!isSandbox && !PRODUCTION_SPEND_APPROVAL)) return;
+    if (!wallet || isSigningUp) return;
 
-    setOpenView("signup");
+    setIsSigningUp(true);
     try {
-      const result = isSandbox
-        ? await signUp({
-            environment: "sandbox",
-            walletId: wallet.id,
-            chainId: chain.id,
-            asset: "path_usd",
-          })
-        : await signUp({
-            environment: "production",
-            spendApproval: PRODUCTION_SPEND_APPROVAL!,
-            walletId: wallet.id,
-            chainId: chain.id,
-            asset: "usdc",
-          });
+      const token = await getAccessToken();
+      if (!token) throw new Error("No access token");
+      const options = await getCardSignUpOptions({
+        environment,
+        walletId: wallet.id,
+        accessToken: token,
+      });
+      setOpenView("signup");
+      const result = await signUp(options);
       setCardId(result.id);
       showSuccessToast("Card is ready.");
       setOpenView("summary");
@@ -98,6 +96,7 @@ const Cards = () => {
         );
       }
     } finally {
+      setIsSigningUp(false);
       setOpenView((view) => (view === "signup" ? null : view));
     }
   };
@@ -110,9 +109,9 @@ const Cards = () => {
         filepath="src/components/sections/cards"
         actions={[
           {
-            name: "Sign up for a card",
+            name: isSigningUp ? "Signing up…" : "Sign up for a card",
             function: openCardSignUp,
-            disabled: !wallet || (!isSandbox && !PRODUCTION_SPEND_APPROVAL),
+            disabled: !wallet || isSigningUp,
           },
           {
             name: "View card summary",

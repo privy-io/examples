@@ -17,10 +17,7 @@ export const PATH_USD = "0x20C0000000000000000000000000000000000000" as const;
  */
 export const TEMPO_TESTNET = tempoModerato.extend({ feeToken: PATH_USD });
 
-/**
- * Tempo mainnet. No `feeToken` here: the production stablecoin comes from the Bridge integration via
- * `NEXT_PUBLIC_CARD_USDC_ADDRESS`, so hardcoding a fee token would be a guess about a real balance.
- */
+/** Tempo mainnet, the default chain for new production OUSD cards. */
 export const TEMPO_MAINNET = tempo;
 
 export type CardEnvironment = "sandbox" | "production";
@@ -41,12 +38,9 @@ export const CARD_CHAINS: Record<
     label: TEMPO_TESTNET.name,
     token: "pathUSD",
   },
-  // No token name for production: which stablecoin a live card settles in comes from the Bridge
-  // integration via `NEXT_PUBLIC_CARD_USDC_ADDRESS`, so naming one here would be a guess about
-  // someone else's configuration. Tempo mainnet's only initialized TIP-20 today is pathUSD.
   production: {
     id: `eip155:${TEMPO_MAINNET.id}`,
     label: TEMPO_MAINNET.name,
-    token: null,
+    token: "OUSD",
   },
 };

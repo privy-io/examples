@@ -4,21 +4,21 @@ This Next.js example shows how to issue and manage cards for your users with the
 
 It is scaffolded from [`privy-next-starter`](../../privy-next-starter), trimmed down to just the card flow — the wallet, funding, linking, signer, and MFA sections are intentionally removed (opted out under `sectionOverrides` in [`.sync-manifest.json`](../../.sync-manifest.json), so base syncs don't re-add them).
 
-The card funds from **Tempo** — Tempo Testnet (Moderato) in sandbox, Tempo mainnet in production.
+New cards fund from **Tempo** — pathUSD on Tempo Testnet (Moderato) in sandbox, OUSD on Tempo mainnet in production. Signup resumes the newest open card using its existing wallet, chain, and asset, including live Base USDC cards.
 
-> **⚠️ Production signup needs a spend-approval target.** `SignUpForCardView` grants the card's stablecoin spend allowance to a Bridge spender. The SDK ships built-in targets for sandbox testnets, but not for mainnets — on `environment="production"` it requires a `spendApproval` prop naming the USDC contract and Bridge spender to approve. This demo reads both from env vars and keeps production signup disabled until they are set. See [Environments](#environments).
+> **⚠️ Production signup needs a spend-approval target.** `SignUpForCardView` grants the card's stablecoin spend allowance to a Bridge spender. The SDK ships built-in targets for sandbox testnets, but not for mainnets — on `environment="production"` it requires a `spendApproval` target naming the stablecoin contract and Bridge spender to approve. This demo selects the target for the existing card, or Tempo OUSD for a new production card, and reports missing configuration before opening signup. See [Environments](#environments).
 
 ## Flow
 
 1. Sign in with Privy. The provider creates an embedded Ethereum wallet for users without one.
-2. Press **Sign up for a card**. The demo calls `useSignUpForCard().signUp(...)`, and `SignUpForCardView` walks the e-sign disclosure, the bank agreements (which name your app, the issuing bank, and Bridge as the card-program manager), the provider terms, and KYC, then creates the card and prompts for the on-chain USDC spend approval.
+2. Press **Sign up for a card**. The demo calls `useSignUpForCard().signUp(...)`, and `SignUpForCardView` walks the e-sign disclosure, the bank agreements (which name your app, the issuing bank, and Bridge as the card-program manager), the provider terms, and KYC, then creates or reuses the card and prompts for its on-chain spend approval when needed.
 3. On success the `signUp` promise returns the card id, and the demo hands straight off to the summary.
 4. `CardSummaryView` shows the balance, card face, transactions, card details and reveal, statement downloads, and the freeze/cancel/replace actions.
 5. Optionally press **Simulate a $0.50 purchase** to put a real row on the transaction list. See [Simulating a purchase](#simulating-a-purchase).
 
 A pill next to the funding wallet address shows whether a card exists yet. The demo finds an existing card by listing the user's cards for the selected environment, so a reload goes straight to the summary.
 
-**Sign up for a card** stays available even once a card exists, so the onboarding flow is always there to walk through. A returning user starts at "Get started" again and re-walks the disclosure and KYC steps, but the SDK hands back the card they already have rather than issuing a second one. To get a genuinely new card, use **Replace** in the card details.
+**Sign up for a card** stays available even once a card exists, so the onboarding flow is always there to walk through. Before opening signup, the example fetches the newest open card in the selected environment and passes its wallet, chain, and asset to the SDK. A returning user starts at "Get started" again; the SDK reuses that card and checks its spending approval rather than using the new-card defaults. To get a genuinely new card, use **Replace** in the card details.
 
 ### Replacements
 
@@ -30,8 +30,9 @@ Because a replacement leaves the old card behind as `canceled`, a user accumulat
 
 - [`src/app/page.tsx`](./src/app/page.tsx): Login state, page layout, and the `Cards` section
 - [`src/chains.ts`](./src/chains.ts): The two Tempo chains, the sandbox fee token, and the per-environment chain map
-- [`src/providers/providers.tsx`](./src/providers/providers.tsx): Privy provider configuration; EVM-only, declares both Tempo chains, creates an embedded Ethereum wallet on login
-- [`src/components/sections/cards.tsx`](./src/components/sections/cards.tsx): Launches signup with `useSignUpForCard`, hosts both card views, owns the environment toggle and card id, and holds the production spend-approval target
+- [`src/providers/providers.tsx`](./src/providers/providers.tsx): Privy provider configuration; EVM-only, declares both Tempo chains and Base mainnet for existing live cards, creates an embedded Ethereum wallet on login
+- [`src/components/sections/cards.tsx`](./src/components/sections/cards.tsx): Launches signup with `useSignUpForCard`, hosts both card views, and owns the environment toggle and card id
+- [`src/components/sections/get-card-sign-up-options.ts`](./src/components/sections/get-card-sign-up-options.ts): Reads the existing card's funding settings and selects its approval target, with Tempo OUSD as the new production card default
 - [`src/components/sections/tempo-faucet.ts`](./src/components/sections/tempo-faucet.ts) and [`src/app/api/faucet/route.ts`](./src/app/api/faucet/route.ts): Testnet faucet top-up via the `tempo_fundAddress` RPC method
 - [`src/components/sections/cards-api.ts`](./src/components/sections/cards-api.ts): Lists the user's cards for an environment and picks the newest open one, since the SDK exports no card-list hook
 - [`src/components/sections/find-embedded-wallet.ts`](./src/components/sections/find-embedded-wallet.ts): Picks the embedded EVM wallet whose Privy wallet id the card views need
@@ -102,24 +103,28 @@ Production needs its own credentials, separate from sandbox: a Bridge production
 
 |  | Sandbox | Production |
 | --- | --- | --- |
-| Funding chain | Tempo Testnet (Moderato) (`eip155:42431`) | Tempo (`eip155:4217`), real USDC |
-| Funding token | pathUSD, from the faucet | set by `NEXT_PUBLIC_CARD_USDC_ADDRESS`, real money |
+| New-card funding chain | Tempo Testnet (Moderato) (`eip155:42431`) | Tempo (`eip155:4217`) |
+| New-card funding token | pathUSD, from the faucet | OUSD, real money |
 | Spend approval target | built in | `spendApproval` prop, from env |
-| Card signup | ✅ | ✅ once the target is set |
+| Card signup | ✅ | ✅ once the card's target is set |
 | Card summary | ✅ | ✅ |
 | Faucet top-up | ✅ | ❌ testnet only |
 | Simulated purchase | ✅ | ❌ not possible |
 
 **Production needs the spend-approval target.** `SignUpForCardView`'s props are discriminated on `environment`: sandbox resolves the USDC contract and Bridge spender from the SDK's built-in testnet targets and rejects a supplied one, while production **requires** a `spendApproval` — Bridge does not publish its mainnet targets to the SDK, and approving the wrong spender would leave a `ready` card that cannot spend. Passing neither, or passing one on sandbox, is a type error rather than a silently unusable card.
 
-This demo reads the production target from two public env vars and gates signup on them:
+This demo reads the new-card Tempo OUSD production target from two public env vars:
 
 ```env
 NEXT_PUBLIC_CARD_USDC_ADDRESS=0x…
 NEXT_PUBLIC_CARD_SPENDER_ADDRESS=0x…
 ```
 
-The USDC address is Tempo mainnet's; the spender is the issuer address from the Bridge **production** integration behind your app's card configuration. With either missing, the production **Sign up for a card** button is disabled and the modal says which vars to set. Sandbox is unaffected and needs no configuration.
+Despite the legacy `NEXT_PUBLIC_CARD_USDC_ADDRESS` name, set it to the **Tempo OUSD** contract. The spender must be the Tempo OUSD issuer address from your Bridge **production** integration. Sandbox is unaffected and needs no configuration.
+
+For an existing **Base USDC** card, set `NEXT_PUBLIC_BASE_CARD_SPENDER_ADDRESS` to that card program's Base production spender. The example uses native Base USDC (`0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913`) and never applies the Tempo spender to Base. The funding wallet needs Base USDC for spending and, if sponsorship is unavailable, ETH on Base for approval gas.
+
+Missing targets and unsupported chain/asset combinations stop signup with an error rather than falling back to a different card. A card-list failure also stops signup. An existing allowance for the correct wallet, token, and spender can legitimately skip the approval prompt.
 
 `SignUpForCardView` also accepts a Solana target (`{stablecoinAddress, programId, merchantId}`) for a `solana:*` `chainId`; this demo is EVM-only, so it always supplies the EVM shape.
 
@@ -135,7 +140,7 @@ Tempo's fee model differs from an ETH-gas chain in a way that shows up throughou
 
 The sandbox spend-approval target the SDK builds in for `eip155:42431` uses pathUSD (`0x20C0…0000`) as its `stablecoinAddress`, which is why that is the token the demo names and the fee token it pins.
 
-Both Tempo chains are declared in [`providers.tsx`](./src/providers/providers.tsx) under `supportedChains`. This is not cosmetic: the approval step calls `wallet_switchEthereumChain` to the card's chain before reading the allowance, and an undeclared chain fails that switch with an error that says nothing about chain configuration.
+Both Tempo chains and Base mainnet are declared in [`providers.tsx`](./src/providers/providers.tsx) under `supportedChains`. This is not cosmetic: the approval step calls `wallet_switchEthereumChain` to the card's chain before reading the allowance, and an undeclared chain fails that switch with an error that says nothing about chain configuration.
 
 ## Simulating a purchase
 
