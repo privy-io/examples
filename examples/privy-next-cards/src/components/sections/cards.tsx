@@ -4,7 +4,7 @@ import { useCallback, useState } from "react";
 import { usePrivy } from "@privy-io/react-auth";
 import { useSignUpForCard } from "@privy-io/react-auth/cards";
 
-import { CARD_CHAINS, type CardEnvironment } from "@/chains";
+import { CARD_CHAINS, OUSD, type CardEnvironment } from "@/chains";
 import Section from "../reusables/section";
 import { showErrorToast, showSuccessToast } from "../ui/custom-toast";
 import type { CardContainerMode } from "./card-container-mode";
@@ -21,10 +21,9 @@ import { useSimulatedCardSpend } from "./use-simulated-card-spend";
 import { useWalletFunding } from "./use-wallet-funding";
 
 const PRODUCTION_SPEND_APPROVAL = (() => {
-  const stablecoinAddress = process.env.NEXT_PUBLIC_CARD_USDC_ADDRESS;
   const spenderAddress = process.env.NEXT_PUBLIC_CARD_SPENDER_ADDRESS;
-  if (!stablecoinAddress || !spenderAddress) return null;
-  return { stablecoinAddress, spenderAddress };
+  if (!spenderAddress) return null;
+  return { stablecoinAddress: OUSD, spenderAddress };
 })();
 
 const Cards = () => {

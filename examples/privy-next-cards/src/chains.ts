@@ -7,6 +7,9 @@ import { tempo, tempoModerato } from "viem/chains";
  */
 export const PATH_USD = "0x20C0000000000000000000000000000000000000" as const;
 
+/** OUSD on Tempo mainnet, the stablecoin new production cards spend. */
+export const OUSD = "0x20c0000000000000000000006a37DA5C996874BE" as const;
+
 /**
  * Tempo has no native gas token — fees are paid in a TIP-20 stablecoin. Pinning `feeToken` to the
  * same token the card spends means one faucet top-up covers both the approval transaction and the

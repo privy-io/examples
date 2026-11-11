@@ -1,7 +1,7 @@
 import type { SignUpForCardOptions } from "@privy-io/react-auth/cards";
 import { base } from "viem/chains";
 
-import { CARD_CHAINS, type CardEnvironment } from "@/chains";
+import { CARD_CHAINS, OUSD, type CardEnvironment } from "@/chains";
 import { isOpen, listCards } from "./cards-api";
 
 /** Resume the newest open card rather than changing its funding chain or asset. */
@@ -33,8 +33,7 @@ export const getCardSignUpOptions = async ({
   let stablecoinAddress: string | undefined;
   let spenderAddress: string | undefined;
   if (chainId === CARD_CHAINS.production.id && asset === "ousd") {
-    // Keep the existing env names for the default Tempo production target.
-    stablecoinAddress = process.env.NEXT_PUBLIC_CARD_USDC_ADDRESS;
+    stablecoinAddress = OUSD;
     spenderAddress = process.env.NEXT_PUBLIC_CARD_SPENDER_ADDRESS;
   } else if (chainId === `eip155:${base.id}` && asset === "usdc") {
     stablecoinAddress = "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913";
@@ -47,7 +46,7 @@ export const getCardSignUpOptions = async ({
     throw new Error(
       chainId === `eip155:${base.id}`
         ? "Set NEXT_PUBLIC_BASE_CARD_SPENDER_ADDRESS to your Base card program's production spender."
-        : "Set NEXT_PUBLIC_CARD_USDC_ADDRESS to the Tempo OUSD token and NEXT_PUBLIC_CARD_SPENDER_ADDRESS to its production spender.",
+        : "Set NEXT_PUBLIC_CARD_SPENDER_ADDRESS to your Tempo OUSD card program's production spender.",
     );
   }
 

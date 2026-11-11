@@ -7,7 +7,7 @@ export const ProductionCardWarning = ({
     Production uses real money. New cards use OUSD on Tempo.{" "}
     {isConfigured
       ? "Signup uses an existing card's funding settings when available. Tempo OUSD and Base USDC require their own production approval targets."
-      : "New cards need NEXT_PUBLIC_CARD_USDC_ADDRESS (Tempo OUSD) and NEXT_PUBLIC_CARD_SPENDER_ADDRESS. Existing Base USDC cards need NEXT_PUBLIC_BASE_CARD_SPENDER_ADDRESS instead."}{" "}
+      : "New cards need NEXT_PUBLIC_CARD_SPENDER_ADDRESS (Tempo OUSD). Existing Base USDC cards need NEXT_PUBLIC_BASE_CARD_SPENDER_ADDRESS instead."}{" "}
     Simulated purchases are sandbox-only &mdash; Stripe&apos;s test helpers do
     not exist for live keys.
   </p>

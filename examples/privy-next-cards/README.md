@@ -113,14 +113,13 @@ Production needs its own credentials, separate from sandbox: a Bridge production
 
 **Production needs the spend-approval target.** `SignUpForCardView`'s props are discriminated on `environment`: sandbox resolves the USDC contract and Bridge spender from the SDK's built-in testnet targets and rejects a supplied one, while production **requires** a `spendApproval` — Bridge does not publish its mainnet targets to the SDK, and approving the wrong spender would leave a `ready` card that cannot spend. Passing neither, or passing one on sandbox, is a type error rather than a silently unusable card.
 
-This demo reads the new-card Tempo OUSD production target from two public env vars:
+This demo reads the new-card Tempo OUSD production spender from a public env var:
 
 ```env
-NEXT_PUBLIC_CARD_USDC_ADDRESS=0x…
 NEXT_PUBLIC_CARD_SPENDER_ADDRESS=0x…
 ```
 
-Despite the legacy `NEXT_PUBLIC_CARD_USDC_ADDRESS` name, set it to the **Tempo OUSD** contract. The spender must be the Tempo OUSD issuer address from your Bridge **production** integration. Sandbox is unaffected and needs no configuration.
+The spender must be the Tempo OUSD issuer address from your Bridge **production** integration. The stablecoin is Tempo OUSD (`0x20c0…6a37DA5C996874BE`), the card's asset, so it isn't configured. Sandbox is unaffected and needs no configuration.
 
 For an existing **Base USDC** card, set `NEXT_PUBLIC_BASE_CARD_SPENDER_ADDRESS` to that card program's Base production spender. The example uses native Base USDC (`0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913`) and never applies the Tempo spender to Base. The funding wallet needs Base USDC for spending and, if sponsorship is unavailable, ETH on Base for approval gas.
 
