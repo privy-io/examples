@@ -12,11 +12,13 @@ import { CardContainerToggle } from "./card-container-toggle";
 import { CardEnvironmentToggle } from "./card-environment-toggle";
 import { CardSignUpModal } from "./card-sign-up-modal";
 import { CardSummaryContainer } from "./card-summary-container";
+import { EarnAutoDepositStatus } from "./earn-auto-deposit-status";
 import { findEmbeddedWallet } from "./find-embedded-wallet";
 import { FundingWalletStatus } from "./funding-wallet-status";
 import { getCardSignUpOptions } from "./get-card-sign-up-options";
 import { ProductionCardWarning } from "./production-card-warning";
 import { useActiveCard } from "./use-active-card";
+import { useEarnAutoDeposit } from "./use-earn-auto-deposit";
 import { useSimulatedCardSpend } from "./use-simulated-card-spend";
 import { useWalletFunding } from "./use-wallet-funding";
 
@@ -30,13 +32,10 @@ const Cards = () => {
   const { user, getAccessToken } = usePrivy();
   const { signUp } = useSignUpForCard();
   const [isSigningUp, setIsSigningUp] = useState(false);
-  const [environment, setEnvironment] =
-    useState<CardEnvironment>("sandbox");
+  const [environment, setEnvironment] = useState<CardEnvironment>("sandbox");
   const [containerMode, setContainerMode] =
     useState<CardContainerMode>("modal");
-  const [openView, setOpenView] = useState<
-    "signup" | "summary" | null
-  >(null);
+  const [openView, setOpenView] = useState<"signup" | "summary" | null>(null);
   const wallet = findEmbeddedWallet(user?.linkedAccounts ?? []);
   const chain = CARD_CHAINS[environment];
   const isSandbox = environment === "sandbox";
@@ -48,6 +47,11 @@ const Cards = () => {
   const { fund, isFunding } = useWalletFunding({
     address: wallet?.address,
     token: chain.token,
+  });
+  const earnAutoDeposit = useEarnAutoDeposit({
+    walletId: wallet?.id,
+    isProduction: !isSandbox,
+    getAccessToken,
   });
   const { simulate, isSpending, label } = useSimulatedCardSpend({
     cardId,
@@ -132,7 +136,19 @@ const Cards = () => {
                   disabled: !cardId || isSpending,
                 },
               ]
-            : []),
+            : [
+                {
+                  name: earnAutoDeposit.isEnabling
+                    ? "Turning on…"
+                    : "Turn on Earn auto-deposit",
+                  function: earnAutoDeposit.enable,
+                  disabled:
+                    !wallet ||
+                    earnAutoDeposit.isEnabled ||
+                    earnAutoDeposit.isEnabling ||
+                    !earnAutoDeposit.isConfigured,
+                },
+              ]),
         ]}
       >
         <CardEnvironmentToggle
@@ -153,6 +169,13 @@ const Cards = () => {
           token={chain.token}
           totalCards={totalCards}
         />
+        {!isSandbox && wallet && (
+          <EarnAutoDepositStatus
+            isEnabled={earnAutoDeposit.isEnabled}
+            isLoading={earnAutoDeposit.isLoading}
+            error={earnAutoDeposit.error}
+          />
+        )}
         {!isSandbox && (
           <ProductionCardWarning
             isConfigured={Boolean(PRODUCTION_SPEND_APPROVAL)}

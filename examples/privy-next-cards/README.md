@@ -39,6 +39,7 @@ Because a replacement leaves the old card behind as `canceled`, a user accumulat
 - [`src/components/sections/modal.tsx`](./src/components/sections/modal.tsx): Centered 440px modal the card views render inside
 - [`src/components/sections/simulate-spend.ts`](./src/components/sections/simulate-spend.ts): Resolves the Privy card id to its Stripe card id, then calls the test-spend route
 - [`src/app/api/test-spend/route.ts`](./src/app/api/test-spend/route.ts): Server-only route that creates and captures a Stripe Issuing test authorization
+- [`src/app/api/earn-auto-deposit/route.ts`](./src/app/api/earn-auto-deposit/route.ts) and [`src/components/sections/use-earn-auto-deposit.ts`](./src/components/sections/use-earn-auto-deposit.ts): Production Earn auto-deposit, a wallet automation that moves the funding wallet's OUSD into Earn
 
 ## Quick start
 
@@ -128,6 +129,28 @@ Missing targets and unsupported chain/asset combinations stop signup with an err
 `SignUpForCardView` also accepts a Solana target (`{stablecoinAddress, programId, merchantId}`) for a `solana:*` `chainId`; this demo is EVM-only, so it always supplies the EVM shape.
 
 **Why simulated purchases are sandbox-only.** Stripe's Issuing test helpers do not exist for live keys — there is no API to fabricate a live authorization, so live spend must be a real purchase at a real merchant. The button is hidden in production, and the route refuses non-test keys.
+
+## Spending from Earn
+
+A production Tempo OUSD card can spend from an Earn vault instead of the wallet's OUSD balance. When the app's card program offers a vault, signup approves the vault's share token and opts the card into it. The card then pays for purchases with vault shares. The cardholder can switch it back to spending OUSD in the card's settings.
+
+Signup does not deposit anything, so the demo funds Earn with a Privy [wallet automation](https://docs.privy.io/wallets/automations/earn-deposits). **Turn on Earn auto-deposit** (production only) attaches an `earn_deposit` automation to the funding wallet. After that, every OUSD deposit on Tempo moves the wallet's full OUSD balance into the vault. To fund the card, send OUSD on Tempo mainnet to the funding wallet address.
+
+To enable it, set two **server-only** variables:
+
+```env
+PRIVY_APP_SECRET=…
+PRIVY_EARN_VAULT_ID=…
+```
+
+`PRIVY_EARN_VAULT_ID` is the Earn vault's Privy ID, an OUSD vault on Tempo mainnet that belongs to this app. Also enable app-pays gas sponsorship on Tempo in the Privy dashboard. The automation deposits the wallet's full OUSD balance, which leaves nothing to pay a Tempo fee in OUSD.
+
+Notes:
+
+- [`src/app/api/earn-auto-deposit/route.ts`](./src/app/api/earn-auto-deposit/route.ts) creates one automation per vault on first use and reuses it for every wallet.
+- The user owns their embedded wallet, so attaching needs their [authorization signature](https://docs.privy.io/controls/authorization-keys/owners/configuration/user/server-transactions). The route returns the attach request, the browser signs it with `useAuthorizationSignature`, and the route sends the signed request. The route also checks that the wallet belongs to the signed-in user.
+- The automation reacts to new deposits. Right after attaching, the route [reindexes](https://docs.privy.io/wallets/automations/lifecycle#recover-a-missed-or-failed-deposit) the wallet once, so OUSD that was already there moves too.
+- Earn withdrawals back to the wallet do not trigger a redeposit.
 
 ## Funding on Tempo
 
