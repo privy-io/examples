@@ -34,7 +34,9 @@ export const EarnAutoDepositStatus = ({
         Once on, a Privy wallet automation deposits the funding wallet&apos;s
         OUSD into Earn whenever OUSD arrives on Tempo. A card that spends from
         Earn then pays for purchases with those vault shares. Send OUSD on Tempo
-        mainnet to the funding wallet address above to fund it.
+        mainnet to the funding wallet address above, or press{" "}
+        <strong className="font-medium">Deposit crypto</strong> to send another
+        asset from another chain and have Privy convert it to OUSD.
       </p>
     </div>
   );

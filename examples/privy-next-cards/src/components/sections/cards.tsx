@@ -18,6 +18,7 @@ import { FundingWalletStatus } from "./funding-wallet-status";
 import { getCardSignUpOptions } from "./get-card-sign-up-options";
 import { ProductionCardWarning } from "./production-card-warning";
 import { useActiveCard } from "./use-active-card";
+import { useCryptoDeposit } from "./use-crypto-deposit";
 import { useEarnAutoDeposit } from "./use-earn-auto-deposit";
 import { useSimulatedCardSpend } from "./use-simulated-card-spend";
 import { useWalletFunding } from "./use-wallet-funding";
@@ -48,6 +49,7 @@ const Cards = () => {
     address: wallet?.address,
     token: chain.token,
   });
+  const { deposit, isDepositing } = useCryptoDeposit({ walletId: wallet?.id });
   const earnAutoDeposit = useEarnAutoDeposit({
     walletId: wallet?.id,
     isProduction: !isSandbox,
@@ -147,6 +149,11 @@ const Cards = () => {
                     earnAutoDeposit.isEnabled ||
                     earnAutoDeposit.isEnabling ||
                     !earnAutoDeposit.isConfigured,
+                },
+                {
+                  name: isDepositing ? "Depositing…" : "Deposit crypto",
+                  function: deposit,
+                  disabled: !wallet || isDepositing,
                 },
               ]),
         ]}

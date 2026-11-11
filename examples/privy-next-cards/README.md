@@ -40,6 +40,7 @@ Because a replacement leaves the old card behind as `canceled`, a user accumulat
 - [`src/components/sections/simulate-spend.ts`](./src/components/sections/simulate-spend.ts): Resolves the Privy card id to its Stripe card id, then calls the test-spend route
 - [`src/app/api/test-spend/route.ts`](./src/app/api/test-spend/route.ts): Server-only route that creates and captures a Stripe Issuing test authorization
 - [`src/app/api/earn-auto-deposit/route.ts`](./src/app/api/earn-auto-deposit/route.ts) and [`src/components/sections/use-earn-auto-deposit.ts`](./src/components/sections/use-earn-auto-deposit.ts): Production Earn auto-deposit, a wallet automation that moves the funding wallet's OUSD into Earn
+- [`src/components/sections/use-crypto-deposit.ts`](./src/components/sections/use-crypto-deposit.ts): Opens the crypto deposit modal, which converts USDC on Base to OUSD on Tempo
 
 ## Quick start
 
@@ -151,6 +152,14 @@ Notes:
 - The user owns their embedded wallet, so attaching needs their [authorization signature](https://docs.privy.io/controls/authorization-keys/owners/configuration/user/server-transactions). The route returns the attach request, the browser signs it with `useAuthorizationSignature`, and the route sends the signed request. The route also checks that the wallet belongs to the signed-in user.
 - The automation reacts to new deposits. Right after attaching, the route [reindexes](https://docs.privy.io/wallets/automations/lifecycle#recover-a-missed-or-failed-deposit) the wallet once, so OUSD that was already there moves too.
 - Earn withdrawals back to the wallet do not trigger a redeposit.
+
+### Depositing from other chains
+
+**Deposit crypto** (production only) opens Privy's crypto deposit modal with [`useDepositFunds`](https://docs.privy.io/wallets/funding/use-deposit-funds). The user gets a deposit address for USDC on Base. Privy converts what arrives to OUSD on Tempo and delivers it to the funding wallet, where Earn auto-deposit moves it into the vault.
+
+- In the Privy dashboard, enable app-pays gas sponsorship on Base. Privy requires sponsorship on every chain a deposit account accepts, so add chains to `source` in [`use-crypto-deposit.ts`](./src/components/sections/use-crypto-deposit.ts) only once you sponsor them. `mode: 'all'` would need every supported deposit chain.
+- The demo keeps the default `dedicated` deposit address strategy. The deposit address is a separate wallet, so the converted OUSD lands in the funding wallet as an ordinary deposit that triggers the Earn automation.
+- `useDepositFunds` is experimental and may change between SDK releases.
 
 ## Funding on Tempo
 
