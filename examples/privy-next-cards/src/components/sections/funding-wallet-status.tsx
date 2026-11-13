@@ -1,3 +1,4 @@
+import { TEMPO_MAINNET, TEMPO_TESTNET } from "@/chains";
 import { Badge, type BadgeVariant } from "../ui/badge";
 
 export const FundingWalletStatus = ({
@@ -59,7 +60,14 @@ export const FundingWalletStatus = ({
         </p>
       )}
 
-      <p className="font-light break-all">{address}</p>
+      <a
+        href={`${(isSandbox ? TEMPO_TESTNET : TEMPO_MAINNET).blockExplorers.default.url}/address/${address}`}
+        target="_blank"
+        rel="noreferrer"
+        className="block font-light break-all underline underline-offset-2"
+      >
+        {address}
+      </a>
       <p className="mt-2 font-light">
         {isSandbox ? (
           <>
