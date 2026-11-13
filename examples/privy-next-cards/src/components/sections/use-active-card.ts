@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import type { CardEnvironment } from "@/chains";
 import { isOpen, listCards } from "./cards-api";
@@ -18,6 +18,7 @@ export const useActiveCard = ({
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [totalCards, setTotalCards] = useState(0);
+  const [reloadCount, setReloadCount] = useState(0);
 
   useEffect(() => {
     if (!userId) {
@@ -54,7 +55,9 @@ export const useActiveCard = ({
     return () => {
       active = false;
     };
-  }, [userId, environment, getAccessToken]);
+  }, [userId, environment, getAccessToken, reloadCount]);
 
-  return { cardId, setCardId, error, isLoading, totalCards };
+  const reload = useCallback(() => setReloadCount((count) => count + 1), []);
+
+  return { cardId, setCardId, error, isLoading, totalCards, reload };
 };

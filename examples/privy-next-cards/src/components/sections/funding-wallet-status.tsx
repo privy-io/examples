@@ -1,3 +1,4 @@
+import { TEMPO_MAINNET, TEMPO_TESTNET } from "@/chains";
 import { Badge, type BadgeVariant } from "../ui/badge";
 
 export const FundingWalletStatus = ({
@@ -9,6 +10,7 @@ export const FundingWalletStatus = ({
   chainLabel,
   token,
   totalCards,
+  earnBalances,
 }: {
   address?: string;
   cardId: string | null;
@@ -18,6 +20,8 @@ export const FundingWalletStatus = ({
   chainLabel: string;
   token: string | null;
   totalCards: number;
+  /** OUSD in the wallet and in Earn, for a production card that spends from Earn. */
+  earnBalances?: { ousd: string; shares: string; earnValue: string } | null;
 }) => {
   if (!address) {
     return (
@@ -59,7 +63,24 @@ export const FundingWalletStatus = ({
         </p>
       )}
 
-      <p className="font-light break-all">{address}</p>
+      <a
+        href={`${(isSandbox ? TEMPO_TESTNET : TEMPO_MAINNET).blockExplorers.default.url}/address/${address}`}
+        target="_blank"
+        rel="noreferrer"
+        className="block font-light break-all underline underline-offset-2"
+      >
+        {address}
+      </a>
+      {earnBalances && (
+        <dl className="mt-2 grid grid-cols-[auto_1fr] gap-x-3 gap-y-0.5 text-[13px]">
+          <dt className="font-medium">Wallet</dt>
+          <dd className="font-light">{earnBalances.ousd} OUSD</dd>
+          <dt className="font-medium">Earn</dt>
+          <dd className="font-light">
+            {earnBalances.earnValue} OUSD ({earnBalances.shares} vault shares)
+          </dd>
+        </dl>
+      )}
       <p className="mt-2 font-light">
         {isSandbox ? (
           <>

@@ -1,6 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
+import { useSignUpForCard } from "@privy-io/react-auth/cards";
 
 import { Modal } from "./modal";
 
@@ -12,8 +13,16 @@ const SignUpForCardView = dynamic(
   { ssr: false },
 );
 
-export const CardSignUpModal = ({ onClose }: { onClose: () => void }) => (
-  <Modal onClose={onClose} label="Sign up for a card" dismissible={false}>
-    <SignUpForCardView />
-  </Modal>
-);
+/**
+ * Backdrop and Escape close through the hook's `close`, which settles the pending `signUp` promise
+ * the same way the view's own controls do. Most signup steps have no close control of their own.
+ */
+export const CardSignUpModal = () => {
+  const { close } = useSignUpForCard();
+
+  return (
+    <Modal onClose={close} label="Sign up for a card">
+      <SignUpForCardView />
+    </Modal>
+  );
+};

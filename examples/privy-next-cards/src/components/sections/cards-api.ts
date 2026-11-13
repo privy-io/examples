@@ -14,7 +14,20 @@ export type Card = {
   wallet_id: string;
   chain_id: string;
   asset: string;
+  /** Where the card can spend from. A card on an Earn vault lists it with its onchain addresses. */
+  funding_sources?: FundingSource[];
 };
+
+export type FundingSource =
+  | { type: "wallet"; selected: boolean }
+  | {
+      type: "tempo_earn_vault";
+      selected: boolean;
+      spender_address: string;
+      share_token_address: string;
+      vault_address: string;
+      asset_address: string;
+    };
 
 /** A card that is still usable. Cancelled cards stay in the list, so they have to be filtered out. */
 export const isOpen = (card: Card) =>

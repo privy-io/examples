@@ -17,6 +17,8 @@ import { FundingWalletStatus } from "./funding-wallet-status";
 import { getCardSignUpOptions } from "./get-card-sign-up-options";
 import { ProductionCardWarning } from "./production-card-warning";
 import { useActiveCard } from "./use-active-card";
+import { useEarnActions } from "./use-earn-actions";
+import { useEarnBalances } from "./use-earn-balances";
 import { useSimulatedCardSpend } from "./use-simulated-card-spend";
 import { useWalletFunding } from "./use-wallet-funding";
 
@@ -41,7 +43,8 @@ const Cards = () => {
   const wallet = findEmbeddedWallet(user?.linkedAccounts ?? []);
   const chain = CARD_CHAINS[environment];
   const isSandbox = environment === "sandbox";
-  const { cardId, setCardId, error, isLoading, totalCards } = useActiveCard({
+  const { cardId, setCardId, error, isLoading, totalCards, reload } =
+    useActiveCard({
     userId: user?.id,
     environment,
     getAccessToken,
@@ -50,6 +53,26 @@ const Cards = () => {
     address: wallet?.address,
     token: chain.token,
   });
+  const {
+    depositToEarn,
+    withdrawFromEarn,
+    sendOusd,
+    pending: pendingEarnAction,
+  } = useEarnActions({
+    walletId: wallet?.id,
+    walletAddress: wallet?.address,
+    cardId,
+    getAccessToken,
+  });
+  const earnBalances = useEarnBalances({
+    cardId: isSandbox ? null : cardId,
+    walletId: wallet?.id,
+    walletAddress: wallet?.address,
+    getAccessToken,
+    refreshKey: pendingEarnAction,
+  });
+  const canUseEarn =
+    Boolean(wallet && cardId) && !pendingEarnAction;
   const { simulate, isSpending, label } = useSimulatedCardSpend({
     cardId,
     environment,
@@ -95,6 +118,9 @@ const Cards = () => {
           error instanceof Error ? error.message : "Card sign-up failed",
         );
       }
+      // Closing after the card is created but before its approval settles still reads as a cancel,
+      // so look the card up again rather than assume there is none.
+      reload();
     } finally {
       setIsSigningUp(false);
       setOpenView((view) => (view === "signup" ? null : view));
@@ -133,7 +159,29 @@ const Cards = () => {
                   disabled: !cardId || isSpending,
                 },
               ]
-            : []),
+            : [
+                {
+                  name:
+                    pendingEarnAction === "deposit"
+                      ? "Depositing…"
+                      : "Deposit OUSD to Earn",
+                  function: depositToEarn,
+                  disabled: !canUseEarn,
+                },
+                {
+                  name:
+                    pendingEarnAction === "withdraw"
+                      ? "Withdrawing…"
+                      : "Withdraw OUSD from Earn",
+                  function: withdrawFromEarn,
+                  disabled: !canUseEarn,
+                },
+                {
+                  name: pendingEarnAction === "send" ? "Sending…" : "Send OUSD",
+                  function: sendOusd,
+                  disabled: !canUseEarn,
+                },
+              ]),
         ]}
       >
         <CardEnvironmentToggle
@@ -153,6 +201,7 @@ const Cards = () => {
           chainLabel={chain.label}
           token={chain.token}
           totalCards={totalCards}
+          earnBalances={earnBalances}
         />
         {!isSandbox && (
           <ProductionCardWarning
@@ -161,7 +210,7 @@ const Cards = () => {
         )}
       </Section>
 
-      {openView === "signup" && <CardSignUpModal onClose={closeView} />}
+      {openView === "signup" && <CardSignUpModal />}
       {openView === "summary" && cardId && (
         <CardSummaryContainer
           cardId={cardId}
