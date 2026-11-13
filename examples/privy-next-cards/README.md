@@ -142,6 +142,12 @@ The sandbox spend-approval target the SDK builds in for `eip155:42431` uses path
 
 Both Tempo chains and Base mainnet are declared in [`providers.tsx`](./src/providers/providers.tsx) under `supportedChains`. This is not cosmetic: the approval step calls `wallet_switchEthereumChain` to the card's chain before reading the allowance, and an undeclared chain fails that switch with an error that says nothing about chain configuration.
 
+## Spending from Earn
+
+A production Tempo OUSD card can spend from a Privy Earn vault instead of the wallet's OUSD. When the app's card program offers a vault, signup approves the vault's share token and opts the card into it, and the card's settings switch it between Earn and OUSD. Signup doesn't deposit anything, though, so the card has no shares to spend yet.
+
+**Deposit OUSD to Earn** and **Withdraw OUSD from Earn** (production only) move OUSD between the funding wallet and the vault with `useEarn`, which the user signs. Purchases spend the deposit only while the card is set to Earn in its settings. **Send OUSD** transfers OUSD out of the wallet with `useTransfer`; its address prompt defaults to Privy's test faucet (`DEFAULT_SEND_RECIPIENT`), so a fork changes or clears it. Under the funding wallet's address, the Cards section shows its OUSD balance and its Earn position (OUSD value and vault shares), read onchain and refreshed every 15 seconds ([`use-earn-balances.ts`](./src/components/sections/use-earn-balances.ts)). The buttons live in [`use-earn-actions.ts`](./src/components/sections/use-earn-actions.ts), where `EARN_VAULT_ID` is this demo app's vault; a fork with its own vault replaces it.
+
 ## Simulating a purchase
 
 `CardSummaryView`'s transaction list is fed from Stripe Issuing, so a new card has nothing to show. **Simulate a $0.50 purchase** creates an authorization with [Stripe's Issuing test helpers](https://docs.stripe.com/api/issuing/authorizations/test-helpers-create) and captures it, which puts a real row on the list.
