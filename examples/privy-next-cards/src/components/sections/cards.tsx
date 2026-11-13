@@ -161,7 +161,7 @@ const Cards = () => {
         )}
       </Section>
 
-      {openView === "signup" && <CardSignUpModal onClose={closeView} />}
+      {openView === "signup" && <CardSignUpModal />}
       {openView === "summary" && cardId && (
         <CardSummaryContainer
           cardId={cardId}
