@@ -38,16 +38,16 @@ export const getCardSignUpOptions = async ({
     spenderAddress = process.env.NEXT_PUBLIC_CARD_SPENDER_ADDRESS;
   } else if (chainId === `eip155:${base.id}` && asset === "usdc") {
     stablecoinAddress = "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913";
-    spenderAddress = process.env.NEXT_PUBLIC_BASE_CARD_SPENDER_ADDRESS;
+    spenderAddress = "0x47699D6ce475b44ad35980311c423679d8576858";
   } else {
-    throw new Error(`No production approval target configured for ${asset} on ${chainId}.`);
+    throw new Error(
+      `No production approval target configured for ${asset} on ${chainId}.`,
+    );
   }
 
   if (!stablecoinAddress || !spenderAddress) {
     throw new Error(
-      chainId === `eip155:${base.id}`
-        ? "Set NEXT_PUBLIC_BASE_CARD_SPENDER_ADDRESS to your Base card program's production spender."
-        : "Set NEXT_PUBLIC_CARD_USDC_ADDRESS to the Tempo OUSD token and NEXT_PUBLIC_CARD_SPENDER_ADDRESS to its production spender.",
+      "Set NEXT_PUBLIC_CARD_USDC_ADDRESS to the Tempo OUSD token and NEXT_PUBLIC_CARD_SPENDER_ADDRESS to its production spender.",
     );
   }
 

@@ -101,15 +101,15 @@ A **sandbox / production** toggle sits at the top of the Cards section. It switc
 
 Production needs its own credentials, separate from sandbox: a Bridge production integration with the `cards` endorsement on that live account, and a live Stripe key in the app's production card configuration. Sandbox credentials do not carry over.
 
-|  | Sandbox | Production |
-| --- | --- | --- |
-| New-card funding chain | Tempo Testnet (Moderato) (`eip155:42431`) | Tempo (`eip155:4217`) |
-| New-card funding token | pathUSD, from the faucet | OUSD, real money |
-| Spend approval target | built in | `spendApproval` prop, from env |
-| Card signup | ✅ | ✅ once the card's target is set |
-| Card summary | ✅ | ✅ |
-| Faucet top-up | ✅ | ❌ testnet only |
-| Simulated purchase | ✅ | ❌ not possible |
+|                        | Sandbox                                   | Production                       |
+| ---------------------- | ----------------------------------------- | -------------------------------- |
+| New-card funding chain | Tempo Testnet (Moderato) (`eip155:42431`) | Tempo (`eip155:4217`)            |
+| New-card funding token | pathUSD, from the faucet                  | OUSD, real money                 |
+| Spend approval target  | built in                                  | `spendApproval` prop (see below) |
+| Card signup            | ✅                                        | ✅ once the card's target is set |
+| Card summary           | ✅                                        | ✅                               |
+| Faucet top-up          | ✅                                        | ❌ testnet only                  |
+| Simulated purchase     | ✅                                        | ❌ not possible                  |
 
 **Production needs the spend-approval target.** `SignUpForCardView`'s props are discriminated on `environment`: sandbox resolves the USDC contract and Bridge spender from the SDK's built-in testnet targets and rejects a supplied one, while production **requires** a `spendApproval` — Bridge does not publish its mainnet targets to the SDK, and approving the wrong spender would leave a `ready` card that cannot spend. Passing neither, or passing one on sandbox, is a type error rather than a silently unusable card.
 
@@ -122,7 +122,7 @@ NEXT_PUBLIC_CARD_SPENDER_ADDRESS=0x…
 
 Despite the legacy `NEXT_PUBLIC_CARD_USDC_ADDRESS` name, set it to the **Tempo OUSD** contract. The spender must be the Tempo OUSD issuer address from your Bridge **production** integration. Sandbox is unaffected and needs no configuration.
 
-For an existing **Base USDC** card, set `NEXT_PUBLIC_BASE_CARD_SPENDER_ADDRESS` to that card program's Base production spender. The example uses native Base USDC (`0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913`) and never applies the Tempo spender to Base. The funding wallet needs Base USDC for spending and, if sponsorship is unavailable, ETH on Base for approval gas.
+For an existing **Base USDC** card, the example uses native Base USDC (`0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913`) and the hardcoded production spender `0x47699D6ce475b44ad35980311c423679d8576858`. This spender is specific to this demo's card program; use your card program's Base production spender for other integrations. No Base spender env var is needed, and the example never applies the Tempo spender to Base. The funding wallet needs Base USDC for spending and, if sponsorship is unavailable, ETH on Base for approval gas.
 
 Missing targets and unsupported chain/asset combinations stop signup with an error rather than falling back to a different card. A card-list failure also stops signup. An existing allowance for the correct wallet, token, and spender can legitimately skip the approval prompt.
 
