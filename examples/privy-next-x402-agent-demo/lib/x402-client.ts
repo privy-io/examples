@@ -1,6 +1,7 @@
 import { createX402Client } from '@privy-io/node/x402';
 import { wrapFetchWithPayment } from '@x402/fetch';
 import { getPrivyClient } from './privy';
+import { attachPreflight } from './preflight';
 
 /**
  * Execute an x402 payment request
@@ -13,6 +14,13 @@ export async function executeX402Request(
   options?: RequestInit
 ): Promise<Response> {
   const x402client = createX402Client(getPrivyClient(), { walletId, address });
+  // Explicit opt-in; testnet demo behavior is unchanged by default.
+  if (process.env.SPENDPREFLIGHT_ENABLED === 'true') {
+    if (process.env.NETWORK_MODE !== 'mainnet') {
+      throw new Error('SpendPreflight example requires NETWORK_MODE=mainnet');
+    }
+    attachPreflight(x402client, url);
+  }
   const agentFetch = wrapFetchWithPayment(fetch, x402client);
 
   // Add timeout to prevent hanging

@@ -132,6 +132,40 @@ Open [http://localhost:3000](http://localhost:3000) to see the demo.
 - `app/api/agent/` - API routes for agent operations
 - `app/api/mock-services/` - x402-enabled service endpoints
 
+## Optional preflight before signing (Base mainnet)
+
+The default testnet demo is unchanged. Operators can explicitly set
+`SPENDPREFLIGHT_ENABLED=true` together with `NETWORK_MODE=mainnet` to screen
+each selected x402 quote with [SpendPreflight](https://spendpreflight.com)
+before Privy creates a payment payload. This contribution is from SpendPreflight's
+operator; Privy does not endorse the service.
+
+The hook sends the selected payment quote and actual HTTPS resource URL to
+`https://api.spendpreflight.com/v1/preflight?trial=1` using ordinary fetch.
+It does not send Privy credentials, wallet IDs, signatures, request headers or
+merchant request bodies. See the [service privacy policy](https://spendpreflight.com/privacy).
+The free trial is **three calls per day per public IP, shared with MCP**.
+After the trial, HTTP 402 stops the merchant payment; this example never pays
+for screening automatically. Paid preflight currently costs $0.02 per review
+and requires a separately configured screening buyer, outside this example.
+
+Only exact Base USDC quotes up to $1 are admitted locally. `hold`, `block`,
+invalid results, an unavailable service, an eight-second timeout or exhausted
+trial abort before signing or retrying the merchant. The hook checks the returned
+receipt ID's presence; it does **not** cryptographically verify the receipt.
+This is a screening signal, not a guarantee of merchant identity, delivery or
+safety. Keep Privy's spending policies: the hook supplies no durable daily budget
+or settlement ledger. Localhost and testnet deployments cannot use this opt-in
+mode; deploy the merchant demo at an HTTPS URL before enabling it.
+
+Run the network-free tests (mock mechanism; no wallet, signing or payments):
+
+```bash
+npm test
+npm run typecheck
+npm run build
+```
+
 ## Learn More
 
 - [x402 Protocol](https://x402.org)
