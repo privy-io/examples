@@ -214,7 +214,7 @@ export const useEarnActions = ({
       const created =
         action === "send"
           ? await transfer(walletId, {
-              source: { asset_address: vault.asset_address, chain: "tempo" },
+              source: { asset: "ousd", chain: "tempo" },
               destination: { address: recipient! },
               amount,
             })
