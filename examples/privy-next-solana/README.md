@@ -98,6 +98,63 @@ const receipt = await sendTransaction({
 });
 ```
 
+### Using wallet-adapter-based SDKs
+
+Some Solana SDKs, including Metaplex Umi and Irys, expect a
+`@solana/wallet-adapter`-style signer whose `signTransaction` method receives
+and returns `Transaction` or `VersionedTransaction` objects. Privy's Solana
+wallet methods receive serialized transaction bytes, so those SDKs need a small
+adapter layer at the integration boundary.
+
+If your integration does not already depend on `@solana/web3.js`, add it before
+using this adapter.
+
+```tsx
+import { PublicKey, Transaction, VersionedTransaction } from "@solana/web3.js";
+
+function createSolanaWalletAdapter(wallet: {
+  address: string;
+  signMessage: (args: { message: Uint8Array }) => Promise<{ signature: Uint8Array }>;
+  signTransaction: (args: {
+    transaction: Uint8Array;
+  }) => Promise<{ signedTransaction: Uint8Array }>;
+}) {
+  const adapter = {
+    publicKey: new PublicKey(wallet.address),
+    signMessage: async (message: Uint8Array) => {
+      const { signature } = await wallet.signMessage({ message });
+      return new Uint8Array(signature);
+    },
+    signTransaction: async <T extends Transaction | VersionedTransaction>(
+      transaction: T,
+    ): Promise<T> => {
+      const serialized =
+        transaction instanceof VersionedTransaction
+          ? transaction.serialize()
+          : transaction.serialize({ requireAllSignatures: false });
+
+      const { signedTransaction } = await wallet.signTransaction({
+        transaction: serialized,
+      });
+
+      return (
+        transaction instanceof VersionedTransaction
+          ? VersionedTransaction.deserialize(signedTransaction)
+          : Transaction.from(signedTransaction)
+      ) as T;
+    },
+    signAllTransactions: async <T extends Transaction | VersionedTransaction>(
+      transactions: T[],
+    ) => Promise.all(transactions.map((transaction) => adapter.signTransaction(transaction))),
+  };
+
+  return adapter;
+}
+```
+
+Use this adapter when passing a Privy Solana wallet into APIs that expect a
+wallet-adapter signer, for example `createSignerFromWalletAdapter(...)`.
+
 ## Relevant Links
 
 - [Privy Dashboard](https://dashboard.privy.io)
