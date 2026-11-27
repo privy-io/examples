@@ -20,14 +20,14 @@ function Home() {
     <div
       className={`${
         !!address
-          ? "bg-[#E0E7FF66] md:max-h-[100vh] md:overflow-hidden"
+          ? "bg-[#E0E7FF66] md:max-h-screen md:overflow-hidden"
           : "bg-transparent h-screen overflow-hidden"
       }`}
     >
       <Header authenticated={!!address} />
       {!!address ? (
-        <section className="w-full flex flex-col md:flex-row h-screen pt-[60px]">
-          <div className="flex-grow overflow-y-auto h-full p-4 pl-8">
+        <section className="w-full flex flex-col md:flex-row md:h-screen pt-[60px]">
+          <div className="grow md:overflow-y-auto md:h-full p-4 pl-8 pb-4">
             <button className="button" onClick={() => disconnect()}>
               <ArrowLeftIcon className="h-4 w-4" strokeWidth={2} /> Disconnect
             </button>
@@ -52,7 +52,7 @@ function Home() {
           />
           <div className="z-10 flex flex-col items-center justify-center w-full h-full">
             <div className="flex h-10 items-center justify-center rounded-[20px] border border-white px-6 text-lg text-white font-abc-favorit">
-              Cross App Connect Demo
+                  Cross App Connect Demo
             </div>
             <div className="text-center mt-4 text-white text-7xl font-medium font-abc-favorit leading-[81.60px]">
               Starter repo
@@ -68,7 +68,11 @@ function Home() {
               onClick={() => {
                 login();
                 setTimeout(() => {
-                  (document.querySelector('input[type="email"]') as HTMLInputElement)?.focus();
+                  (
+                    document.querySelector(
+                      'input[type="email"]'
+                    ) as HTMLInputElement
+                  )?.focus();
                 }, 150);
               }}
             >
