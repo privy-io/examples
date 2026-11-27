@@ -4,6 +4,7 @@
   "private": true,
   "description": "Comprehensive collection of Privy starter repos and integration examples",
   "scripts": {
+    "test": "node --test scripts/sync-tools.test.cjs",
     "sync": "ts-node scripts/sync-from-base.ts",
     "sync:apply": "ts-node scripts/sync-from-base.ts --apply",
     "check-drift": "ts-node scripts/check-drift.ts",
@@ -12,6 +13,7 @@
   "devDependencies": {
     "@types/node": "^20.0.0",
     "glob": "^11.0.0",
+    "minimatch": "11.0.9",
     "ts-node": "^10.9.2",
     "typescript": "^5.0.0"
   }

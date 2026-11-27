@@ -15,6 +15,7 @@
 import fs from "fs";
 import path from "path";
 import { glob } from "glob";
+import { minimatch } from "minimatch";
 
 interface SyncManifest {
   bases: Array<{
@@ -63,17 +64,7 @@ function loadManifest(): SyncManifest {
 }
 
 function matchesPattern(filePath: string, patterns: string[]): boolean {
-  return patterns.some((pattern) => {
-    const regex = new RegExp(
-      "^" +
-        pattern
-          .replace(/\*\*/g, ".*")
-          .replace(/\*/g, "[^/]*")
-          .replace(/\//g, "\\/") +
-        "$"
-    );
-    return regex.test(filePath);
-  });
+  return patterns.some((pattern) => minimatch(filePath, pattern));
 }
 
 function shouldSync(
@@ -135,13 +126,13 @@ function getFiles(basePath: string, patterns: string[]): string[] {
     ) {
       continue; // Skip patterns that would escape basePath
     }
-    const matches = glob.sync(fullPattern, { nodir: true });
+    const matches = glob.sync(safePattern, { cwd: basePath, nodir: true, absolute: true });
     // Validate all matched files are within basePath
     const validatedMatches = matches
       .map((f) => {
         const relPath = path.relative(basePath, f);
         try {
-          return sanitizeRelativePath(relPath);
+          return sanitizeRelativePath(relPath).split(path.sep).join("/");
         } catch {
           return null;
         }
