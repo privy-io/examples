@@ -1,68 +1,90 @@
-@import 'tailwindcss';
+@import "tailwindcss";
 
 :root {
-  /* Primary accent color */
-  --color-primary: #8B5CF6; /* violet-500 */
-  --color-offblack: #0f0f10;
+  --background: #ffffff;
+  --foreground: #171717;
+}
 
-  /* Background colors */
-  --color-background: #ffffff;
-  --color-background-elevated: #f8fafc;
-  
-  /* Text colors */
-  --color-text: #0f172a;
-  --color-text-muted: #64748b;
-  
-  /* Status colors */
-  --color-success: #10b981;
-  --color-warning: #f59e0b;
-  --color-error: #ef4444;
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-inter);
 }
 
 body {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
-    'Helvetica Neue', Arial, sans-serif;
-  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 50%, #e2e8f0 100%);
-  min-height: 100vh;
-  color: var(--color-text);
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-inter), Arial, Helvetica, sans-serif;
 }
 
-/* Custom utility classes */
-@layer utilities {
-  .bg-offblack {
-    background-color: var(--color-offblack);
+@layer components {
+  .button-primary {
+    @apply bg-[#5B4FFF] hover:bg-[#4A3EE6] focus:bg-[#4A3EE6] active:bg-[#3F35D9]
+           disabled:bg-gray-300 disabled:cursor-not-allowed
+           text-white font-medium
+           px-4 py-2 rounded-md
+           border border-transparent
+           transition-colors duration-200 ease-in-out
+           focus:outline-none focus:ring-2 focus:ring-[#5B4FFF] focus:ring-offset-2
+           inline-flex items-center justify-center
+           text-sm leading-5 cursor-pointer;
   }
 
-  .text-offblack {
-    color: var(--color-offblack);
+  .button-outline {
+    @apply flex flex-row items-center
+           px-4 py-2 gap-1 cursor-pointer
+           h-9 rounded-full
+           bg-transparent border border-[#5B4FFF]
+           text-[#5B4FFF] font-medium text-sm leading-tight
+           hover:bg-[#5B4FFF] hover:text-white
+           focus:bg-[#5B4FFF] focus:text-white
+           active:bg-[#4A3EE6]
+           focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2
+           transition-all duration-200 ease-in-out
+           disabled:opacity-50 disabled:cursor-not-allowed;
   }
 
-  .gradient-card {
-    background: linear-gradient(
-      180deg,
-      rgba(255, 255, 255, 1) 0%,
-      rgba(248, 250, 252, 1) 100%
-    );
+  .button {
+    @apply flex flex-row items-center
+           px-3 py-2 gap-3 cursor-pointer
+           bg-white border border-[#E2E3F0] rounded-xl
+           text-[#040217] font-normal text-base leading-6
+           hover:bg-gray-50 hover:border-gray-300
+           focus:bg-gray-50 focus:border-gray-300
+           active:bg-gray-100
+           focus:outline-none focus:ring-2 focus:ring-gray-300 focus:ring-offset-2
+           transition-all duration-200 ease-in-out
+           disabled:opacity-50 disabled:cursor-not-allowed
+           box-border;
+  }
+
+  .text-primary {
+    @apply text-[#5B4FFF];
+  }
+  .border-primary {
+    @apply border-[#5B4FFF];
+  }
+
+  .loader-overlay {
+    @apply absolute left-0 top-0 z-10 flex h-full w-full items-center justify-center bg-white/30;
+    animation: fade-in 150ms ease-in forwards;
   }
 }
 
 /* Animations */
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
 @keyframes float {
-  0%, 100% {
-    transform: translateY(0px);
-  }
-  50% {
-    transform: translateY(-10px);
-  }
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
 }
 
 @keyframes pulse-slow {
-  0%, 100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.7;
-  }
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
 }
 
 .animate-float {
@@ -71,65 +93,4 @@ body {
 
 .animate-pulse-slow {
   animation: pulse-slow 2s ease-in-out infinite;
-}
-
-/* Card styles */
-.card {
-  background: white;
-  border-radius: 1rem;
-  border: 1px solid #e2e8f0;
-  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
-}
-
-.card-hover {
-  transition: all 0.2s ease;
-}
-
-.card-hover:hover {
-  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-  transform: translateY(-2px);
-}
-
-/* Button base styles */
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0.75rem 1.5rem;
-  font-weight: 500;
-  font-size: 0.875rem;
-  border-radius: 0.75rem;
-  transition: all 0.15s ease;
-  cursor: pointer;
-}
-
-.btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-.btn-primary {
-  background-color: var(--color-offblack);
-  color: white;
-}
-
-.btn-primary:hover:not(:disabled) {
-  background-color: #1e1e20;
-}
-
-.btn-secondary {
-  background-color: white;
-  color: var(--color-text);
-  border: 1px solid #e2e8f0;
-}
-
-.btn-secondary:hover:not(:disabled) {
-  background-color: #f8fafc;
-  border-color: #cbd5e1;
-}
-
-/* Focus states */
-*:focus-visible {
-  outline: 2px solid var(--color-primary);
-  outline-offset: 2px;
 }
